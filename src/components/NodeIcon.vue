@@ -1,5 +1,5 @@
 <template>
-  <i class="treevue-node-icon" :class="iconClass" @click="onClick"></i>
+  <i class="treevue-node-icon" :class="iconClass" @click.stop="onClick"></i>
 </template>
 
 <script>

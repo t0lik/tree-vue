@@ -1,12 +1,12 @@
 <template>
-  <div class="treevue-tree-node-container" :class="nodeClasses">
-    <div class="treevue-tree-node">
+  <div class="treevue-tree-node-container" :class="nodeContainerClasses">
+    <div class="treevue-tree-node" @click="onClick" :class="parentClasses(node)">
       <node-icon v-model="node.states.opened" :styleManager="styleManager" class="treevue-tree-node-element" v-if="node.children.length"/>
       <node-checkbox v-model="node.states.checked" :styleManager="styleManager" class="treevue-tree-node-element treevue-tree-node-checkbox"/>
-      <node-text :title="node.item.name" class="treevue-tree-node-element treevue-tree-node-text" />
+      <node-text :title="node.item.name" class="treevue-tree-node-element treevue-tree-node-text" @click="onClick" @сhangeRequested="checkChangeRequested" @selectRequested="selectChangeRequested"/>
     </div>
     <div class="treevue-tree-node-children-container" v-if="node.states.opened">
-      <node :styleManager="styleManager" v-for="child in node.children" :key="child.id" :node="child" class="treevue-tree-node-child" />
+      <node :options="options" v-for="child in node.children" :key="child.id" :node="child" class="treevue-tree-node-child" @selected="onSelected" :parentClasses="parentClasses"/>
     </div>
   </div>
 </template>
@@ -22,7 +22,10 @@ export default {
     node: {
       type: Object
     },
-    styleManager: {
+    parentClasses: {
+      type: Function
+    },
+    options: {
       type: Object,
       required: true
     }
@@ -37,7 +40,10 @@ export default {
     }
   },
   computed: {
-    nodeClasses () {
+    styleManager () {
+      return this.options.styleManager
+    },
+    nodeContainerClasses () {
       return {
         'no-children': this.node.children.length === 0
       }
@@ -46,6 +52,18 @@ export default {
   mounted () {
   },
   methods: {
+    onSelected (item) {
+      this.$emit('selected', item)
+    },
+    onClick () {
+      this.$emit('selected', this.node)
+    },
+    checkChangeRequested () {
+      this.node.states.checked = !this.node.states.checked
+    },
+    selectChangeRequested () {
+      this.$emit('selected', this.node)
+    }
   }
 }
 </script>
@@ -64,10 +82,20 @@ export default {
 .treevue-tree-node-container.no-children .treevue-tree-node-element.treevue-tree-node-checkbox {
   margin-left: 1em;
 }
+.treevue-tree-node-container {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
 .treevue-tree-node-children-container {
   margin-left: 20px;
 }
-.treevue-tree-node-text.selected {
-  background-color: rgba(0, 0, 200, 0.5)
+.treevue-tree-node:hover {
+  background-color: rgba(231, 238, 247, 0.514);
+}
+.treevue-tree-node.selected {
+  background-color: rgb(231, 238, 247);
+}
+.treevue-tree-node-text {
+  flex: 1
 }
 </style>

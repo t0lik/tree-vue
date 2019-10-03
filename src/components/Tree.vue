@@ -1,12 +1,13 @@
 <template>
   <div class="treevue-tree">
-    <node :styleManager="treeOptions.styleManager" v-for="item in items" :key="item.id" :node="item"/>
+    <node :options="treeOptions" v-for="item in nodeManager.items" :key="item.id" :node="item" @selected="onItemSelected" :parentClasses="getNodeClasses"/>
   </div>
 </template>
 
 <script>
 import Node from './Node'
 import fontawesomeManager from '../styleManagers/fontawesomeManager'
+import DefaultManager from '../nodeManagers/defaultManager'
 
 export default {
   name: 'Tree',
@@ -24,35 +25,44 @@ export default {
   data () {
     return {
       items: [],
+      selectedItem: null,
       treeOptions: Object.assign({}, this.options, {
-        styleManager: fontawesomeManager
-      })
+        styleManager: fontawesomeManager,
+        multiselect: false
+      }),
+      nodeManager: new DefaultManager()
     }
   },
   computed: {
-    nodeItems () {
-      return this.nodes.map(x => this.mapNodeToItem(x))
-    }
   },
   mounted () {
-    this.items = this.nodes.map(x => this.mapNodeToItem(x))
+    this.nodeManager.setNodes(this.nodes)
+    // this.items = this.nodes.map(x => this.mapNodeToItem(x))
   },
   methods: {
+    getNodeClasses (item) {
+      return {
+        selected: this.selectedItem === item
+      }
+    },
     mapNodeToItem (node) {
       return {
         item: node,
         states: {
           checked: node.checked ||  false,
           disabled: node.disabled ||  false,
-          opened: node.opened ||  false,
-          selected: node.selected ||  false
+          opened: node.opened ||  false
         },
         children: node.children ? node.children.map(x => this.mapNodeToItem(x)) : []
       }
+    },
+    onItemSelected (item) {
+      this.selectedItem = item
     }
   }
 }
 </script>
 
 <style scoped>
+
 </style>

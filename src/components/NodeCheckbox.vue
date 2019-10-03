@@ -1,5 +1,5 @@
 <template>
-  <i class="treevue-node-checkbox" :class="checkClass" @click="onClick"></i>
+  <i class="treevue-node-checkbox" :class="checkClass" @click.stop="onClick"></i>
 </template>
 
 <script>
