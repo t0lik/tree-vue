@@ -1,6 +1,6 @@
 <template>
   <div class="treevue-tree">
-    <node :options="treeOptions" v-for="item in nodeManager.items" :key="item.id" :node="item" @selected="onItemSelected" :parentClasses="getNodeClasses"/>
+    <node :options="treeOptions" :manager="nodeManager" :state="treeState" v-for="item in visibleItems" :key="item.id" :node="item" @selected="onItemSelected" :parentClasses="getNodeClasses"/>
   </div>
 </template>
 
@@ -25,39 +25,44 @@ export default {
   data () {
     return {
       items: [],
-      selectedItem: null,
-      treeOptions: Object.assign({}, this.options, {
+      treeState: {
+      },
+      treeOptions: Object.assign({}, {
         styleManager: fontawesomeManager,
-        multiselect: false
-      }),
+        multiselect: false,
+        checkOnSelect: false
+      }, this.options),
       nodeManager: new DefaultManager()
     }
   },
   computed: {
+    visibleItems () {
+      return this.items.filter(x => this.nodeManager.getVisibility(x))
+    }
   },
   mounted () {
+    this.nodeManager.initialize(this.treeOptions)
     this.nodeManager.setNodes(this.nodes)
-    // this.items = this.nodes.map(x => this.mapNodeToItem(x))
   },
   methods: {
+    getCheckedNodes () {
+      return this.nodeManager.getCheckedNodes()
+    },
+    getNodeManager() {
+      return this.nodeManager
+    },
     getNodeClasses (item) {
       return {
-        selected: this.selectedItem === item
-      }
-    },
-    mapNodeToItem (node) {
-      return {
-        item: node,
-        states: {
-          checked: node.checked ||  false,
-          disabled: node.disabled ||  false,
-          opened: node.opened ||  false
-        },
-        children: node.children ? node.children.map(x => this.mapNodeToItem(x)) : []
+        selected: this.nodeManager.selectedNode === item
       }
     },
     onItemSelected (item) {
-      this.selectedItem = item
+      this.nodeManager.setSelected(item)
+      console.log('this.nodeManager', this.nodeManager)
+      this.$emit('onSelect', item)
+      if (this.treeOptions.checkOnSelect) {
+        item.states.checked = true
+      }
     }
   }
 }

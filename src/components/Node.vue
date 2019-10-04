@@ -6,7 +6,7 @@
       <node-text :title="node.item.name" class="treevue-tree-node-element treevue-tree-node-text" @click="onClick" @сhangeRequested="checkChangeRequested" @selectRequested="selectChangeRequested"/>
     </div>
     <div class="treevue-tree-node-children-container" v-if="node.states.opened">
-      <node :options="options" v-for="child in node.children" :key="child.id" :node="child" class="treevue-tree-node-child" @selected="onSelected" :parentClasses="parentClasses"/>
+      <node :options="options" :state="state" :manager="manager" v-for="child in visibleItems" :key="child.id" :node="child" class="treevue-tree-node-child" @selected="onSelected" :parentClasses="parentClasses"/>
     </div>
   </div>
 </template>
@@ -24,6 +24,14 @@ export default {
     },
     parentClasses: {
       type: Function
+    },
+    state: {
+      type: Object,
+      required: true
+    },
+    manager: {
+      type: Object,
+      required: true
     },
     options: {
       type: Object,
@@ -47,6 +55,9 @@ export default {
       return {
         'no-children': this.node.children.length === 0
       }
+    },
+    visibleItems () {
+      return this.node.children.filter(x => this.nodeManager.getVisibility(x))
     }
   },
   mounted () {

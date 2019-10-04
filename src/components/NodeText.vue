@@ -1,8 +1,8 @@
 <template>
-  <input type="text" readonly :value="title" class="treevue-node-text" @keydown="onKeyDown" @focus="onFocus"/>
-  <!-- <span class="treevue-node-text">
+  <!-- <input type="text" readonly :value="title" class="treevue-node-text" @keydown="onKeyDown" @focus="onFocus"/> -->
+  <span class="treevue-node-text">
     {{ title }}
-  </span> -->
+  </span>
 </template>
 
 <script>
