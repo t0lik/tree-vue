@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <tree :nodes="nodes" ref="tree" :options="{ checkOnSelect: true }" @onSelect="onSelect"/>
-    <div>
+    <tree :nodes="nodes" ref="tree" :options="treeOptions"/>
+    <div class="button-group">
       <button @click="getCheckNodes">get checked</button>
       <button @click="checkAllNodes">check all</button>
       <button @click="uncheckAllNodes">uncheck all</button>
@@ -11,13 +11,24 @@
       <button @click="collapseSelectedNode">collapse selected</button>
       <button @click="collapseAll">collapse all</button>
       <button @click="findById">find by id = 3 and select</button>
+      <div class="search-group">
+        <input v-model="searchString" />
+        <button @click="startSearch">search</button>
+        <button @click="clearSearch">clear</button>
+      </div>
+      <div class="style-group">
+        <button @click="switchToAwesome">fontawesome</button>
+        <button @click="switchToDefault">defaultStyle</button>
+      </div>
+      <span class="checked-nodes-text">{{ checkedNodesString }}</span>
     </div>
-    <span class="checked-nodes-text">{{ checkedNodesString }}</span>
   </div>
 </template>
 
 <script>
 import Tree from './components/Tree'
+import fontawesomeManager from './styleManagers/fontawesomeManager'
+import defaultStyleManager from './styleManagers/defaultStyleManager'
 
 export default {
   name: 'app',
@@ -26,7 +37,12 @@ export default {
   },
   data () {
     return {
+      treeOptions: {
+        checkOnSelect: false,
+        styleManager: defaultStyleManager
+      },
       selectedNode: null,
+      searchString: null,
       nodes: [{
         id: 0,
         name: 'ноль'
@@ -75,16 +91,13 @@ export default {
       const nodeManager = this.$refs.tree.getNodeManager()
       nodeManager.checkVisible()
     },
-    onSelect (item) {
-      this.selectedNode = item
-    },
     expandSelectedNode () {
       const nodeManager = this.$refs.tree.getNodeManager()
-      nodeManager.expand(this.selectedNode, true)
+      nodeManager.expand(nodeManager.selectedNode, true)
     },
     collapseSelectedNode () {
       const nodeManager = this.$refs.tree.getNodeManager()
-      nodeManager.collapse(this.selectedNode, true)
+      nodeManager.collapse(nodeManager.selectedNode, true)
     },
     expandAll () {
       const nodeManager = this.$refs.tree.getNodeManager()
@@ -98,6 +111,22 @@ export default {
       const nodeManager = this.$refs.tree.getNodeManager()
       const foundNode = nodeManager.getById(3)
       nodeManager.setSelected(foundNode)
+      nodeManager.showNode(foundNode)
+    },
+    startSearch () {
+      const nodeManager = this.$refs.tree.getNodeManager()
+      nodeManager.filter(this.searchString)
+    },
+    clearSearch () {
+      const nodeManager = this.$refs.tree.getNodeManager()
+      nodeManager.clearFilter()
+      this.searchString = ''
+    },
+    switchToAwesome () {
+      this.treeOptions.styleManager = fontawesomeManager
+    },
+    switchToDefault () {
+      this.treeOptions.styleManager = defaultStyleManager
     }
   }
 }
@@ -114,5 +143,16 @@ export default {
 }
 .checked-nodes-text {
   white-space: pre-wrap
+}
+.button-group {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+}
+.search-group {
+  display: flex;  
+}
+.style-group {
+  display: flex;  
 }
 </style>

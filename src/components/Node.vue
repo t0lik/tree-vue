@@ -3,7 +3,7 @@
     <div class="treevue-tree-node" @click="onClick" :class="parentClasses(node)">
       <node-icon v-model="node.states.opened" :styleManager="styleManager" class="treevue-tree-node-element" v-if="node.children.length"/>
       <node-checkbox v-model="node.states.checked" :styleManager="styleManager" class="treevue-tree-node-element treevue-tree-node-checkbox"/>
-      <node-text :title="node.item.name" class="treevue-tree-node-element treevue-tree-node-text" @click="onClick" @сhangeRequested="checkChangeRequested" @selectRequested="selectChangeRequested"/>
+      <node-text :title="node.item.name" class="treevue-tree-node-element treevue-tree-node-text" :class="textClasses" @click="onClick" @сhangeRequested="checkChangeRequested" @selectRequested="selectChangeRequested"/>
     </div>
     <div class="treevue-tree-node-children-container" v-if="node.states.opened">
       <node :options="options" :state="state" :manager="manager" v-for="child in visibleItems" :key="child.id" :node="child" class="treevue-tree-node-child" @selected="onSelected" :parentClasses="parentClasses"/>
@@ -48,6 +48,11 @@ export default {
     }
   },
   computed: {
+    textClasses () {
+      return {
+        'filter-matched': this.node.states.filterMatched
+      }
+    },
     styleManager () {
       return this.options.styleManager
     },
@@ -57,7 +62,7 @@ export default {
       }
     },
     visibleItems () {
-      return this.node.children.filter(x => this.nodeManager.getVisibility(x))
+      return this.node.children.filter(x => this.manager.getVisibility(x))
     }
   },
   mounted () {
@@ -91,7 +96,10 @@ export default {
   margin-right: 0px;
 }
 .treevue-tree-node-container.no-children .treevue-tree-node-element.treevue-tree-node-checkbox {
-  margin-left: 1em;
+  margin-left: 18px;
+}
+.treevue-tree-node-container .treevue-tree-node-element.treevue-tree-node-checkbox {
+  margin-right: 5px;
 }
 .treevue-tree-node-container {
   margin-top: 2px;
@@ -108,5 +116,8 @@ export default {
 }
 .treevue-tree-node-text {
   flex: 1
+}
+.treevue-tree-node-text.filter-matched {
+  font-weight: bold;
 }
 </style>

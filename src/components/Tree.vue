@@ -6,7 +6,7 @@
 
 <script>
 import Node from './Node'
-import fontawesomeManager from '../styleManagers/fontawesomeManager'
+import defaultStyleManager from '../styleManagers/defaultStyleManager'
 import DefaultManager from '../nodeManagers/defaultManager'
 
 export default {
@@ -24,20 +24,24 @@ export default {
   },
   data () {
     return {
-      items: [],
       treeState: {
       },
       treeOptions: Object.assign({}, {
-        styleManager: fontawesomeManager,
+        styleManager: defaultStyleManager,
         multiselect: false,
         checkOnSelect: false
       }, this.options),
       nodeManager: new DefaultManager()
     }
   },
+  watch: {
+    'options.styleManager' (newValue) {
+      this.treeOptions.styleManager = this.options.styleManager
+    }
+  },
   computed: {
     visibleItems () {
-      return this.items.filter(x => this.nodeManager.getVisibility(x))
+      return this.nodeManager.items.filter(x => this.nodeManager.getVisibility(x))
     }
   },
   mounted () {

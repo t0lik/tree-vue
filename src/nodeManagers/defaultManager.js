@@ -8,7 +8,8 @@ function mapNodeToItem (node, parent) {
       checked: node.checked ||  false,
       disabled: node.disabled ||  false,
       opened: node.opened ||  false,
-      filtered: false
+      filtered: false,
+      filterMatched: false
     }
   }
   item.children = node.children ? node.children.map(x => mapNodeToItem(x, item)) : []
@@ -20,29 +21,69 @@ function getVisibility (node) {
   if (this.options.inSearch && !node.states.filtered) {
     return false
   }
-
+  if (node.parent && !node.parent.states.opened) {
+    return false
+  }
   return true
 }
 
 function visitNodeAndChildren (item, itemCallback, onlyVisible) {
-  itemCallback(item)
-  if (onlyVisible && !item.states.opened) {
+  if (onlyVisible && !this.getVisibility(item)) {
     return
   }
+
+  itemCallback(item)
+
   for (const child of item.children) {
-    visitNodeAndChildren(child, itemCallback, onlyVisible)
+    this.visitNodeAndChildren(child, itemCallback, onlyVisible)
   }
 }
 
 function visitAllNodes (items, itemCallback, onlyVisible = false) {
   for (const item of items) {
-    visitNodeAndChildren(item, itemCallback, onlyVisible)
+    this.visitNodeAndChildren(item, itemCallback, onlyVisible)
   }
+}
+
+function visitAllParents (item, itemCallback) {
+  let parent = item.parent
+  while (parent) {
+    itemCallback(parent)
+    parent = parent.parent
+  }
+}
+
+function clearFilter () {
+  this.options.inSearch = false
+  this.visitAll(this.items, item => {
+    item.states.filtered = false
+    item.states.filterMatched = false
+  })
+}
+function filter (searchString) {
+  if(!searchString) {
+    return
+  }
+
+  this.options.inSearch = false
+  this.visitAll(this.items, item => {
+    item.states.filtered = false
+    item.states.filterMatched = false
+  if (item.item.name.toLowerCase().indexOf(searchString.toLowerCase()) !== -1) {
+      item.states.filtered = true
+      item.states.filterMatched = true
+      this.visitAllParents(item, parent => {
+        parent.states.filtered = true
+      })
+    }
+  })
+  this.options.inSearch = true
+  this.expandAll()
 }
 
 function getCheckedNodes () {
   const checkedNodes = []
-  visitAllNodes(this.items, item => {
+  this.visitAll(this.items, item => {
     if (item.states.checked) {
       checkedNodes.push(item)
     }
@@ -52,61 +93,64 @@ function getCheckedNodes () {
 }
 
 function setAllNodesCheckState (items, state, onlyVisible = false) {
-  visitAllNodes(items, item => {
+  this.visitAll(items, item => {
     item.states.checked = state
   }, onlyVisible)
 }
 
 function checkAllNodes (onlyVisible = false) {
-  setAllNodesCheckState(this.items, true, onlyVisible)
+  this.setAllNodesCheckState(this.items, true, onlyVisible)
 }
 
 function checkVisibleNodes () {
-  setAllNodesCheckState(this.items, true, true)
+  this.setAllNodesCheckState(this.items, true, true)
 }
 
 function uncheckAllNodes (onlyVisible = false) {
-  setAllNodesCheckState(this.items, false, onlyVisible)
+  this.setAllNodesCheckState(this.items, false, onlyVisible)
 }
 
 function uncheckVisibleNodes () {
-  setAllNodesCheckState(this.items, false, true)
+  this.setAllNodesCheckState(this.items, false, true)
 }
 
 function setNodeOpenState (item, state, withChildren = false) {
   item.states.opened = state
   if (withChildren) {
-    visitAllNodes(item.children, item => {
+    this.visitAll(item.children, item => {
       item.states.opened = state
     })
   }
 }
 
 function setAllNodesOpenState (items, state) {
-  visitAllNodes(items, item => {
+  this.visitAll(items, item => {
     item.states.opened = state
   })
 }
 
 function expandNode (node, withChildren = false) {
-  setNodeOpenState(node, true, withChildren)
+  this.setNodeOpenState(node, true, withChildren)
 }
 
 function expandAll () {
-  setAllNodesOpenState(this.items, true)
+  this.setAllNodesOpenState(this.items, true)
 }
 
 function collapseNode (node, withChildren = false) {
-  setNodeOpenState(node, false, withChildren)
+  this.setNodeOpenState(node, false, withChildren)
 }
 
 function collapseAll () {
-  setAllNodesOpenState(this.items, false)
+  this.setAllNodesOpenState(this.items, false)
+  if (this.selectedNode && !this.getVisibility(this.selectedNode)) {
+    this.selectedNode = null
+  }
 }
 
 function getNodeById (id) {
   let foundNode = null
-  visitAllNodes(this.items, item => {
+  this.visitAll(this.items, item => {
     if (item.item.id === id) {
       foundNode = item
     }
@@ -117,7 +161,7 @@ function getNodeById (id) {
 
 function findOne (selector) {
   let foundNode = null
-  visitAllNodes(this.items, item => {
+  this.visitAll(this.items, item => {
     if (selector(item)) {
       foundNode = item
     }
@@ -128,13 +172,19 @@ function findOne (selector) {
 
 function findAll (selector) {
   const foundNodes = []
-  visitAllNodes(this.items, item => {
+  this.visitAll(this.items, item => {
     if (selector(item)) {
       foundNodes.push(item)
     }
   })
 
   return foundNodes
+}
+
+function showNode (node) {
+  this.visitAllParents(node, item => {
+    this.expand(item)
+  })
 }
 
 function setSelectedNode (node) {
@@ -159,21 +209,30 @@ function DefaultManager (initialNodes) {
   } else {
     this.items = []
   }
-  this.initialize = initialize
-  this.getChecked = getCheckedNodes
-  this.checkAll = checkAllNodes
-  this.checkVisible = checkVisibleNodes
-  this.uncheckAll = uncheckAllNodes
-  this.uncheckVisible = uncheckVisibleNodes
-  this.expand = expandNode
-  this.collapse = collapseNode
-  this.expandAll = expandAll
-  this.collapseAll = collapseAll
-  this.getById = getNodeById
-  this.findOne = findOne
-  this.findAll = findAll
-  this.setSelected = setSelectedNode
-  this.getVisibility = getVisibility
+  this.initialize = initialize.bind(this)
+  this.getChecked = getCheckedNodes.bind(this)
+  this.checkAll = checkAllNodes.bind(this)
+  this.checkVisible = checkVisibleNodes.bind(this)
+  this.uncheckAll = uncheckAllNodes.bind(this)
+  this.uncheckVisible = uncheckVisibleNodes.bind(this)
+  this.expand = expandNode.bind(this)
+  this.collapse = collapseNode.bind(this)
+  this.expandAll = expandAll.bind(this)
+  this.collapseAll = collapseAll.bind(this)
+  this.getById = getNodeById.bind(this)
+  this.findOne = findOne.bind(this)
+  this.findAll = findAll.bind(this)
+  this.setSelected = setSelectedNode.bind(this)
+  this.getVisibility = getVisibility.bind(this)
+  this.visitNodeAndChildren = visitNodeAndChildren.bind(this)
+  this.filter = filter.bind(this)
+  this.clearFilter = clearFilter.bind(this)
+  this.visitAll = visitAllNodes.bind(this)
+  this.setAllNodesCheckState = setAllNodesCheckState.bind(this)
+  this.setAllNodesOpenState = setAllNodesOpenState.bind(this)
+  this.setNodeOpenState = setNodeOpenState.bind(this)
+  this.showNode = showNode.bind(this)
+  this.visitAllParents = visitAllParents.bind(this)
 
   this.setNodes = function (nodes) {
     this.items = nodes.map(x => mapNodeToItem(x))
