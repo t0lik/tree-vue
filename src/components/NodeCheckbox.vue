@@ -41,6 +41,9 @@ export default {
 </script>
 
 <style scoped>
+.treevue-node-checkbox {
+  font-size: 18px;
+}
 .treevue-default-checkbox {
   height: 18px;
   width: 18px;
@@ -58,7 +61,7 @@ export default {
   width: 12px;
 }
 
-.checked.treevue-default-checkbox:after {
+.treevue-default-checkbox.checked:after {
   border: 2px solid #494646;
   border-top: 0;
   border-left: 0;
@@ -70,7 +73,7 @@ export default {
   height: 9px;
   width: 4px;
 }
-.indeterminate.treevue-default-checkbox:after {
+.treevue-default-checkbox.indeterminate:after {
   background: #494646;
   box-sizing: content-box;
   left: 2px;

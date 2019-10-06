@@ -1,9 +1,9 @@
 <template>
   <div class="treevue-tree-node-container" :class="nodeContainerClasses">
     <div class="treevue-tree-node" @click="onClick" :class="parentClasses(node)">
-      <node-icon v-model="node.states.opened" :styleManager="styleManager" class="treevue-tree-node-element" v-if="node.children.length"/>
+      <node-icon v-model="node.states.opened" :styleManager="styleManager" class="treevue-tree-node-element treevue-tree-node-icon" v-if="node.children.length"/>
       <node-checkbox v-model="node.states.checked" :styleManager="styleManager" class="treevue-tree-node-element treevue-tree-node-checkbox"/>
-      <node-text :title="node.item.name" class="treevue-tree-node-element treevue-tree-node-text" :class="textClasses" @click="onClick" @сhangeRequested="checkChangeRequested" @selectRequested="selectChangeRequested"/>
+      <node-text :title="nodeText" class="treevue-tree-node-element treevue-tree-node-text" :class="textClasses" @click="onClick" @сhangeRequested="checkChangeRequested" @selectRequested="selectChangeRequested"/>
     </div>
     <div class="treevue-tree-node-children-container" v-if="node.states.opened">
       <node :options="options" :state="state" :manager="manager" v-for="child in visibleItems" :key="child.id" :node="child" class="treevue-tree-node-child" @selected="onSelected" :parentClasses="parentClasses"/>
@@ -63,6 +63,13 @@ export default {
     },
     visibleItems () {
       return this.node.children.filter(x => this.manager.getVisibility(x))
+    },
+    nodeText () {
+      const nameProp = this.options.nameProp
+      if (typeof nameProp === 'function') {
+        return nameProp(this.node.item)
+      }
+      return this.node.item[nameProp]
     }
   },
   mounted () {
@@ -95,8 +102,11 @@ export default {
 .treevue-tree-node-element {
   margin-right: 0px;
 }
+.treevue-tree-node-element.treevue-tree-node-icon {
+  margin-right: 2px;
+}
 .treevue-tree-node-container.no-children .treevue-tree-node-element.treevue-tree-node-checkbox {
-  margin-left: 18px;
+  margin-left: 20px;
 }
 .treevue-tree-node-container .treevue-tree-node-element.treevue-tree-node-checkbox {
   margin-right: 5px;

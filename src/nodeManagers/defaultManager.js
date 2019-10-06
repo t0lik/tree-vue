@@ -1,8 +1,12 @@
 'use strict'
 
 function mapNodeToItem (node, parent) {
+  const idProp = this.treeOptions.idProp
+  const id = node[idProp] != null ? node[idProp] : this.internalLastNodeId
+  this.internalLastNodeId += 1
   const item = {
     item: node,
+    id,
     parent,
     states: {
       checked: node.checked ||  false,
@@ -12,7 +16,7 @@ function mapNodeToItem (node, parent) {
       filterMatched: false
     }
   }
-  item.children = node.children ? node.children.map(x => mapNodeToItem(x, item)) : []
+  item.children = node.children ? node.children.map(x => this.mapNodeToItem(x, item)) : []
 
   return item
 }
@@ -151,7 +155,7 @@ function collapseAll () {
 function getNodeById (id) {
   let foundNode = null
   this.visitAll(this.items, item => {
-    if (item.item.id === id) {
+    if (item.id === id) {
       foundNode = item
     }
   })
@@ -198,17 +202,14 @@ function initialize (treeOptions) {
   this.treeOptions = treeOptions
 }
 
-function DefaultManager (initialNodes) {
+function DefaultManager () {
   this.treeOptions = null
   this.options = {
     inSearch: false
   }
   this.selectedNode = null
-  if (initialNodes) {
-    this.items = initialNodes.map(x => mapNodeToItem(x))
-  } else {
-    this.items = []
-  }
+  this.items = []
+  this.internalLastNodeId = 0
   this.initialize = initialize.bind(this)
   this.getChecked = getCheckedNodes.bind(this)
   this.checkAll = checkAllNodes.bind(this)
@@ -233,10 +234,11 @@ function DefaultManager (initialNodes) {
   this.setNodeOpenState = setNodeOpenState.bind(this)
   this.showNode = showNode.bind(this)
   this.visitAllParents = visitAllParents.bind(this)
+  this.mapNodeToItem = mapNodeToItem.bind(this)
 
   this.setNodes = function (nodes) {
-    this.items = nodes.map(x => mapNodeToItem(x))
-  }
+    this.items = nodes.map(x => this.mapNodeToItem(x))
+  }.bind(this)
 }
 
 export default DefaultManager

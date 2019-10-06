@@ -29,7 +29,9 @@ export default {
       treeOptions: Object.assign({}, {
         styleManager: defaultStyleManager,
         multiselect: false,
-        checkOnSelect: false
+        checkOnSelect: false,
+        idProp: 'id_',
+        nameProp: 'name'
       }, this.options),
       nodeManager: new DefaultManager()
     }
@@ -62,7 +64,6 @@ export default {
     },
     onItemSelected (item) {
       this.nodeManager.setSelected(item)
-      console.log('this.nodeManager', this.nodeManager)
       this.$emit('onSelect', item)
       if (this.treeOptions.checkOnSelect) {
         item.states.checked = true

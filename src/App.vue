@@ -39,7 +39,8 @@ export default {
     return {
       treeOptions: {
         checkOnSelect: false,
-        styleManager: defaultStyleManager
+        styleManager: defaultStyleManager,
+        nameProp: item => `${item.name} (${item.id})`
       },
       selectedNode: null,
       searchString: null,

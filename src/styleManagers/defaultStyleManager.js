@@ -3,7 +3,7 @@
 export default {
   closedIcon: 'treevue-default-arrow',
   openIcon: 'treevue-default-arrow expanded',
-  checkedIcon: 'treevue-default-checkbox indeterminate',
+  checkedIcon: 'treevue-default-checkbox checked',
   partialCheckedIcon: 'treevue-default-checkbox indeterminate',
   uncheckedIcon: 'treevue-default-checkbox'
 }
