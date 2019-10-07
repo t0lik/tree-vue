@@ -31,7 +31,8 @@ export default {
         multiselect: false,
         checkOnSelect: false,
         idProp: 'id_',
-        nameProp: 'name'
+        nameProp: 'name',
+        childrenProp: 'children'
       }, this.options),
       nodeManager: new DefaultManager()
     }

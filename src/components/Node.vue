@@ -65,11 +65,7 @@ export default {
       return this.node.children.filter(x => this.manager.getVisibility(x))
     },
     nodeText () {
-      const nameProp = this.options.nameProp
-      if (typeof nameProp === 'function') {
-        return nameProp(this.node.item)
-      }
-      return this.node.item[nameProp]
+      return this.manager.getName(this.node)
     }
   },
   mounted () {

@@ -40,6 +40,7 @@ export default {
       treeOptions: {
         checkOnSelect: false,
         styleManager: defaultStyleManager,
+        childrenProp: 'kids',
         nameProp: item => `${item.name} (${item.id})`
       },
       selectedNode: null,
@@ -50,10 +51,10 @@ export default {
       }, {
         id: 1,
         name: 'один',
-        children: [{
+        kids: [{
         id: 3,
         name: 'три',
-        children: [{
+        kids: [{
         id: 8,
         name: 'восемьдесят восемь тысяч триста пятдесят два'
       }, {

@@ -16,9 +16,14 @@ function mapNodeToItem (node, parent) {
       filterMatched: false
     }
   }
-  item.children = node.children ? node.children.map(x => this.mapNodeToItem(x, item)) : []
+  const children = this.getChildren(node)
+  item.children = children ? children.map(x => this.mapNodeToItem(x, item)) : []
 
   return item
+}
+
+function isFunction (obj) {
+  return (typeof obj === 'function')
 }
 
 function getVisibility (node) {
@@ -73,7 +78,8 @@ function filter (searchString) {
   this.visitAll(this.items, item => {
     item.states.filtered = false
     item.states.filterMatched = false
-  if (item.item.name.toLowerCase().indexOf(searchString.toLowerCase()) !== -1) {
+    const itemName = this.getName(item)
+  if (itemName.toLowerCase().indexOf(searchString.toLowerCase()) !== -1) {
       item.states.filtered = true
       item.states.filterMatched = true
       this.visitAllParents(item, parent => {
@@ -164,6 +170,10 @@ function getNodeById (id) {
 }
 
 function findOne (selector) {
+  if (!isFunction(selector)) {
+    throw new Error('selector is not a function')
+  }
+
   let foundNode = null
   this.visitAll(this.items, item => {
     if (selector(item)) {
@@ -175,6 +185,10 @@ function findOne (selector) {
 }
 
 function findAll (selector) {
+  if (!isFunction(selector)) {
+    throw new Error('selector is not a function')
+  }
+
   const foundNodes = []
   this.visitAll(this.items, item => {
     if (selector(item)) {
@@ -196,6 +210,23 @@ function setSelectedNode (node) {
   if (this.treeOptions.checkOnSelect) {
     node.states.checked = true
   }
+}
+
+function getName (node) {
+  const nameProp = this.treeOptions.nameProp
+  if (typeof nameProp === 'function') {
+    return nameProp(node.item)
+  }
+  return node.item[nameProp]
+}
+
+function getChildren (node) {
+  const childrenProp = this.treeOptions.childrenProp
+  if (typeof childrenProp === 'function') {
+    return childrenProp(node)
+  }
+
+  return node[childrenProp]
 }
 
 function initialize (treeOptions) {
@@ -235,6 +266,8 @@ function DefaultManager () {
   this.showNode = showNode.bind(this)
   this.visitAllParents = visitAllParents.bind(this)
   this.mapNodeToItem = mapNodeToItem.bind(this)
+  this.getName = getName.bind(this)
+  this.getChildren = getChildren.bind(this)
 
   this.setNodes = function (nodes) {
     this.items = nodes.map(x => this.mapNodeToItem(x))
