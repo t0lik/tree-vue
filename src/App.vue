@@ -10,10 +10,17 @@
       <button @click="expandAll">expand all</button>
       <button @click="collapseSelectedNode">collapse selected</button>
       <button @click="collapseAll">collapse all</button>
-      <button @click="findById">find by id = 3 and select</button>
+      <button @click="findById">find by id = 8 and select</button>
+      <button @click="addChild">find by id = 8 and add child</button>
+      <button @click="insertChildAt">find by id = 8 and insert child before first child node</button>
+      <button @click="insertChild">find by id = 8 and insert child to be first</button>
+      <button @click="removeChildNode">find child by id = 8 and remove</button>
+      <button @click="removeRootNode">find root node by id = 2 and remove</button>
       <div class="search-group">
         <input v-model="searchString" />
-        <button @click="startSearch">search</button>
+        <button @click="startSearch">search by Text</button>
+        <button @click="startRegexpSearch">search by Regexp</button>
+        <button @click="startFuncSearch">search by function</button>
         <button @click="clearSearch">clear</button>
       </div>
       <div class="style-group">
@@ -56,7 +63,8 @@ export default {
         name: 'три',
         kids: [{
         id: 8,
-        name: 'восемьдесят восемь тысяч триста пятдесят два'
+        name: 'восемьдесят восемь тысяч семьсот пятьдесят два',
+        kids: []
       }, {
         id: 9,
         name: 'девять'
@@ -111,13 +119,56 @@ export default {
     },
     findById () {
       const nodeManager = this.$refs.tree.getNodeManager()
-      const foundNode = nodeManager.getById(3)
+      const foundNode = nodeManager.findOne(item => item.item.id === 8)
       nodeManager.setSelected(foundNode)
       nodeManager.showNode(foundNode)
+    },
+    addChild () {
+      const nodeManager = this.$refs.tree.getNodeManager()
+      const foundNode = nodeManager.findOne(item => item.item.id === 8)
+      foundNode.addChild({
+        id: 10,
+        name: 'десять'
+      })
+    },
+    insertChildAt () {
+      const nodeManager = this.$refs.tree.getNodeManager()
+      const foundNode = nodeManager.findOne(item => item.item.id === 8)
+      const firstChild = foundNode.children[0]
+      foundNode.insertChild({
+        id: 10,
+        name: 'десять'
+      }, firstChild)
+    },
+    insertChild () {
+      const nodeManager = this.$refs.tree.getNodeManager()
+      const foundNode = nodeManager.findOne(item => item.item.id === 8)
+      foundNode.insertChild({
+        id: 11,
+        name: 'одинадцать'
+      })
+    },
+    removeChildNode () {
+      const nodeManager = this.$refs.tree.getNodeManager()
+      const foundNode = nodeManager.findOne(item => item.item.id === 8)
+      nodeManager.removeNode(foundNode)
+    },
+    removeRootNode () {
+      const nodeManager = this.$refs.tree.getNodeManager()
+      const foundNode = nodeManager.findOne(item => item.item.id === 2)
+      nodeManager.removeNode(foundNode)
     },
     startSearch () {
       const nodeManager = this.$refs.tree.getNodeManager()
       nodeManager.filter(this.searchString)
+    },
+    startRegexpSearch () {
+      const nodeManager = this.$refs.tree.getNodeManager()
+      nodeManager.filter(new RegExp(this.searchString, 'i'))
+    },
+    startFuncSearch () {
+      const nodeManager = this.$refs.tree.getNodeManager()
+      nodeManager.filter(item => item.name.toLowerCase().indexOf(this.searchString.toLowerCase()) !== -1)
     },
     clearSearch () {
       const nodeManager = this.$refs.tree.getNodeManager()

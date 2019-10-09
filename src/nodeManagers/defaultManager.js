@@ -1,6 +1,6 @@
 'use strict'
 
-function mapNodeToItem (node, parent) {
+function mapNodeToItem (node, parent = null) {
   const idProp = this.treeOptions.idProp
   const id = node[idProp] != null ? node[idProp] : this.internalLastNodeId
   this.internalLastNodeId += 1
@@ -18,6 +18,15 @@ function mapNodeToItem (node, parent) {
   }
   const children = this.getChildren(node)
   item.children = children ? children.map(x => this.mapNodeToItem(x, item)) : []
+
+  item.states.isIndeterminate = () => {
+    const isSomeChildrenChecked = item.children.some(x => x.states.checked)
+    const isAllChildrenChecked = item.children.every(x => x.states.checked)
+    return isSomeChildrenChecked && !isAllChildrenChecked
+  }
+
+  item.addChild = child => this.addChild(item, child)
+  item.insertChild = (child, beforeChild) => this.insertChild(item, child, beforeChild)
 
   return item
 }
@@ -69,23 +78,29 @@ function clearFilter () {
     item.states.filterMatched = false
   })
 }
-function filter (searchString) {
-  if(!searchString) {
+function filter (searchObject) {
+  if(!searchObject) {
     return
   }
 
   this.options.inSearch = false
+  let searchFunc = name => name.toLowerCase().indexOf(searchObject.toLowerCase()) !== -1
+  if (searchObject instanceof RegExp) {
+    searchFunc = name => searchObject.test(name)
+  } else if (isFunction(searchObject)) {
+    searchFunc = (name, item) => searchObject(item)
+  }
   this.visitAll(this.items, item => {
     item.states.filtered = false
     item.states.filterMatched = false
     const itemName = this.getName(item)
-  if (itemName.toLowerCase().indexOf(searchString.toLowerCase()) !== -1) {
-      item.states.filtered = true
-      item.states.filterMatched = true
-      this.visitAllParents(item, parent => {
-        parent.states.filtered = true
-      })
-    }
+    if (searchFunc(itemName, item.item)) {
+        item.states.filtered = true
+        item.states.filterMatched = true
+        this.visitAllParents(item, parent => {
+          parent.states.filtered = true
+        })
+      }
   })
   this.options.inSearch = true
   this.expandAll()
@@ -229,6 +244,53 @@ function getChildren (node) {
   return node[childrenProp]
 }
 
+function addChild (parent, node) {
+  const nodeItem = this.mapNodeToItem(node, parent)
+  parent.children.push(nodeItem)
+}
+
+function insertChild (parent, node, beforeNode) {
+  const nodeItem = this.mapNodeToItem(node, parent)
+  if (beforeNode) {
+    const insertIndex = parent.children.indexOf(beforeNode)
+    parent.children.splice(insertIndex, 0, nodeItem)
+  } else {
+    parent.children.unshift(nodeItem)
+  }
+}
+
+function removeRootNode (items, originalItems, node) {
+  const removingIndex = items.indexOf(node)
+  items.splice(removingIndex, 1)
+  const item = node.item
+  const removingItemIndex = originalItems.indexOf(item)
+  originalItems.splice(removingItemIndex, 1)
+}
+
+function removeChildNode (parent, itemChildren, node) {
+  const removingIndex = parent.children.indexOf(node)
+  parent.children.splice(removingIndex, 1)
+  const removingItemIndex = itemChildren.indexOf(node.item)
+  itemChildren.splice(removingItemIndex, 1)
+}
+function removeNode (node) {
+  // TODO: учесть что children могут быть функцией
+  const parent = node.parent
+  if (!parent) {
+    removeRootNode(this.items, this.originalItems, node)
+    if (this.selectedNode === node) {
+      this.selectedNode = null
+    }
+    return
+  }
+  const parentItem = parent.item
+  const itemChildren = this.getChildren(parentItem)
+  removeChildNode(parent, itemChildren, node)
+  if (this.selectedNode === node) {
+    this.selectedNode = null
+  }
+}
+
 function initialize (treeOptions) {
   this.treeOptions = treeOptions
 }
@@ -239,6 +301,7 @@ function DefaultManager () {
     inSearch: false
   }
   this.selectedNode = null
+  this.originalItems = []
   this.items = []
   this.internalLastNodeId = 0
   this.initialize = initialize.bind(this)
@@ -268,8 +331,12 @@ function DefaultManager () {
   this.mapNodeToItem = mapNodeToItem.bind(this)
   this.getName = getName.bind(this)
   this.getChildren = getChildren.bind(this)
+  this.addChild = addChild.bind(this)
+  this.insertChild = insertChild.bind(this)
+  this.removeNode = removeNode.bind(this)
 
   this.setNodes = function (nodes) {
+    this.originalItems = nodes
     this.items = nodes.map(x => this.mapNodeToItem(x))
   }.bind(this)
 }

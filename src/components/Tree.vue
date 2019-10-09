@@ -1,5 +1,6 @@
 <template>
   <div class="treevue-tree">
+    <div class="treevue-empty-search-text" v-if="!visibleItems.length && nodeManager.options.inSearch"> {{ treeOptions.emptySearchText }} </div>
     <node :options="treeOptions" :manager="nodeManager" :state="treeState" v-for="item in visibleItems" :key="item.id" :node="item" @selected="onItemSelected" :parentClasses="getNodeClasses"/>
   </div>
 </template>
@@ -32,7 +33,8 @@ export default {
         checkOnSelect: false,
         idProp: 'id_',
         nameProp: 'name',
-        childrenProp: 'children'
+        childrenProp: 'children',
+        emptySearchText: 'no nodes are found'
       }, this.options),
       nodeManager: new DefaultManager()
     }
@@ -75,5 +77,7 @@ export default {
 </script>
 
 <style scoped>
-
+.treevue-empty-search-text {
+  margin: 10px;
+}
 </style>
