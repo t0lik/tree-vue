@@ -3,10 +3,14 @@
     <div class="treevue-tree-node" @click="onClick" :class="parentClasses(node)">
       <node-icon v-model="node.states.opened" :styleManager="styleManager" class="treevue-tree-node-element treevue-tree-node-icon" v-if="node.children.length"/>
       <node-checkbox v-model="node.states.checked" :styleManager="styleManager" class="treevue-tree-node-element treevue-tree-node-checkbox"/>
-      <node-text :title="nodeText" class="treevue-tree-node-element treevue-tree-node-text" :class="textClasses" @click="onClick" @сhangeRequested="checkChangeRequested" @selectRequested="selectChangeRequested"/>
+      <slot name="text" v-bind:nodeText="nodeText" v-bind:textClasses="textClasses">
+        <node-text :title="nodeText" class="treevue-tree-node-element treevue-tree-node-text" :class="textClasses"/>
+      </slot>
     </div>
     <div class="treevue-tree-node-children-container" v-if="node.states.opened">
-      <node :options="options" :state="state" :manager="manager" v-for="child in visibleItems" :key="child.id" :node="child" class="treevue-tree-node-child" @selected="onSelected" :parentClasses="parentClasses"/>
+      <node :options="options" :state="state" :manager="manager" v-for="child in visibleItems" :key="child.id" :node="child" class="treevue-tree-node-child" @selected="onSelected" :parentClasses="parentClasses">
+        <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope"><slot :name="slot" v-bind="scope"/></template>
+      </node>
     </div>
   </div>
 </template>
@@ -75,12 +79,7 @@ export default {
       this.$emit('selected', item)
     },
     onClick () {
-      this.$emit('selected', this.node)
-    },
-    checkChangeRequested () {
-      this.node.states.checked = !this.node.states.checked
-    },
-    selectChangeRequested () {
+      console.log('onClick')
       this.$emit('selected', this.node)
     }
   }

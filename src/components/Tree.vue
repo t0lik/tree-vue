@@ -1,7 +1,9 @@
 <template>
   <div class="treevue-tree">
-    <div class="treevue-empty-search-text" v-if="!visibleItems.length && nodeManager.options.inSearch"> {{ treeOptions.emptySearchText }} </div>
-    <node :options="treeOptions" :manager="nodeManager" :state="treeState" v-for="item in visibleItems" :key="item.id" :node="item" @selected="onItemSelected" :parentClasses="getNodeClasses"/>
+    <div class="treevue-empty-search-text" v-if="!visibleItems.length && nodeManager.options.inSearch"> {{ treeOptions.notFoundText }} </div>
+    <node :options="treeOptions" :manager="nodeManager" :state="treeState" v-for="item in visibleItems" :key="item.id" :node="item" @selected="onItemSelected" :parentClasses="getNodeClasses">
+      <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope"><slot :name="slot" v-bind="scope"/></template>
+    </node>
   </div>
 </template>
 
@@ -34,7 +36,7 @@ export default {
         idProp: 'id_',
         nameProp: 'name',
         childrenProp: 'children',
-        emptySearchText: 'no nodes are found'
+        notFoundText: 'no nodes are found'
       }, this.options),
       nodeManager: new DefaultManager()
     }

@@ -1,29 +1,40 @@
 <template>
   <div id="app">
-    <tree :nodes="nodes" ref="tree" :options="treeOptions"/>
-    <div class="button-group">
-      <button @click="getCheckNodes">get checked</button>
-      <button @click="checkAllNodes">check all</button>
-      <button @click="uncheckAllNodes">uncheck all</button>
-      <button @click="checkVisibleNodes">check visible</button>
-      <button @click="expandSelectedNode">expand selected</button>
-      <button @click="expandAll">expand all</button>
-      <button @click="collapseSelectedNode">collapse selected</button>
-      <button @click="collapseAll">collapse all</button>
+    <tree :nodes="nodes" ref="tree" :options="treeOptions">
+      <!-- <template #text="slotProps">
+        <label :class="slotProps.textClasses"> {{ slotProps.nodeText }}</label>
+      </template> -->
+    </tree>
+    <div class="button-container">
+      <div class="button-group">
+        <button @click="getCheckNodes">get checked</button>
+        <button @click="checkAllNodes">check all</button>
+        <button @click="uncheckAllNodes">uncheck all</button>
+        <button @click="checkVisibleNodes">check visible</button>
+      </div>
+      <div class="button-group">
+        <button @click="expandSelectedNode">expand selected</button>
+        <button @click="expandAll">expand all</button>
+        <button @click="collapseSelectedNode">collapse selected</button>
+        <button @click="collapseAll">collapse all</button>
+      </div>
       <button @click="findById">find by id = 8 and select</button>
-      <button @click="addChild">find by id = 8 and add child</button>
-      <button @click="insertChildAt">find by id = 8 and insert child before first child node</button>
-      <button @click="insertChild">find by id = 8 and insert child to be first</button>
-      <button @click="removeChildNode">find child by id = 8 and remove</button>
-      <button @click="removeRootNode">find root node by id = 2 and remove</button>
-      <div class="search-group">
+      <div class="button-group">
+        <button @click="addChild">find by id = 8 and add child</button>
+        <button @click="insertChildAt">find by id = 8 and insert child before first child node</button>
+        <button @click="insertChild">find by id = 8 and insert child to be first</button>
+        <button @click="removeChildNode">find child by id = 8 and remove</button>
+        <button @click="removeRootNode">find root node by id = 2 and remove</button>
+      </div>
+      <div class="button-group">
         <input v-model="searchString" />
         <button @click="startSearch">search by Text</button>
+        <button @click="startSearchWithChildren">search by Text (show children)</button>
         <button @click="startRegexpSearch">search by Regexp</button>
         <button @click="startFuncSearch">search by function</button>
         <button @click="clearSearch">clear</button>
       </div>
-      <div class="style-group">
+      <div class="button-group">
         <button @click="switchToAwesome">fontawesome</button>
         <button @click="switchToDefault">defaultStyle</button>
       </div>
@@ -162,6 +173,10 @@ export default {
       const nodeManager = this.$refs.tree.getNodeManager()
       nodeManager.filter(this.searchString)
     },
+    startSearchWithChildren () {
+      const nodeManager = this.$refs.tree.getNodeManager()
+      nodeManager.filter(this.searchString, { showChildren: true })
+    },
     startRegexpSearch () {
       const nodeManager = this.$refs.tree.getNodeManager()
       nodeManager.filter(new RegExp(this.searchString, 'i'))
@@ -197,15 +212,15 @@ export default {
 .checked-nodes-text {
   white-space: pre-wrap
 }
-.button-group {
+.button-container {
   width: 200px;
   display: flex;
   flex-direction: column;
 }
-.search-group {
+.button-group {
   display: flex;  
 }
-.style-group {
-  display: flex;  
+.button-group button{
+  min-width: 150px;  
 }
 </style>

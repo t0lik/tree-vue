@@ -78,10 +78,14 @@ function clearFilter () {
     item.states.filterMatched = false
   })
 }
-function filter (searchObject) {
+function filter (searchObject, options) {
   if(!searchObject) {
     return
   }
+
+  const filterOptions = Object.assign({
+    showChildren: false
+  }, options || {})
 
   this.options.inSearch = false
   let searchFunc = name => name.toLowerCase().indexOf(searchObject.toLowerCase()) !== -1
@@ -91,16 +95,16 @@ function filter (searchObject) {
     searchFunc = (name, item) => searchObject(item)
   }
   this.visitAll(this.items, item => {
-    item.states.filtered = false
+    item.states.filtered = item.parent && item.parent.states.filtered && filterOptions.showChildren
     item.states.filterMatched = false
     const itemName = this.getName(item)
     if (searchFunc(itemName, item.item)) {
-        item.states.filtered = true
-        item.states.filterMatched = true
-        this.visitAllParents(item, parent => {
-          parent.states.filtered = true
-        })
-      }
+      item.states.filtered = true
+      item.states.filterMatched = true
+      this.visitAllParents(item, parent => {
+        parent.states.filtered = true
+      })
+    }
   })
   this.options.inSearch = true
   this.expandAll()
