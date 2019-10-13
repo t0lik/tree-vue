@@ -91,18 +91,18 @@ export default {
   display: flex;
   align-items: center;
 }
-/* .treevue-tree-node-container.no-children {
-  margin-left: 20px;
-} */
+.treevue-tree-node-container.no-children .treevue-tree-node {
+  margin-left: 22px;
+}
 .treevue-tree-node-element {
   margin-right: 0px;
 }
 .treevue-tree-node-element.treevue-tree-node-icon {
   margin-right: 2px;
 }
-.treevue-tree-node-container.no-children .treevue-tree-node-element.treevue-tree-node-checkbox {
+/* .treevue-tree-node-container.no-children .treevue-tree-node-element.treevue-tree-node-checkbox {
   margin-left: 20px;
-}
+} */
 .treevue-tree-node-container .treevue-tree-node-element.treevue-tree-node-checkbox {
   margin-right: 5px;
 }

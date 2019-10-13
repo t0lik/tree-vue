@@ -114,11 +114,11 @@ export default {
     },
     expandSelectedNode () {
       const nodeManager = this.$refs.tree.getNodeManager()
-      nodeManager.expand(nodeManager.selectedNode, true)
+      nodeManager.selectedNode.expand(true)
     },
     collapseSelectedNode () {
       const nodeManager = this.$refs.tree.getNodeManager()
-      nodeManager.collapse(nodeManager.selectedNode, true)
+      nodeManager.selectedNode.collapse(true)
     },
     expandAll () {
       const nodeManager = this.$refs.tree.getNodeManager()
@@ -131,8 +131,8 @@ export default {
     findById () {
       const nodeManager = this.$refs.tree.getNodeManager()
       const foundNode = nodeManager.findOne(item => item.item.id === 8)
-      nodeManager.setSelected(foundNode)
-      nodeManager.showNode(foundNode)
+      foundNode.select()
+      foundNode.show()
     },
     addChild () {
       const nodeManager = this.$refs.tree.getNodeManager()

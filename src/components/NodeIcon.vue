@@ -40,7 +40,7 @@ export default {
 <style scoped>
 .treevue-default-arrow {
   height: 22px;
-  width: 1.25em;
+  width: 20px;
   position: relative;
 }
 

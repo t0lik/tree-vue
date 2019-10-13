@@ -27,6 +27,10 @@ function mapNodeToItem (node, parent = null) {
 
   item.addChild = child => this.addChild(item, child)
   item.insertChild = (child, beforeChild) => this.insertChild(item, child, beforeChild)
+  item.expand = withChildren => this.expand(item, withChildren)
+  item.collapse = withChildren => this.collapse(item, withChildren)
+  item.select = () => this.setSelected(item)
+  item.show = () => this.showNode(item)
 
   return item
 }
