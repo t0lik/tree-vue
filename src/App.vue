@@ -18,6 +18,14 @@
         <button @click="collapseSelectedNode">collapse selected</button>
         <button @click="collapseAll">collapse all</button>
       </div>
+      <div class="button-group">
+        <button @click="disableSelectedNode">disable selected</button>
+        <button @click="disableSelectedNodeWithChildren">disable selected with chldren</button>
+        <button @click="disableAll">disable all</button>
+        <button @click="enableSelectedNode">enable selected</button>
+        <button @click="enableSelectedNodeWithChildren">enable selected with children</button>
+        <button @click="enableAll">enable all</button>
+      </div>
       <button @click="findById">find by id = 8 and select</button>
       <div class="button-group">
         <button @click="addChild">find by id = 8 and add child</button>
@@ -128,6 +136,30 @@ export default {
       const nodeManager = this.$refs.tree.getNodeManager()
       nodeManager.collapseAll()
     },
+    disableSelectedNode () {
+      const nodeManager = this.$refs.tree.getNodeManager()
+      nodeManager.selectedNode.disable()
+    },
+    disableSelectedNodeWithChildren () {
+      const nodeManager = this.$refs.tree.getNodeManager()
+      nodeManager.selectedNode.disable(true)
+    },
+    enableSelectedNode () {
+      const nodeManager = this.$refs.tree.getNodeManager()
+      nodeManager.selectedNode.enable()
+    },
+    enableSelectedNodeWithChildren () {
+      const nodeManager = this.$refs.tree.getNodeManager()
+      nodeManager.selectedNode.enable(true)
+    },
+    disableAll () {
+      const nodeManager = this.$refs.tree.getNodeManager()
+      nodeManager.disableAll()
+    },
+    enableAll () {
+      const nodeManager = this.$refs.tree.getNodeManager()
+      nodeManager.enableAll()
+    },
     findById () {
       const nodeManager = this.$refs.tree.getNodeManager()
       const foundNode = nodeManager.findOne(item => item.item.id === 8)
@@ -219,6 +251,9 @@ export default {
 }
 .button-group {
   display: flex;  
+}
+.button-group button {
+  min-height: 35px;  
 }
 .button-group button{
   min-width: 150px;  

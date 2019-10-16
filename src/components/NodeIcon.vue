@@ -9,6 +9,10 @@ export default {
     value: {
       type: Boolean
     },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
     styleManager: {
       type: Object,
       required: true
@@ -31,6 +35,10 @@ export default {
   },
   methods: {
     onClick () {
+      if (this.disabled) {
+        return
+      }
+
       this.$emit('input', !this.value)
     }
   }

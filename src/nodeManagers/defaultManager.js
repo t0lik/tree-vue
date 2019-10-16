@@ -9,11 +9,11 @@ function mapNodeToItem (node, parent = null) {
     id,
     parent,
     states: {
-      checked: node.checked ||  false,
-      disabled: node.disabled ||  false,
-      opened: node.opened ||  false,
-      filtered: false,
-      filterMatched: false
+      checked: node.checked || false,
+      disabled: node.disabled || false,
+      opened: node.opened || false,
+      visible: true,
+      matched: false
     }
   }
   const children = this.getChildren(node)
@@ -31,6 +31,8 @@ function mapNodeToItem (node, parent = null) {
   item.collapse = withChildren => this.collapse(item, withChildren)
   item.select = () => this.setSelected(item)
   item.show = () => this.showNode(item)
+  item.disable = withChildren => this.disable(item, withChildren)
+  item.enable = withChildren => this.enable(item, withChildren)
 
   return item
 }
@@ -40,7 +42,7 @@ function isFunction (obj) {
 }
 
 function getVisibility (node) {
-  if (this.options.inSearch && !node.states.filtered) {
+  if (!node.states.visible) {
     return false
   }
   if (node.parent && !node.parent.states.opened) {
@@ -78,12 +80,12 @@ function visitAllParents (item, itemCallback) {
 function clearFilter () {
   this.options.inSearch = false
   this.visitAll(this.items, item => {
-    item.states.filtered = false
-    item.states.filterMatched = false
+    item.states.visible = true
+    item.states.matched = false
   })
 }
 function filter (searchObject, options) {
-  if(!searchObject) {
+  if (!searchObject) {
     return
   }
 
@@ -99,14 +101,14 @@ function filter (searchObject, options) {
     searchFunc = (name, item) => searchObject(item)
   }
   this.visitAll(this.items, item => {
-    item.states.filtered = item.parent && item.parent.states.filtered && filterOptions.showChildren
-    item.states.filterMatched = false
+    item.states.visible = item.parent && item.parent.states.visible && filterOptions.showChildren
+    item.states.matched = false
     const itemName = this.getName(item)
     if (searchFunc(itemName, item.item)) {
-      item.states.filtered = true
-      item.states.filterMatched = true
+      item.states.visible = true
+      item.states.matched = true
       this.visitAllParents(item, parent => {
-        parent.states.filtered = true
+        parent.states.visible = true
       })
     }
   })
@@ -179,6 +181,44 @@ function collapseAll () {
   if (this.selectedNode && !this.getVisibility(this.selectedNode)) {
     this.selectedNode = null
   }
+}
+
+function setSingleNodeDisableState (item, state) {
+  item.states.disabled = state
+  if (this.selectedNode === item && state) {
+    this.selectedNode = null
+  }
+}
+
+function setNodeDisableState (item, state, withChildren = false) {
+  this.setSingleNodeDisableState(item, state)
+  if (withChildren) {
+    this.visitAll(item.children, child => {
+      this.setSingleNodeDisableState(child, state)
+    })
+  }
+}
+
+function setAllNodesDisableState (items, state) {
+  this.visitAll(items, item => {
+    this.setSingleNodeDisableState(item, state)
+  })
+}
+
+function disable (node, withChildren = false) {
+  this.setNodeDisableState(node, true, withChildren)
+}
+
+function disableAll () {
+  this.setAllNodesDisableState(this.items, true)
+}
+
+function enable (node, withChildren = false) {
+  this.setNodeDisableState(node, false, withChildren)
+}
+
+function enableAll () {
+  this.setAllNodesDisableState(this.items, false)
 }
 
 function getNodeById (id) {
@@ -342,6 +382,13 @@ function DefaultManager () {
   this.addChild = addChild.bind(this)
   this.insertChild = insertChild.bind(this)
   this.removeNode = removeNode.bind(this)
+  this.setSingleNodeDisableState = setSingleNodeDisableState.bind(this)
+  this.setNodeDisableState = setNodeDisableState.bind(this)
+  this.setAllNodesDisableState = setAllNodesDisableState.bind(this)
+  this.disable = disable.bind(this)
+  this.disableAll = disableAll.bind(this)
+  this.enable = enable.bind(this)
+  this.enableAll = enableAll.bind(this)
 
   this.setNodes = function (nodes) {
     this.originalItems = nodes

@@ -9,6 +9,10 @@ export default {
     value: {
       type: Boolean
     },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
     styleManager: {
       type: Object,
       required: true
@@ -34,6 +38,10 @@ export default {
   },
   methods: {
     onClick () {
+      if (this.disabled) {
+        return
+      }
+
       this.$emit('input', !this.value)
     }
   }
@@ -68,10 +76,10 @@ export default {
   transform-origin: center;
   box-sizing: content-box;
   transform: rotate(45deg) scaleY(1);
-  left: 4px;
-  top: 0px;
-  height: 9px;
-  width: 4px;
+  left: 32%;
+  top: 9%;
+  height: 50%;
+  width: 25%;
 }
 .treevue-default-checkbox.indeterminate:after {
   background: #494646;

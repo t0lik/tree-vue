@@ -1,8 +1,8 @@
 <template>
   <div class="treevue-tree-node-container" :class="nodeContainerClasses">
     <div class="treevue-tree-node" @click="onClick" :class="parentClasses(node)">
-      <node-icon v-model="node.states.opened" :styleManager="styleManager" class="treevue-tree-node-element treevue-tree-node-icon" v-if="node.children.length"/>
-      <node-checkbox v-model="node.states.checked" :styleManager="styleManager" class="treevue-tree-node-element treevue-tree-node-checkbox"/>
+      <node-icon v-model="node.states.opened" :styleManager="styleManager" class="treevue-tree-node-element treevue-tree-node-icon" v-if="node.children.length" :disabled="node.states.disabled"/>
+      <node-checkbox v-model="node.states.checked" :styleManager="styleManager" class="treevue-tree-node-element treevue-tree-node-checkbox"  :class="checkClasses" :disabled="node.states.disabled"/>
       <slot name="text" v-bind:nodeText="nodeText" v-bind:textClasses="textClasses">
         <node-text :title="nodeText" class="treevue-tree-node-element treevue-tree-node-text" :class="textClasses"/>
       </slot>
@@ -54,7 +54,13 @@ export default {
   computed: {
     textClasses () {
       return {
-        'filter-matched': this.node.states.filterMatched
+        'filter-matched': this.node.states.matched,
+        disabled: this.node.states.disabled
+      }
+    },
+    checkClasses () {
+      return {
+        disabled: this.node.states.disabled
       }
     },
     styleManager () {
@@ -79,7 +85,9 @@ export default {
       this.$emit('selected', item)
     },
     onClick () {
-      console.log('onClick')
+      if (this.node.states.disabled) {
+        return
+      }
       this.$emit('selected', this.node)
     }
   }
@@ -107,8 +115,8 @@ export default {
   margin-right: 5px;
 }
 .treevue-tree-node-container {
-  margin-top: 2px;
-  margin-bottom: 2px;
+  margin-top: 3px;
+  margin-bottom: 3px;
 }
 .treevue-tree-node-children-container {
   margin-left: 20px;
@@ -121,6 +129,13 @@ export default {
 }
 .treevue-tree-node-text {
   flex: 1
+}
+.treevue-tree-node-text.disabled {
+  color: #979191
+}
+.treevue-tree-node-checkbox.disabled {
+  color: #979191;
+  border-color: #979191
 }
 .treevue-tree-node-text.filter-matched {
   font-weight: bold;
