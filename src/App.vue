@@ -50,6 +50,10 @@
         <button @click="switchToAwesome">fontawesome</button>
         <button @click="switchToDefault">defaultStyle</button>
       </div>
+      <div class="button-group">
+        <button @click="sortAsc">ascending sort</button>
+        <button @click="sortDesc">descending sort</button>
+      </div>
       <span class="checked-nodes-text">{{ outputString }}</span>
     </div>
   </div>
@@ -69,12 +73,16 @@ export default {
     return {
       treeOptions: {
         checkOnSelect: false,
+        openOnSelect: false,
+        autoSort: true,
         styleManager: defaultStyleManager,
         childrenProp: 'kids',
         nameProp: item => `${item.name} (${item.id})`
       },
       selectedNode: null,
       searchString: null,
+      descComparator: (item1, item2) => 0 - item1.item.name.localeCompare(item2.item.name),
+      ascComparator: (item1, item2) => item1.item.name.localeCompare(item2.item.name),
       nodes: [{
         id: 0,
         name: 'ноль'
@@ -103,87 +111,79 @@ export default {
       outputString: ''
     }
   },
+  computed: {
+    nodeManager () {
+      if (!this.$refs.tree) {
+        return null
+      }
+
+      return this.$refs.tree.getNodeManager()
+    }
+  },
   methods: {
     outputMessage(message) {
       this.outputString += '\n' + message
     },
     getCheckNodes () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      const checkedNodes = nodeManager.getChecked()
+      const checkedNodes = this.nodeManager.getChecked()
       this.outputMessage(JSON.stringify(checkedNodes.map(x => ({
         item: x.item,
         states: x.states
       })), null, 2))
     },
     checkAllNodes () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      nodeManager.checkAll()
+      this.nodeManager.checkAll()
     },
     uncheckAllNodes () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      nodeManager.uncheckAll()
+      this.nodeManager.uncheckAll()
     },
     checkVisibleNodes () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      nodeManager.checkVisible()
+      this.nodeManager.checkVisible()
     },
     expandSelectedNode () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      nodeManager.selectedNode.expand(true)
+      this.nodeManager.selectedNode.expand(true)
     },
     collapseSelectedNode () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      nodeManager.selectedNode.collapse(true)
+      this.nodeManager.selectedNode.collapse(true)
     },
     expandAll () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      nodeManager.expandAll()
+      this.nodeManager.expandAll()
     },
     collapseAll () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      nodeManager.collapseAll()
+      this.nodeManager.collapseAll()
     },
     disableSelectedNode () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      nodeManager.selectedNode.disable()
+      this.nodeManager.selectedNode.disable()
     },
     disableSelectedNodeWithChildren () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      nodeManager.selectedNode.disable(true)
+      this.nodeManager.selectedNode.disable(true)
     },
     enableSelectedNode () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      nodeManager.selectedNode.enable()
+      this.nodeManager.selectedNode.enable()
     },
     enableSelectedNodeWithChildren () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      nodeManager.selectedNode.enable(true)
+      this.nodeManager.selectedNode.enable(true)
     },
     disableAll () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      nodeManager.disableAll()
+      this.nodeManager.disableAll()
     },
     enableAll () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      nodeManager.enableAll()
+      this.nodeManager.enableAll()
     },
     findById () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      const foundNode = nodeManager.findOne(item => item.item.id === 8)
+      const foundNode = this.nodeManager.findOne(item => item.item.id === 8)
       foundNode.select()
       foundNode.show()
     },
     addChild () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      const foundNode = nodeManager.findOne(item => item.item.id === 8)
+      const foundNode = this.nodeManager.findOne(item => item.item.id === 8)
       foundNode.addChild({
         id: 10,
         name: 'десять'
       })
     },
     insertChildAt () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      const foundNode = nodeManager.findOne(item => item.item.id === 8)
+      const foundNode = this.nodeManager.findOne(item => item.item.id === 8)
       const firstChild = foundNode.children[0]
       foundNode.insertChild({
         id: 10,
@@ -191,42 +191,34 @@ export default {
       }, firstChild)
     },
     insertChild () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      const foundNode = nodeManager.findOne(item => item.item.id === 8)
+      const foundNode = this.nodeManager.findOne(item => item.item.id === 8)
       foundNode.insertChild({
         id: 11,
         name: 'одинадцать'
       })
     },
     removeChildNode () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      const foundNode = nodeManager.findOne(item => item.item.id === 8)
+      const foundNode = this.nodeManager.findOne(item => item.item.id === 8)
       nodeManager.removeNode(foundNode)
     },
     removeRootNode () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      const foundNode = nodeManager.findOne(item => item.item.id === 2)
+      const foundNode = this.nodeManager.findOne(item => item.item.id === 2)
       nodeManager.removeNode(foundNode)
     },
     startSearch () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      nodeManager.filter(this.searchString)
+      this.nodeManager.filter(this.searchString)
     },
     startSearchWithChildren () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      nodeManager.filter(this.searchString, { showChildren: true })
+      this.nodeManager.filter(this.searchString, { showChildren: true })
     },
     startRegexpSearch () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      nodeManager.filter(new RegExp(this.searchString, 'i'))
+      this.nodeManager.filter(new RegExp(this.searchString, 'i'))
     },
     startFuncSearch () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      nodeManager.filter(item => item.name.toLowerCase().indexOf(this.searchString.toLowerCase()) !== -1)
+      this.nodeManager.filter(item => item.name.toLowerCase().indexOf(this.searchString.toLowerCase()) !== -1)
     },
     clearSearch () {
-      const nodeManager = this.$refs.tree.getNodeManager()
-      nodeManager.clearFilter()
+      this.nodeManager.clearFilter()
       this.searchString = ''
     },
     switchToAwesome () {
@@ -247,6 +239,12 @@ export default {
     },
     onNodeEnabled (node) {
       this.outputMessage(this.outputString = `enabled node: ${JSON.stringify(node.item, null, 2)}`)
+    },
+    sortAsc () {
+      this.nodeManager.sort(this.ascComparator)
+    },
+    sortDesc () {
+      this.nodeManager.sort(this.descComparator)
     }
   }
 }

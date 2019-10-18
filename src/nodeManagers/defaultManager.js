@@ -18,7 +18,9 @@ function mapNodeToItem (node, parent = null) {
   }
   const children = this.getChildren(node)
   item.children = children ? children.map(x => this.mapNodeToItem(x, item)) : []
-
+  if (this.treeOptions.autoSort) {
+    this.sortNodes(item.children, this.treeOptions.sortComparator)
+  }
   item.states.isIndeterminate = () => {
     const isSomeChildrenChecked = item.children.some(x => x.states.checked)
     const isAllChildrenChecked = item.children.every(x => x.states.checked)
@@ -314,9 +316,14 @@ function showNode (node) {
 function setSelectedNode (node) {
   this.selectedNode = node
   this.tree.$emit('node:selected', node)
-
-  if (this.treeOptions.checkOnSelect && node) {
+  if (!node) {
+    return
+  }
+  if (this.treeOptions.checkOnSelect) {
     this.setNodeCheckState(node, true)
+  }
+  if (this.treeOptions.openOnSelect) {
+    this.expand(node)
   }
 }
 
@@ -340,6 +347,9 @@ function getChildren (node) {
 function addChild (parent, node) {
   const child = this.mapNodeToItem(node, parent)
   parent.children.push(child)
+  if (this.treeOptions.autoSort) {
+    this.sortNodes(parent.children, this.treeOptions.sortComparator)
+  }
   this.tree.$emit('node:child:added', node, child)
 }
 
@@ -350,6 +360,9 @@ function insertChild (parent, node, beforeNode) {
     parent.children.splice(insertIndex, 0, child)
   } else {
     parent.children.unshift(child)
+  }
+  if (this.treeOptions.autoSort) {
+    this.sortNodes(parent.children, this.treeOptions.sortComparator)
   }
   this.tree.$emit('node:child:added', node, child)
 }
@@ -386,6 +399,23 @@ function removeNode (node) {
   this.removeChildNode(parent, itemChildren, node)
   if (this.selectedNode === node) {
     this.setSelected(null)
+  }
+}
+
+function sortNodes (nodes, comparator) {
+  if (comparator) {
+    nodes.sort(comparator)
+  } else {
+    nodes.sort((node1, node2) => this.getName(node1).localeCompare(this.getName(node2)))
+  }
+}
+
+function sortNodesRecursive (nodes, comparator) {
+  const compareFunc = comparator || this.treeOptions.sortComparator
+  this.sortNodes(nodes, compareFunc)
+
+  for (const item of nodes) {
+    this.sortNodesRecursive(item.children, comparator)
   }
 }
 
@@ -445,10 +475,18 @@ function DefaultManager (treeComponent) {
   this.disableAll = disableAll.bind(this)
   this.enable = enable.bind(this)
   this.enableAll = enableAll.bind(this)
-
+  this.sortNodes = sortNodes.bind(this)
+  this.sortNodesRecursive = sortNodesRecursive.bind(this)
+  this.sort = function (comparator) {
+    this.sortNodesRecursive(this.items, comparator)
+  }
   this.setNodes = function (nodes) {
     this.originalItems = nodes
-    this.items = nodes.map(x => this.mapNodeToItem(x))
+    const items = nodes.map(x => this.mapNodeToItem(x))
+    if (this.treeOptions.autoSort) {
+      this.sortNodes(items, this.treeOptions.sortComparator)
+    }
+    this.items = items
   }.bind(this)
 }
 
