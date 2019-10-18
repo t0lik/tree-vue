@@ -1,14 +1,14 @@
 <template>
   <div class="treevue-tree-node-container" :class="nodeContainerClasses">
     <div class="treevue-tree-node" @click="onClick" :class="parentClasses(node)">
-      <node-icon v-model="node.states.opened" :styleManager="styleManager" class="treevue-tree-node-element treevue-tree-node-icon" v-if="node.children.length" :disabled="node.states.disabled"/>
-      <node-checkbox v-model="node.states.checked" :styleManager="styleManager" class="treevue-tree-node-element treevue-tree-node-checkbox"  :class="checkClasses" :disabled="node.states.disabled"/>
+      <node-icon :value="node.states.opened" @input="onNodeOpenStateChanging" :styleManager="styleManager" class="treevue-tree-node-element treevue-tree-node-icon" v-if="node.children.length" :disabled="node.states.disabled"/>
+      <node-checkbox :value="node.states.checked" @input="onNodeCheckStateChanging" :styleManager="styleManager" class="treevue-tree-node-element treevue-tree-node-checkbox"  :class="checkClasses" :disabled="node.states.disabled"/>
       <slot name="text" v-bind:nodeText="nodeText" v-bind:textClasses="textClasses">
         <node-text :title="nodeText" class="treevue-tree-node-element treevue-tree-node-text" :class="textClasses"/>
       </slot>
     </div>
     <div class="treevue-tree-node-children-container" v-if="node.states.opened">
-      <node :options="options" :state="state" :manager="manager" v-for="child in visibleItems" :key="child.id" :node="child" class="treevue-tree-node-child" @selected="onSelected" :parentClasses="parentClasses">
+      <node :options="options" :state="state" :manager="manager" v-for="child in visibleItems" :key="child.id" :node="child" class="treevue-tree-node-child" :parentClasses="parentClasses" @clicked="onClicked">
         <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope"><slot :name="slot" v-bind="scope"/></template>
       </node>
     </div>
@@ -81,14 +81,21 @@ export default {
   mounted () {
   },
   methods: {
-    onSelected (item) {
-      this.$emit('selected', item)
+    onClicked (item) {
+      this.$emit('clicked', item)
+    },
+    onNodeCheckStateChanging (state) {
+      this.manager.setNodeCheckState(this.node, state)
+    },
+    onNodeOpenStateChanging (state) {
+      this.manager.setNodeOpenState(this.node, state)
     },
     onClick () {
       if (this.node.states.disabled) {
         return
       }
-      this.$emit('selected', this.node)
+      this.manager.setSelected(this.node)
+      this.$emit('clicked', this.node)
     }
   }
 }

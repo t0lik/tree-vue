@@ -30,9 +30,12 @@ function mapNodeToItem (node, parent = null) {
   item.expand = withChildren => this.expand(item, withChildren)
   item.collapse = withChildren => this.collapse(item, withChildren)
   item.select = () => this.setSelected(item)
+  item.deselect = () => this.setSelected(null)
   item.show = () => this.showNode(item)
   item.disable = withChildren => this.disable(item, withChildren)
   item.enable = withChildren => this.enable(item, withChildren)
+  item.check = withChildren => this.check(item, withChildren)
+  item.uncheck = withChildren => this.uncheck(item, withChildren)
 
   return item
 }
@@ -83,7 +86,9 @@ function clearFilter () {
     item.states.visible = true
     item.states.matched = false
   })
+  this.tree.$emit('tree:filter:cleared')
 }
+
 function filter (searchObject, options) {
   if (!searchObject) {
     return
@@ -100,6 +105,7 @@ function filter (searchObject, options) {
   } else if (isFunction(searchObject)) {
     searchFunc = (name, item) => searchObject(item)
   }
+  const matchedNodes = []
   this.visitAll(this.items, item => {
     item.states.visible = item.parent && item.parent.states.visible && filterOptions.showChildren
     item.states.matched = false
@@ -107,6 +113,7 @@ function filter (searchObject, options) {
     if (searchFunc(itemName, item.item)) {
       item.states.visible = true
       item.states.matched = true
+      matchedNodes.push(item)
       this.visitAllParents(item, parent => {
         parent.states.visible = true
       })
@@ -114,6 +121,7 @@ function filter (searchObject, options) {
   })
   this.options.inSearch = true
   this.expandAll()
+  this.tree.$emit('tree:filtered', matchedNodes, searchObject)
 }
 
 function getCheckedNodes () {
@@ -135,25 +143,48 @@ function setAllNodesCheckState (items, state, onlyVisible = false) {
 
 function checkAllNodes (onlyVisible = false) {
   this.setAllNodesCheckState(this.items, true, onlyVisible)
+  this.tree.$emit('tree:checked:all')
 }
 
 function checkVisibleNodes () {
   this.setAllNodesCheckState(this.items, true, true)
+  this.tree.$emit('tree:checked:visible')
 }
 
 function uncheckAllNodes (onlyVisible = false) {
   this.setAllNodesCheckState(this.items, false, onlyVisible)
+  this.tree.$emit('tree:unchecked:all')
 }
 
 function uncheckVisibleNodes () {
   this.setAllNodesCheckState(this.items, false, true)
+  this.tree.$emit('tree:unchecked:visible')
+}
+
+function setNodeCheckState (item, state, withChildren = false) {
+  item.states.checked = state
+  this.tree.$emit(state ? 'node:checked' : 'node:unchecked', item)
+  if (withChildren) {
+    this.visitAll(item.children, child => {
+      this.setNodeCheckState(child, state, true)
+    })
+  }
+}
+
+function checkNode (node, withChildren = false) {
+  this.setNodeCheckState(node, true, withChildren)
+}
+
+function uncheckNode (node, withChildren = false) {
+  this.setNodeCheckState(node, false, withChildren)
 }
 
 function setNodeOpenState (item, state, withChildren = false) {
   item.states.opened = state
+  this.tree.$emit(state ? 'node:expand' : 'node:collapse', item)
   if (withChildren) {
-    this.visitAll(item.children, item => {
-      item.states.opened = state
+    this.visitAll(item.children, child => {
+      this.setNodeOpenState(child, state, true)
     })
   }
 }
@@ -170,6 +201,7 @@ function expandNode (node, withChildren = false) {
 
 function expandAll () {
   this.setAllNodesOpenState(this.items, true)
+  this.tree.$emit('tree:expand:all')
 }
 
 function collapseNode (node, withChildren = false) {
@@ -179,14 +211,20 @@ function collapseNode (node, withChildren = false) {
 function collapseAll () {
   this.setAllNodesOpenState(this.items, false)
   if (this.selectedNode && !this.getVisibility(this.selectedNode)) {
-    this.selectedNode = null
+    this.setSelected(null)
   }
+  this.tree.$emit('tree:collapse:all')
 }
 
 function setSingleNodeDisableState (item, state) {
   item.states.disabled = state
   if (this.selectedNode === item && state) {
-    this.selectedNode = null
+    this.setSelected(null)
+  }
+  if (state) {
+    this.tree.$emit('node:disabled', item)
+  } else {
+    this.tree.$emit('node:enabled', item)
   }
 }
 
@@ -201,8 +239,11 @@ function setNodeDisableState (item, state, withChildren = false) {
 
 function setAllNodesDisableState (items, state) {
   this.visitAll(items, item => {
-    this.setSingleNodeDisableState(item, state)
+    item.states.disabled = state
   })
+  if (state) {
+    this.setSelected(null)
+  }
 }
 
 function disable (node, withChildren = false) {
@@ -211,6 +252,7 @@ function disable (node, withChildren = false) {
 
 function disableAll () {
   this.setAllNodesDisableState(this.items, true)
+  this.tree.$emit('tree:disabled:all')
 }
 
 function enable (node, withChildren = false) {
@@ -219,6 +261,7 @@ function enable (node, withChildren = false) {
 
 function enableAll () {
   this.setAllNodesDisableState(this.items, false)
+  this.tree.$emit('tree:enabled:all')
 }
 
 function getNodeById (id) {
@@ -270,8 +313,10 @@ function showNode (node) {
 
 function setSelectedNode (node) {
   this.selectedNode = node
-  if (this.treeOptions.checkOnSelect) {
-    node.states.checked = true
+  this.tree.$emit('node:selected', node)
+
+  if (this.treeOptions.checkOnSelect && node) {
+    this.setNodeCheckState(node, true)
   }
 }
 
@@ -293,18 +338,20 @@ function getChildren (node) {
 }
 
 function addChild (parent, node) {
-  const nodeItem = this.mapNodeToItem(node, parent)
-  parent.children.push(nodeItem)
+  const child = this.mapNodeToItem(node, parent)
+  parent.children.push(child)
+  this.tree.$emit('node:child:added', node, child)
 }
 
 function insertChild (parent, node, beforeNode) {
-  const nodeItem = this.mapNodeToItem(node, parent)
+  const child = this.mapNodeToItem(node, parent)
   if (beforeNode) {
     const insertIndex = parent.children.indexOf(beforeNode)
-    parent.children.splice(insertIndex, 0, nodeItem)
+    parent.children.splice(insertIndex, 0, child)
   } else {
-    parent.children.unshift(nodeItem)
+    parent.children.unshift(child)
   }
+  this.tree.$emit('node:child:added', node, child)
 }
 
 function removeRootNode (items, originalItems, node) {
@@ -313,6 +360,7 @@ function removeRootNode (items, originalItems, node) {
   const item = node.item
   const removingItemIndex = originalItems.indexOf(item)
   originalItems.splice(removingItemIndex, 1)
+  this.tree.$emit('node:child:removed', node)
 }
 
 function removeChildNode (parent, itemChildren, node) {
@@ -320,22 +368,24 @@ function removeChildNode (parent, itemChildren, node) {
   parent.children.splice(removingIndex, 1)
   const removingItemIndex = itemChildren.indexOf(node.item)
   itemChildren.splice(removingItemIndex, 1)
+  this.tree.$emit('node:child:removed', node)
 }
+
 function removeNode (node) {
   // TODO: учесть что children могут быть функцией
   const parent = node.parent
   if (!parent) {
-    removeRootNode(this.items, this.originalItems, node)
+    this.removeRootNode(this.items, this.originalItems, node)
     if (this.selectedNode === node) {
-      this.selectedNode = null
+      this.setSelected(null)
     }
     return
   }
   const parentItem = parent.item
   const itemChildren = this.getChildren(parentItem)
-  removeChildNode(parent, itemChildren, node)
+  this.removeChildNode(parent, itemChildren, node)
   if (this.selectedNode === node) {
-    this.selectedNode = null
+    this.setSelected(null)
   }
 }
 
@@ -343,7 +393,8 @@ function initialize (treeOptions) {
   this.treeOptions = treeOptions
 }
 
-function DefaultManager () {
+function DefaultManager (treeComponent) {
+  this.tree = treeComponent
   this.treeOptions = null
   this.options = {
     inSearch: false
@@ -372,6 +423,9 @@ function DefaultManager () {
   this.clearFilter = clearFilter.bind(this)
   this.visitAll = visitAllNodes.bind(this)
   this.setAllNodesCheckState = setAllNodesCheckState.bind(this)
+  this.setNodeCheckState = setNodeCheckState.bind(this)
+  this.check = checkNode.bind(this)
+  this.uncheck = uncheckNode.bind(this)
   this.setAllNodesOpenState = setAllNodesOpenState.bind(this)
   this.setNodeOpenState = setNodeOpenState.bind(this)
   this.showNode = showNode.bind(this)
@@ -381,6 +435,8 @@ function DefaultManager () {
   this.getChildren = getChildren.bind(this)
   this.addChild = addChild.bind(this)
   this.insertChild = insertChild.bind(this)
+  this.removeRootNode = removeRootNode.bind(this)
+  this.removeChildNode = removeChildNode.bind(this)
   this.removeNode = removeNode.bind(this)
   this.setSingleNodeDisableState = setSingleNodeDisableState.bind(this)
   this.setNodeDisableState = setNodeDisableState.bind(this)

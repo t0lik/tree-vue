@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <tree :nodes="nodes" ref="tree" :options="treeOptions">
+    <tree :nodes="nodes" ref="tree" :options="treeOptions" 
+      @tree:checked:all="onCheckedAll" 
+      @tree:filtered="onFiltered"
+      @node:disabled="onNodeDisabled"
+      @node:enabled="onNodeEnabled">
       <!-- <template #text="slotProps">
         <label :class="slotProps.textClasses"> {{ slotProps.nodeText }}</label>
       </template> -->
@@ -46,7 +50,7 @@
         <button @click="switchToAwesome">fontawesome</button>
         <button @click="switchToDefault">defaultStyle</button>
       </div>
-      <span class="checked-nodes-text">{{ checkedNodesString }}</span>
+      <span class="checked-nodes-text">{{ outputString }}</span>
     </div>
   </div>
 </template>
@@ -96,17 +100,20 @@ export default {
         id: 2,
         name: 'два'
       }],
-      checkedNodesString: ''
+      outputString: ''
     }
   },
   methods: {
+    outputMessage(message) {
+      this.outputString += '\n' + message
+    },
     getCheckNodes () {
       const nodeManager = this.$refs.tree.getNodeManager()
       const checkedNodes = nodeManager.getChecked()
-      this.checkedNodesString = JSON.stringify(checkedNodes.map(x => ({
+      this.outputMessage(JSON.stringify(checkedNodes.map(x => ({
         item: x.item,
         states: x.states
-      })), null, 2)
+      })), null, 2))
     },
     checkAllNodes () {
       const nodeManager = this.$refs.tree.getNodeManager()
@@ -227,6 +234,19 @@ export default {
     },
     switchToDefault () {
       this.treeOptions.styleManager = defaultStyleManager
+    },
+    onCheckedAll () {
+      this.outputMessage('checked all event is fired')
+    },
+    onFiltered (matchedNodes, searchString) {
+      this.outputMessage(`searchString: ${searchString}
+      ${JSON.stringify(matchedNodes.map(x => x.item), null, 2)}`)
+    },
+    onNodeDisabled (node) {
+      this.outputMessage(`disabled node: ${JSON.stringify(node.item, null, 2)}`)
+    },
+    onNodeEnabled (node) {
+      this.outputMessage(this.outputString = `enabled node: ${JSON.stringify(node.item, null, 2)}`)
     }
   }
 }
