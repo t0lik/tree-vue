@@ -12,22 +12,43 @@
     <div class="button-container">
       <div class="button-group">
         <button @click="getCheckNodes">get checked</button>
+      </div>
+      <div class="button-group">
+        <button @click="checkSelectedNode">check selected</button>
+        <button @click="checkSelectedNodeWithChildren">check selected with children</button>
+        <button @click="checkSelectedNodeChildren">check selected node children</button>
         <button @click="checkAllNodes">check all</button>
-        <button @click="uncheckAllNodes">uncheck all</button>
         <button @click="checkVisibleNodes">check visible</button>
       </div>
       <div class="button-group">
+        <button @click="uncheckSelectedNode">uncheck selected</button>
+        <button @click="uncheckSelectedNodeWithChildren">uncheck selected with children</button>
+        <button @click="uncheckSelectedNodeChildren">uncheck selected node children</button>
+        <button @click="uncheckAllNodes">uncheck all</button>
+        <button @click="uncheckVisibleNodes">uncheck visible</button>
+      </div>
+      <div class="button-group">
         <button @click="expandSelectedNode">expand selected</button>
+        <button @click="expandSelectedNodeWithChildren">expand selected with children</button>
+        <button @click="expandSelectedNodeChildren">expand selected node children</button>
         <button @click="expandAll">expand all</button>
+      </div>
+      <div class="button-group">
         <button @click="collapseSelectedNode">collapse selected</button>
+        <button @click="collapseSelectedNodeWithChildren">collapse selected with children</button>
+        <button @click="collapseSelectedNodeChildren">collapse selected node children</button>
         <button @click="collapseAll">collapse all</button>
       </div>
       <div class="button-group">
         <button @click="disableSelectedNode">disable selected</button>
         <button @click="disableSelectedNodeWithChildren">disable selected with chldren</button>
+        <button @click="disableSelectedNodeChildren">disable selected node chldren</button>
         <button @click="disableAll">disable all</button>
+      </div>
+      <div class="button-group">
         <button @click="enableSelectedNode">enable selected</button>
         <button @click="enableSelectedNodeWithChildren">enable selected with children</button>
+        <button @click="enableSelectedNodeChildren">enable selected node children</button>
         <button @click="enableAll">enable all</button>
       </div>
       <button @click="findById">find by id = 8 and select</button>
@@ -179,11 +200,44 @@ export default {
     checkVisibleNodes () {
       this.nodeManager.checkVisible()
     },
+    uncheckVisibleNodes () {
+      this.nodeManager.uncheckVisible()
+    },
+    checkSelectedNode () {
+      this.nodeManager.selectedNode.check(false)
+    },
+    checkSelectedNodeWithChildren () {
+      this.nodeManager.selectedNode.check(true)
+    },
+    checkSelectedNodeChildren () {
+      this.nodeManager.selectedNode.checkChildren()
+    },
+    uncheckSelectedNode () {
+      this.nodeManager.selectedNode.uncheck(false)
+    },
+    uncheckSelectedNodeWithChildren () {
+      this.nodeManager.selectedNode.uncheck(true)
+    },
+    uncheckSelectedNodeChildren () {
+      this.nodeManager.selectedNode.uncheckChildren()
+    },
     expandSelectedNode () {
+      this.nodeManager.selectedNode.expand(false)
+    },
+    expandSelectedNodeWithChildren () {
       this.nodeManager.selectedNode.expand(true)
     },
+    expandSelectedNodeChildren () {
+      this.nodeManager.selectedNode.expandChildren()
+    },
     collapseSelectedNode () {
+      this.nodeManager.selectedNode.collapse(false)
+    },
+    collapseSelectedNodeWithChildren () {
       this.nodeManager.selectedNode.collapse(true)
+    },
+    collapseSelectedNodeChildren () {
+      this.nodeManager.selectedNode.collapseChildren()
     },
     expandAll () {
       this.nodeManager.expandAll()
@@ -197,11 +251,17 @@ export default {
     disableSelectedNodeWithChildren () {
       this.nodeManager.selectedNode.disable(true)
     },
+    disableSelectedNodeChildren () {
+      this.nodeManager.selectedNode.disableChildren()
+    },
     enableSelectedNode () {
       this.nodeManager.selectedNode.enable()
     },
     enableSelectedNodeWithChildren () {
       this.nodeManager.selectedNode.enable(true)
+    },
+    enableSelectedNodeChildren () {
+      this.nodeManager.selectedNode.enableChildren()
     },
     disableAll () {
       this.nodeManager.disableAll()

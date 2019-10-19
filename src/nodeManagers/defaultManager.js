@@ -30,15 +30,26 @@ function mapNodeToItem (node, parent = null) {
 
   item.addChild = child => this.addChild(item, child)
   item.insertChild = (child, beforeChild) => this.insertChild(item, child, beforeChild)
+
   item.expand = withChildren => this.expand(item, withChildren)
+  item.expandChildren = () => this.expandChildren(item)
   item.collapse = withChildren => this.collapse(item, withChildren)
+  item.collapseChildren = () => this.collapseChildren(item)
+
   item.select = () => this.setSelected(item)
   item.deselect = () => this.setSelected(null)
+
   item.show = () => this.showNode(item)
+
   item.disable = withChildren => this.disable(item, withChildren)
+  item.disableChildren = () => this.disableChildren(item)
   item.enable = withChildren => this.enable(item, withChildren)
+  item.enableChildren = () => this.enableChildren(item)
+
   item.check = withChildren => this.check(item, withChildren)
+  item.checkChildren = () => this.checkChildren(item)
   item.uncheck = withChildren => this.uncheck(item, withChildren)
+  item.uncheckChildren = () => this.uncheckChildren(item)
 
   return item
 }
@@ -168,28 +179,44 @@ function setNodeCheckState (item, state, withChildren = false) {
   item.states.checked = state
   this.tree.$emit(state ? 'node:checked' : 'node:unchecked', item)
   if (withChildren) {
-    this.visitAll(item.children, child => {
-      this.setNodeCheckState(child, state, true)
-    })
+    this.setNodeChildrenCheckState(item, state)
   }
+}
+
+function setNodeChildrenCheckState (item, state) {
+  this.visitAll(item.children, child => {
+    this.setNodeCheckState(child, state, true)
+  })
 }
 
 function checkNode (node, withChildren = false) {
   this.setNodeCheckState(node, true, withChildren)
 }
 
+function checkChildren (node) {
+  this.setNodeChildrenCheckState(node, true)
+}
+
 function uncheckNode (node, withChildren = false) {
   this.setNodeCheckState(node, false, withChildren)
+}
+
+function uncheckChildren (node) {
+  this.setNodeChildrenCheckState(node, false)
 }
 
 function setNodeOpenState (item, state, withChildren = false) {
   item.states.opened = state
   this.tree.$emit(state ? 'node:expand' : 'node:collapse', item)
   if (withChildren) {
-    this.visitAll(item.children, child => {
-      this.setNodeOpenState(child, state, true)
-    })
+    this.setNodeChildrenOpenState(item, state)
   }
+}
+
+function setNodeChildrenOpenState (item, state) {
+  this.visitAll(item.children, child => {
+    this.setNodeOpenState(child, state, true)
+  })
 }
 
 function setAllNodesOpenState (items, state) {
@@ -202,6 +229,10 @@ function expandNode (node, withChildren = false) {
   this.setNodeOpenState(node, true, withChildren)
 }
 
+function expandChildren (node) {
+  this.setNodeChildrenOpenState(node, true)
+}
+
 function expandAll () {
   this.setAllNodesOpenState(this.items, true)
   this.tree.$emit('tree:expand:all')
@@ -209,6 +240,10 @@ function expandAll () {
 
 function collapseNode (node, withChildren = false) {
   this.setNodeOpenState(node, false, withChildren)
+}
+
+function collapseChildren (node) {
+  this.setNodeChildrenOpenState(node, false)
 }
 
 function collapseAll () {
@@ -240,6 +275,12 @@ function setNodeDisableState (item, state, withChildren = false) {
   }
 }
 
+function setNodeChildrenDisableState (item, state) {
+  this.visitAll(item.children, child => {
+    this.setSingleNodeDisableState(child, state)
+  })
+}
+
 function setAllNodesDisableState (items, state) {
   this.visitAll(items, item => {
     item.states.disabled = state
@@ -253,6 +294,10 @@ function disable (node, withChildren = false) {
   this.setNodeDisableState(node, true, withChildren)
 }
 
+function disableChildren (node) {
+  this.setNodeChildrenDisableState(node, true)
+}
+
 function disableAll () {
   this.setAllNodesDisableState(this.items, true)
   this.tree.$emit('tree:disabled:all')
@@ -260,6 +305,10 @@ function disableAll () {
 
 function enable (node, withChildren = false) {
   this.setNodeDisableState(node, false, withChildren)
+}
+
+function enableChildren (node) {
+  this.setNodeChildrenDisableState(node, false)
 }
 
 function enableAll () {
@@ -441,7 +490,9 @@ function DefaultManager (treeComponent) {
   this.uncheckAll = uncheckAllNodes.bind(this)
   this.uncheckVisible = uncheckVisibleNodes.bind(this)
   this.expand = expandNode.bind(this)
+  this.expandChildren = expandChildren.bind(this)
   this.collapse = collapseNode.bind(this)
+  this.collapseChildren = collapseChildren.bind(this)
   this.expandAll = expandAll.bind(this)
   this.collapseAll = collapseAll.bind(this)
   this.getById = getNodeById.bind(this)
@@ -455,10 +506,14 @@ function DefaultManager (treeComponent) {
   this.visitAll = visitAllNodes.bind(this)
   this.setAllNodesCheckState = setAllNodesCheckState.bind(this)
   this.setNodeCheckState = setNodeCheckState.bind(this)
+  this.setNodeChildrenCheckState = setNodeChildrenCheckState.bind(this)
   this.check = checkNode.bind(this)
+  this.checkChildren = checkChildren.bind(this)
   this.uncheck = uncheckNode.bind(this)
+  this.uncheckChildren = uncheckChildren.bind(this)
   this.setAllNodesOpenState = setAllNodesOpenState.bind(this)
   this.setNodeOpenState = setNodeOpenState.bind(this)
+  this.setNodeChildrenOpenState = setNodeChildrenOpenState.bind(this)
   this.showNode = showNode.bind(this)
   this.visitAllParents = visitAllParents.bind(this)
   this.mapNodeToItem = mapNodeToItem.bind(this)
@@ -471,10 +526,13 @@ function DefaultManager (treeComponent) {
   this.removeNode = removeNode.bind(this)
   this.setSingleNodeDisableState = setSingleNodeDisableState.bind(this)
   this.setNodeDisableState = setNodeDisableState.bind(this)
+  this.setNodeChildrenDisableState = setNodeChildrenDisableState.bind(this)
   this.setAllNodesDisableState = setAllNodesDisableState.bind(this)
   this.disable = disable.bind(this)
+  this.disableChildren = disableChildren.bind(this)
   this.disableAll = disableAll.bind(this)
   this.enable = enable.bind(this)
+  this.enableChildren = enableChildren.bind(this)
   this.enableAll = enableAll.bind(this)
   this.sortNodes = sortNodes.bind(this)
   this.sortNodesRecursive = sortNodesRecursive.bind(this)
