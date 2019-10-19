@@ -33,6 +33,8 @@ export default {
         styleManager: defaultStyleManager,
         multiselect: false,
         showCheckbox: true,
+        showIcon: false,
+        hideEmptyIcon: true,
         checkOnSelect: false,
         openOnSelect: false,
         autoSort: false,
@@ -51,6 +53,9 @@ export default {
     },
     'options.showCheckbox' (newValue) {
       this.treeOptions.showCheckbox = this.options.showCheckbox
+    },
+    'options.showIcon' (newValue) {
+      this.treeOptions.showIcon = this.options.showIcon
     }
   },
   computed: {

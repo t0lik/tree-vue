@@ -14,7 +14,8 @@ function mapNodeToItem (node, parent = null) {
       opened: node.opened || false,
       visible: true,
       matched: false
-    }
+    },
+    icon: node.icon || null
   }
   const children = this.getChildren(node)
   item.children = children ? children.map(x => this.mapNodeToItem(x, item)) : []

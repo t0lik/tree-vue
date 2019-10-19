@@ -10,6 +10,9 @@
         :class="checkClasses"
         :disabled="node.states.disabled"
         v-if="showCheckbox"/>
+      <slot name="icon" v-bind:iconClasses="iconClasses" v-if="showIcon && (!hideEmptyIcon || node.icon)">
+        <node-icon class="treevue-tree-node-element treevue-tree-node-icon" :class="iconClasses" :iconClass="node.icon"/>
+      </slot>
       <slot name="text" v-bind:nodeText="nodeText" v-bind:textClasses="textClasses">
         <node-text :title="nodeText" class="treevue-tree-node-element treevue-tree-node-text" :class="textClasses"/>
       </slot>
@@ -26,6 +29,7 @@
 import NodeExpander from './NodeExpander'
 import NodeText from './NodeText'
 import NodeCheckbox from './NodeCheckbox'
+import NodeIcon from './NodeIcon'
 
 export default {
   name: 'Node',
@@ -52,7 +56,8 @@ export default {
   components: {
     NodeExpander,
     NodeText,
-    NodeCheckbox
+    NodeCheckbox,
+    NodeIcon
   },
   data () {
     return {
@@ -62,6 +67,11 @@ export default {
     textClasses () {
       return {
         'filter-matched': this.node.states.matched,
+        disabled: this.node.states.disabled
+      }
+    },
+    iconClasses () {
+      return {
         disabled: this.node.states.disabled
       }
     },
@@ -75,6 +85,12 @@ export default {
     },
     showCheckbox () {
       return this.options.showCheckbox
+    },
+    showIcon () {
+      return this.options.showIcon
+    },
+    hideEmptyIcon () {
+      return this.options.hideEmptyIcon
     },
     nodeContainerClasses () {
       return {
@@ -148,6 +164,9 @@ export default {
   flex: 1;
   margin-top: 2px;
   margin-bottom: 2px;
+}
+.treevue-tree-node-icon {
+  margin: 2px;
 }
 .treevue-tree-node-text.disabled {
   color: #979191

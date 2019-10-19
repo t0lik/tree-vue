@@ -82,6 +82,7 @@ export default {
       treeOptions: {
         checkOnSelect: false,
         showCheckbox: true,
+        showIcon: true,
         openOnSelect: false,
         autoSort: false,
         styleManager: defaultStyleManager,
@@ -98,9 +99,11 @@ export default {
       }, {
         id: 1,
         name: 'один',
+        icon: 'fa fa-dice-one',
         kids: [{
         id: 3,
         name: 'три',
+        icon: 'fa fa-dice-three',
         kids: [{
         id: 8,
         name: 'восемьдесят восемь тысяч семьсот пятьдесят два',
@@ -111,11 +114,13 @@ export default {
       }]
       }, {
         id: 4,
-        name: 'четыре'
+        name: 'четыре',
+        icon: 'fa fa-dice-four'
       }]
       }, {
         id: 2,
-        name: 'два'
+        name: 'два',
+        icon: 'fa fa-dice-two'
       }],
       anotherNodes: [{
         id: 0,
