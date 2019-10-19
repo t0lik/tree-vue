@@ -32,6 +32,7 @@ export default {
       treeOptions: Object.assign({}, {
         styleManager: defaultStyleManager,
         multiselect: false,
+        showCheckbox: true,
         checkOnSelect: false,
         openOnSelect: false,
         autoSort: false,
@@ -47,6 +48,9 @@ export default {
   watch: {
     'options.styleManager' (newValue) {
       this.treeOptions.styleManager = this.options.styleManager
+    },
+    'options.showCheckbox' (newValue) {
+      this.treeOptions.showCheckbox = this.options.showCheckbox
     }
   },
   computed: {
@@ -62,7 +66,7 @@ export default {
     getCheckedNodes () {
       return this.nodeManager.getCheckedNodes()
     },
-    getNodeManager() {
+    getNodeManager () {
       return this.nodeManager
     },
     getNodeClasses (item) {

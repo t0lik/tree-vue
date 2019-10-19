@@ -2,7 +2,14 @@
   <div class="treevue-tree-node-container" :class="nodeContainerClasses">
     <div class="treevue-tree-node" @click="onClick" :class="parentClasses(node)">
       <node-icon :value="node.states.opened" @input="onNodeOpenStateChanging" :styleManager="styleManager" class="treevue-tree-node-element treevue-tree-node-icon" v-if="node.children.length" :disabled="node.states.disabled"/>
-      <node-checkbox :value="node.states.checked" @input="onNodeCheckStateChanging" :styleManager="styleManager" class="treevue-tree-node-element treevue-tree-node-checkbox"  :class="checkClasses" :disabled="node.states.disabled"/>
+      <node-checkbox 
+        :value="node.states.checked"
+        @input="onNodeCheckStateChanging"
+        :styleManager="styleManager"
+        class="treevue-tree-node-element treevue-tree-node-checkbox"
+        :class="checkClasses"
+        :disabled="node.states.disabled"
+        v-if="showCheckbox"/>
       <slot name="text" v-bind:nodeText="nodeText" v-bind:textClasses="textClasses">
         <node-text :title="nodeText" class="treevue-tree-node-element treevue-tree-node-text" :class="textClasses"/>
       </slot>
@@ -65,6 +72,9 @@ export default {
     },
     styleManager () {
       return this.options.styleManager
+    },
+    showCheckbox () {
+      return this.options.showCheckbox
     },
     nodeContainerClasses () {
       return {
@@ -135,7 +145,9 @@ export default {
   background-color: rgb(231, 238, 247);
 }
 .treevue-tree-node-text {
-  flex: 1
+  flex: 1;
+  margin-top: 2px;
+  margin-bottom: 2px;
 }
 .treevue-tree-node-text.disabled {
   color: #979191

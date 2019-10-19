@@ -54,6 +54,14 @@
         <button @click="sortAsc">ascending sort</button>
         <button @click="sortDesc">descending sort</button>
       </div>
+      <div class="button-group">
+        <button @click="showCheckboxes">show checkboxes</button>
+        <button @click="hideCheckboxes">hide checkboxes</button>
+      </div>
+      <div class="button-group">
+        <button @click="setNodes">set first source</button>
+        <button @click="setAnotherNodes">set second source</button>
+      </div>
       <span class="checked-nodes-text">{{ outputString }}</span>
     </div>
   </div>
@@ -73,8 +81,9 @@ export default {
     return {
       treeOptions: {
         checkOnSelect: false,
+        showCheckbox: true,
         openOnSelect: false,
-        autoSort: true,
+        autoSort: false,
         styleManager: defaultStyleManager,
         childrenProp: 'kids',
         nameProp: item => `${item.name} (${item.id})`
@@ -107,6 +116,31 @@ export default {
       }, {
         id: 2,
         name: 'два'
+      }],
+      anotherNodes: [{
+        id: 0,
+        name: 'сто'
+      }, {
+        id: 1,
+        name: 'двести',
+        kids: [{
+        id: 3,
+        name: 'десять',
+        kids: [{
+        id: 8,
+        name: 'один',
+        kids: []
+      }, {
+        id: 9,
+        name: 'два'
+      }]
+      }, {
+        id: 4,
+        name: 'четыре'
+      }]
+      }, {
+        id: 2,
+        name: 'триста'
       }],
       outputString: ''
     }
@@ -227,6 +261,12 @@ export default {
     switchToDefault () {
       this.treeOptions.styleManager = defaultStyleManager
     },
+    showCheckboxes () {
+      this.treeOptions.showCheckbox = true
+    },
+    hideCheckboxes () {
+      this.treeOptions.showCheckbox = false
+    },
     onCheckedAll () {
       this.outputMessage('checked all event is fired')
     },
@@ -245,6 +285,12 @@ export default {
     },
     sortDesc () {
       this.nodeManager.sort(this.descComparator)
+    },
+    setNodes () {
+      this.nodeManager.setNodes(this.nodes)
+    },
+    setAnotherNodes () {
+      this.nodeManager.setNodes(this.anotherNodes)
     }
   }
 }
