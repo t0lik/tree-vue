@@ -1,10 +1,10 @@
 <template>
-  <i class="treevue-node-icon" :class="iconClass" @click.stop="onClick"></i>
+  <i class="treevue-node-expander" :class="expanderClass" @click.stop="onClick"></i>
 </template>
 
 <script>
 export default {
-  name: 'NodeIcon',
+  name: 'NodeExpander',
   props: {
     value: {
       type: Boolean
@@ -29,7 +29,7 @@ export default {
     openIcon () {
       return this.styleManager.openIcon
     },
-    iconClass () {
+    expanderClass () {
       return this.value ? this.openIcon : this.closedIcon
     }
   },

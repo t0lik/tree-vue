@@ -1,7 +1,7 @@
 <template>
   <div class="treevue-tree-node-container" :class="nodeContainerClasses">
     <div class="treevue-tree-node" @click="onClick" :class="parentClasses(node)">
-      <node-icon :value="node.states.opened" @input="onNodeOpenStateChanging" :styleManager="styleManager" class="treevue-tree-node-element treevue-tree-node-icon" v-if="node.children.length" :disabled="node.states.disabled"/>
+      <node-expander :value="node.states.opened" @input="onNodeOpenStateChanging" :styleManager="styleManager" class="treevue-tree-node-element treevue-tree-node-expander" v-if="node.children.length" :disabled="node.states.disabled"/>
       <node-checkbox 
         :value="node.states.checked"
         @input="onNodeCheckStateChanging"
@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import NodeIcon from './NodeIcon'
+import NodeExpander from './NodeExpander'
 import NodeText from './NodeText'
 import NodeCheckbox from './NodeCheckbox'
 
@@ -50,7 +50,7 @@ export default {
     }
   },
   components: {
-    NodeIcon,
+    NodeExpander,
     NodeText,
     NodeCheckbox
   },
@@ -122,7 +122,7 @@ export default {
 .treevue-tree-node-element {
   margin-right: 0px;
 }
-.treevue-tree-node-element.treevue-tree-node-icon {
+.treevue-tree-node-element.treevue-tree-node-expander {
   margin-right: 2px;
 }
 /* .treevue-tree-node-container.no-children .treevue-tree-node-element.treevue-tree-node-checkbox {
