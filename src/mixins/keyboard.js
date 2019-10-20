@@ -13,6 +13,54 @@ const Keys = {
 
 const navigationKeys = [Keys.Left, Keys.Right, Keys.Up, Keys.Down, Keys.Space]
 
+function getAvailableNodes (tree) {
+  const availableNodes = []
+  tree.nodeManager.visitAll(tree.nodeManager.items, item => {
+    if (item.visible() && !item.states.disabled) {
+      availableNodes.push(item)
+    }
+  })
+
+  return availableNodes
+}
+
+function findAvailablePrevNode (tree, node) {
+  if (!node) {
+    return null
+  }
+
+  const availableNodes = getAvailableNodes(tree)
+  let prevNode = null
+  for (const nodeItem of availableNodes) {
+    if (nodeItem === node) {
+      return prevNode
+    }
+
+    prevNode = nodeItem
+  }
+
+  return null
+}
+
+function findAvailableNextNode (tree, node) {
+  if (!node) {
+    return null
+  }
+
+  const availableNodes = getAvailableNodes(tree)
+  let currNodeFound = false
+  for (const nodeItem of availableNodes) {
+    if (currNodeFound) {
+      return nodeItem
+    }
+    if (nodeItem === node) {
+      currNodeFound = true
+    }
+  }
+
+  return null
+}
+
 function moveLeft (tree, node) {
   if (node.states.opened) {
     node.collapse()
@@ -29,7 +77,7 @@ function moveRight (tree, node) {
   if (!node.states.opened) {
     node.expand()
   } else {
-    const firstChild = node.children.find(x => !x.states.disabled && x.states.visible)
+    const firstChild = node.children.find(x => !x.states.disabled && x.visible())
 
     if (firstChild) {
       tree.setFocusedNode(firstChild)
@@ -38,16 +86,17 @@ function moveRight (tree, node) {
 }
 
 function moveUp (tree, node) {
-  let prevNode = node.prev
-  let foundPrevNode = null
-  while (prevNode) {
-    if (prevNode.states.visible && !prevNode.states.disabled) {
-      foundPrevNode = prevNode
-      break
-    }
-    prevNode = prevNode.prev
+  const prevNode = node.prev
+  if (prevNode && prevNode.visible() && !prevNode.states.disabled && !prevNode.children.some(x => x.visible() && !x.states.disabled)) {
+    tree.setFocusedNode(prevNode)
+    return
   }
-
+  const parent = node.parent
+  if (!prevNode && parent && parent.visible() && !parent.states.disabled) {
+    tree.setFocusedNode(parent)
+    return
+  }
+  const foundPrevNode = findAvailablePrevNode(tree, node)
   if (!foundPrevNode) {
     return
   }
@@ -56,15 +105,24 @@ function moveUp (tree, node) {
 }
 
 function moveDown (tree, node) {
-  let nextNode = node.next
-  let foundNextNode = null
-  while (nextNode) {
-    if (nextNode.states.visible && !nextNode.states.disabled) {
-      foundNextNode = nextNode
-      break
+  if (node.states.opened) {
+    const firstAvailableChild = node.children[0]
+    if (firstAvailableChild && firstAvailableChild.visible() && !firstAvailableChild.states.disabled) {
+      tree.setFocusedNode(firstAvailableChild)
+      return
     }
-    nextNode = nextNode.next
   }
+  const nextNode = node.next
+  if (!node.states.opened && nextNode && nextNode.visible() && !nextNode.states.disabled) {
+    tree.setFocusedNode(nextNode)
+    return
+  }
+  const parent = node.parent
+  if (!nextNode && parent && parent.next && parent.next.visible() && !parent.next.states.disabled) {
+    tree.setFocusedNode(parent.next)
+    return
+  }
+  const foundNextNode = findAvailableNextNode(tree, node)
   if (!foundNextNode) {
     return
   }
@@ -73,7 +131,7 @@ function moveDown (tree, node) {
 }
 
 function switchNode (node) {
-  if (!node.states.visible || node.states.disabled) {
+  if (!node.visible() || node.states.disabled) {
     return
   }
   if (node.states.checked) {
@@ -84,11 +142,12 @@ function switchNode (node) {
 }
 
 function navigate (event) {
-  const keyCode = event.keyCode
-  console.log('navigate', this.focusedNode, keyCode)
   if (!this.focusedNode) {
     return
   }
+
+  const keyCode = event.keyCode
+
   if (navigationKeys.includes(keyCode)) {
     event.preventDefault()
     event.stopPropagation()

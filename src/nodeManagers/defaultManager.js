@@ -62,6 +62,7 @@ function mapNodeToItem (node, parent = null, prevItem = null) {
   item.checkChildren = () => this.checkChildren(item)
   item.uncheck = withChildren => this.uncheck(item, withChildren)
   item.uncheckChildren = () => this.uncheckChildren(item)
+  item.visible = () => this.getVisibility(item)
 
   return item
 }
@@ -81,7 +82,7 @@ function getVisibility (node) {
 }
 
 function visitNodeAndChildren (item, itemCallback, onlyVisible) {
-  if (onlyVisible && !this.getVisibility(item)) {
+  if (onlyVisible && !item.visible()) {
     return
   }
 
@@ -260,7 +261,7 @@ function collapseChildren (node) {
 
 function collapseAll () {
   this.setAllNodesOpenState(this.items, false)
-  if (this.selectedNode && !this.getVisibility(this.selectedNode)) {
+  if (this.selectedNode && !this.selectedNode.visible()) {
     this.setSelected(null)
   }
   this.tree.$emit('tree:collapse:all')

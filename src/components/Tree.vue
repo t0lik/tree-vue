@@ -96,7 +96,6 @@ export default {
       this.$emit('node:clicked', item)
     },
     onKeyDown (event) {
-      console.log('onKeyDown', event)
       this.navigate(event)
     },
     onNodeFocused (node) {

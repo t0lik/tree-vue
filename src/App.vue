@@ -136,7 +136,18 @@ export default {
       }, {
         id: 4,
         name: 'четыре',
-        icon: 'fa fa-dice-four'
+        icon: 'fa fa-dice-four',
+        kids: [{
+        id: 5,
+        name: 'пять',
+        icon: 'fa fa-dice-five',
+        kids: []
+      }, {
+        id: 6,
+        name: 'шесть',
+        icon: 'fa fa-dice-six',
+        kids: []
+      }]
       }]
       }, {
         id: 2,
