@@ -1,7 +1,15 @@
 <template>
-  <div class="treevue-tree">
+  <div class="treevue-tree" @keydown="onKeyDown">
     <div class="treevue-empty-search-text" v-if="!visibleItems.length && nodeManager.options.inSearch"> {{ treeOptions.notFoundText }} </div>
-    <node :options="treeOptions" :manager="nodeManager" :state="treeState" v-for="item in visibleItems" :key="item.id" :node="item" :parentClasses="getNodeClasses" @clicked="onNodeClicked">
+    <node 
+      :options="treeOptions" 
+      :manager="nodeManager" 
+      :state="treeState" 
+      v-for="item in visibleItems" :key="item.id"
+      :node="item"
+      :parentClasses="getNodeClasses"
+      @clicked="onNodeClicked"
+      @node:focused="onNodeFocused">
       <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope"><slot :name="slot" v-bind="scope"/></template>
     </node>
   </div>
@@ -11,6 +19,7 @@
 import Node from './Node'
 import defaultStyleManager from '../styleManagers/defaultStyleManager'
 import DefaultManager from '../nodeManagers/defaultManager'
+import keyboardMixin from '../mixins/keyboard'
 
 export default {
   name: 'Tree',
@@ -22,13 +31,16 @@ export default {
       type: Object
     }
   },
+  mixins: [keyboardMixin],
   components: {
     Node
   },
   data () {
     return {
       treeState: {
+        nodes: {}
       },
+      focusedNode: null,
       treeOptions: Object.assign({}, {
         styleManager: defaultStyleManager,
         multiselect: false,
@@ -66,6 +78,7 @@ export default {
   mounted () {
     this.nodeManager.initialize(this.treeOptions)
     this.nodeManager.setNodes(this.nodes)
+    const $el = this.$el
   },
   methods: {
     getCheckedNodes () {
@@ -81,6 +94,21 @@ export default {
     },
     onNodeClicked (item) {
       this.$emit('node:clicked', item)
+    },
+    onKeyDown (event) {
+      console.log('onKeyDown', event)
+      this.navigate(event)
+    },
+    onNodeFocused (node) {
+      this.focusedNode = node
+    },
+    setFocusedNode (node) {
+      const nodeComponent = this.treeState.nodes[node.id]
+      if (nodeComponent) {
+        this.focusedNode = node
+        node.select()
+        nodeComponent.focus()
+      }
     }
   }
 }

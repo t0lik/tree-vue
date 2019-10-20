@@ -9,16 +9,26 @@
         class="treevue-tree-node-element treevue-tree-node-checkbox"
         :class="checkClasses"
         :disabled="node.states.disabled"
+        :node="node"
         v-if="showCheckbox"/>
       <slot name="icon" v-bind:iconClasses="iconClasses" v-if="showIcon && (!hideEmptyIcon || node.icon)">
         <node-icon class="treevue-tree-node-element treevue-tree-node-icon" :class="iconClasses" :iconClass="node.icon"/>
       </slot>
       <slot name="text" v-bind:nodeText="nodeText" v-bind:textClasses="textClasses">
-        <node-text :title="nodeText" class="treevue-tree-node-element treevue-tree-node-text" :class="textClasses"/>
+        <node-text :title="nodeText" class="treevue-tree-node-element treevue-tree-node-text" :class="textClasses" :node="node" @node:focused="onFocused" ref="nodeText"/>
       </slot>
     </div>
     <div class="treevue-tree-node-children-container" v-if="node.states.opened">
-      <node :options="options" :state="state" :manager="manager" v-for="child in visibleItems" :key="child.id" :node="child" class="treevue-tree-node-child" :parentClasses="parentClasses" @clicked="onClicked">
+      <node 
+        :options="options" 
+        :state="state"
+        :manager="manager"
+        v-for="child in visibleItems" :key="child.id"
+        :node="child"
+        class="treevue-tree-node-child"
+        :parentClasses="parentClasses"
+        @clicked="onClicked"
+        @node:focused="$emit('node:focused', $event)">
         <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope"><slot :name="slot" v-bind="scope"/></template>
       </node>
     </div>
@@ -105,6 +115,10 @@ export default {
     }
   },
   mounted () {
+    this.state.nodes[this.node.id] = this
+  },
+  beforeDestroy () {
+    delete this.state.nodes[this.node.id]
   },
   methods: {
     onClicked (item) {
@@ -122,6 +136,12 @@ export default {
       }
       this.manager.setSelected(this.node)
       this.$emit('clicked', this.node)
+    },
+    onFocused () {
+      this.$emit('node:focused', this.node)
+    },
+    focus () {
+      this.$refs.nodeText.focus()
     }
   }
 }

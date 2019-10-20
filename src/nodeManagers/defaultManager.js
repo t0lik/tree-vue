@@ -1,6 +1,6 @@
 'use strict'
 
-function mapNodeToItem (node, parent = null) {
+function mapNodeToItem (node, parent = null, prevItem = null) {
   const idProp = this.treeOptions.idProp
   const id = node[idProp] != null ? node[idProp] : this.internalLastNodeId
   this.internalLastNodeId += 1
@@ -8,6 +8,8 @@ function mapNodeToItem (node, parent = null) {
     item: node,
     id,
     parent,
+    prev: prevItem,
+    next: null,
     states: {
       checked: node.checked || false,
       disabled: node.disabled || false,
@@ -17,11 +19,21 @@ function mapNodeToItem (node, parent = null) {
     },
     icon: node.icon || null
   }
-  const children = this.getChildren(node)
-  item.children = children ? children.map(x => this.mapNodeToItem(x, item)) : []
+  const children = this.getChildren(node) || []
+  const mappedChildren = children.map(x => this.mapNodeToItem(x, item))
   if (this.treeOptions.autoSort) {
-    this.sortNodes(item.children, this.treeOptions.sortComparator)
+    this.sortNodes(mappedChildren, this.treeOptions.sortComparator)
   }
+  let prevChild = null
+  for (const item of mappedChildren) {
+    item.prev = prevChild
+    if (prevChild) {
+      prevChild.next = item
+    }
+    prevChild = item
+  }
+
+  item.children = mappedChildren
   item.states.isIndeterminate = () => {
     const isSomeChildrenChecked = item.children.some(x => x.states.checked)
     const isAllChildrenChecked = item.children.every(x => x.states.checked)
@@ -544,6 +556,14 @@ function DefaultManager (treeComponent) {
     const items = nodes.map(x => this.mapNodeToItem(x))
     if (this.treeOptions.autoSort) {
       this.sortNodes(items, this.treeOptions.sortComparator)
+    }
+    let prevItem = null
+    for (const item of items) {
+      item.prev = prevItem
+      if (prevItem) {
+        prevItem.next = item
+      }
+      prevItem = item
     }
     this.items = items
   }.bind(this)
