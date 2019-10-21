@@ -11,55 +11,64 @@
     </tree>
     <div class="button-container">
       <div class="button-group">
+        <label>check</label>
+        <button @click="checkSelectedNode">selected</button>
+        <button @click="checkSelectedNodeWithChildren">selected with children</button>
+        <button @click="checkSelectedNodeChildren">selected node children</button>
+        <button @click="checkAllNodes">all</button>
+        <button @click="checkVisibleNodes">visible</button>
         <button @click="getCheckNodes">get checked</button>
       </div>
       <div class="button-group">
-        <button @click="checkSelectedNode">check selected</button>
-        <button @click="checkSelectedNodeWithChildren">check selected with children</button>
-        <button @click="checkSelectedNodeChildren">check selected node children</button>
-        <button @click="checkAllNodes">check all</button>
-        <button @click="checkVisibleNodes">check visible</button>
+        <label>uncheck</label>
+        <button @click="uncheckSelectedNode">selected</button>
+        <button @click="uncheckSelectedNodeWithChildren">selected with children</button>
+        <button @click="uncheckSelectedNodeChildren">selected node children</button>
+        <button @click="uncheckAllNodes">all</button>
+        <button @click="uncheckVisibleNodes">visible</button>
       </div>
       <div class="button-group">
-        <button @click="uncheckSelectedNode">uncheck selected</button>
-        <button @click="uncheckSelectedNodeWithChildren">uncheck selected with children</button>
-        <button @click="uncheckSelectedNodeChildren">uncheck selected node children</button>
-        <button @click="uncheckAllNodes">uncheck all</button>
-        <button @click="uncheckVisibleNodes">uncheck visible</button>
+        <label>expand</label>
+        <button @click="expandSelectedNode">selected</button>
+        <button @click="expandSelectedNodeWithChildren">selected with children</button>
+        <button @click="expandSelectedNodeChildren">selected node children</button>
+        <button @click="expandAll">all</button>
       </div>
       <div class="button-group">
-        <button @click="expandSelectedNode">expand selected</button>
-        <button @click="expandSelectedNodeWithChildren">expand selected with children</button>
-        <button @click="expandSelectedNodeChildren">expand selected node children</button>
-        <button @click="expandAll">expand all</button>
+        <label>collapse</label>
+        <button @click="collapseSelectedNode">selected</button>
+        <button @click="collapseSelectedNodeWithChildren">selected with children</button>
+        <button @click="collapseSelectedNodeChildren">selected node children</button>
+        <button @click="collapseAll">all</button>
       </div>
       <div class="button-group">
-        <button @click="collapseSelectedNode">collapse selected</button>
-        <button @click="collapseSelectedNodeWithChildren">collapse selected with children</button>
-        <button @click="collapseSelectedNodeChildren">collapse selected node children</button>
-        <button @click="collapseAll">collapse all</button>
+        <label>disable</label>
+        <button @click="disableSelectedNode">selected</button>
+        <button @click="disableSelectedNodeWithChildren">selected with chldren</button>
+        <button @click="disableSelectedNodeChildren">selected node chldren</button>
+        <button @click="disableAll">all</button>
       </div>
       <div class="button-group">
-        <button @click="disableSelectedNode">disable selected</button>
-        <button @click="disableSelectedNodeWithChildren">disable selected with chldren</button>
-        <button @click="disableSelectedNodeChildren">disable selected node chldren</button>
-        <button @click="disableAll">disable all</button>
+        <label>enable</label>
+        <button @click="enableSelectedNode">selected</button>
+        <button @click="enableSelectedNodeWithChildren">selected with children</button>
+        <button @click="enableSelectedNodeChildren">selected node children</button>
+        <button @click="enableAll">all</button>
       </div>
       <div class="button-group">
-        <button @click="enableSelectedNode">enable selected</button>
-        <button @click="enableSelectedNodeWithChildren">enable selected with children</button>
-        <button @click="enableSelectedNodeChildren">enable selected node children</button>
-        <button @click="enableAll">enable all</button>
-      </div>
-      <button @click="findById">find by id = 8 and select</button>
-      <div class="button-group">
-        <button @click="addChild">find by id = 8 and add child</button>
-        <button @click="insertChildAt">find by id = 8 and insert child before first child node</button>
-        <button @click="insertChild">find by id = 8 and insert child to be first</button>
-        <button @click="removeChildNode">find child by id = 8 and remove</button>
-        <button @click="removeRootNode">find root node by id = 2 and remove</button>
+        <label>find by id</label>
+        <button @click="findById">id = 8 and select</button>
       </div>
       <div class="button-group">
+        <label>find by id and add/remove children</label>
+        <button @click="addChild">id=8: add child</button>
+        <button @click="insertChildAt">id=8: insert child before first child node</button>
+        <button @click="insertChild">id=8: insert child to be first</button>
+        <button @click="removeChildNode">remove child id = 8</button>
+        <button @click="removeRootNode">remove root node id = 2</button>
+      </div>
+      <div class="button-group">
+        <label>search</label>
         <input v-model="searchString" />
         <button @click="startSearch">search by Text</button>
         <button @click="startSearchWithChildren">search by Text (show children)</button>
@@ -68,20 +77,52 @@
         <button @click="clearSearch">clear</button>
       </div>
       <div class="button-group">
+        <label>checkbox and expander theme</label>
         <button @click="switchToAwesome">fontawesome</button>
-        <button @click="switchToDefault">defaultStyle</button>
+        <button @click="switchToDefault">default</button>
       </div>
       <div class="button-group">
-        <button @click="sortAsc">ascending sort</button>
-        <button @click="sortDesc">descending sort</button>
+        <label>sort</label>
+        <button @click="sortAsc">ascending</button>
+        <button @click="sortDesc">descending</button>
       </div>
       <div class="button-group">
-        <button @click="showCheckboxes">show checkboxes</button>
-        <button @click="hideCheckboxes">hide checkboxes</button>
+        <label>checkboxes</label>
+        <button @click="showCheckboxes">show</button>
+        <button @click="hideCheckboxes">hide</button>
       </div>
       <div class="button-group">
-        <button @click="setNodes">set first source</button>
-        <button @click="setAnotherNodes">set second source</button>
+        <label>text style</label>
+        <button @click="setSelectedNodeTextStyle">selected</button>
+        <button @click="setSelectedNodeTextStyleWithChildren">selected with children</button>
+        <button @click="resetSelectedNodeTextStyle">reset</button>
+        <button @click="resetSelectedNodeTextStyleWithChildren">reset with children</button>
+      </div>
+      <div class="button-group">
+        <label>icon style</label>
+        <button @click="setSelectedNodeIconStyle">selected</button>
+        <button @click="setSelectedNodeIconStyleWithChildren">selected with children</button>
+        <button @click="resetSelectedNodeIconStyle">reset</button>
+        <button @click="resetSelectedNodeIconStyleWithChildren">reset with children</button>
+      </div>
+      <div class="button-group">
+        <label>checkbox style</label>
+        <button @click="setSelectedNodeCheckboxStyle">selected</button>
+        <button @click="setSelectedNodeCheckboxStyleWithChildren">selected with children</button>
+        <button @click="resetSelectedNodeCheckboxStyle">reset</button>
+        <button @click="resetSelectedNodeCheckboxStyleWithChildren">reset with children</button>
+      </div>
+      <div class="button-group">
+        <label>expander style</label>
+        <button @click="setSelectedNodeExpanderStyle">selected</button>
+        <button @click="setSelectedNodeExpanderStyleWithChildren">selected with children</button>
+        <button @click="resetSelectedNodeExpanderStyle">reset</button>
+        <button @click="resetSelectedNodeExpanderStyleWithChildren">reset with children</button>
+      </div>
+      <div class="button-group">
+        <label>source</label>
+        <button @click="setNodes">first</button>
+        <button @click="setAnotherNodes">second</button>
       </div>
       <span class="checked-nodes-text">{{ outputString }}</span>
     </div>
@@ -343,6 +384,54 @@ export default {
     hideCheckboxes () {
       this.treeOptions.showCheckbox = false
     },
+    setSelectedNodeTextStyle () {
+      this.nodeManager.selectedNode.setTextStyle('custom-text')
+    },
+    setSelectedNodeTextStyleWithChildren () {
+      this.nodeManager.selectedNode.setTextStyle('custom-text', true)
+    },
+    resetSelectedNodeTextStyle () {
+      this.nodeManager.selectedNode.resetTextStyle()
+    },
+    resetSelectedNodeTextStyleWithChildren () {
+      this.nodeManager.selectedNode.resetTextStyle(true)
+    },
+    setSelectedNodeIconStyle () {
+      this.nodeManager.selectedNode.setIconStyle('custom-icon')
+    },
+    setSelectedNodeIconStyleWithChildren () {
+      this.nodeManager.selectedNode.setIconStyle('custom-icon', true)
+    },
+    resetSelectedNodeIconStyle () {
+      this.nodeManager.selectedNode.resetIconStyle()
+    },
+    resetSelectedNodeIconStyleWithChildren () {
+      this.nodeManager.selectedNode.resetIconStyle(true)
+    },
+    setSelectedNodeCheckboxStyle () {
+      this.nodeManager.selectedNode.setCheckboxStyle('custom-checkbox')
+    },
+    setSelectedNodeCheckboxStyleWithChildren () {
+      this.nodeManager.selectedNode.setCheckboxStyle('custom-checkbox', true)
+    },
+    resetSelectedNodeCheckboxStyle () {
+      this.nodeManager.selectedNode.resetCheckboxStyle()
+    },
+    resetSelectedNodeCheckboxStyleWithChildren () {
+      this.nodeManager.selectedNode.resetCheckboxStyle(true)
+    },
+    setSelectedNodeExpanderStyle () {
+      this.nodeManager.selectedNode.setExpanderStyle('custom-expander')
+    },
+    setSelectedNodeExpanderStyleWithChildren () {
+      this.nodeManager.selectedNode.setExpanderStyle('custom-expander', true)
+    },
+    resetSelectedNodeExpanderStyle () {
+      this.nodeManager.selectedNode.resetExpanderStyle()
+    },
+    resetSelectedNodeExpanderStyleWithChildren () {
+      this.nodeManager.selectedNode.resetExpanderStyle(true)
+    },
     onCheckedAll () {
       this.outputMessage('checked all event is fired')
     },
@@ -390,12 +479,35 @@ export default {
   flex-direction: column;
 }
 .button-group {
-  display: flex;  
+  display: flex;
 }
 .button-group button {
-  min-height: 35px;  
+  min-height: 35px;
+}
+.button-group label {
+  align-self: center;
+  margin-right: 10px;
+  min-width: 150px;
 }
 .button-group button{
-  min-width: 150px;  
+  min-width: 150px;
+}
+.custom-text {
+  color: red;
+}
+.custom-icon {
+  color: red;
+}
+.treevue-node-checkbox.custom-checkbox {
+  border-color: red;
+}
+.treevue-node-checkbox.custom-checkbox.checked:after {
+  border-color: red;
+}
+.treevue-node-checkbox.custom-checkbox.indeterminate:after {
+  background: red;
+}
+.treevue-node-expander.custom-expander:after {
+  border-color: red;
 }
 </style>

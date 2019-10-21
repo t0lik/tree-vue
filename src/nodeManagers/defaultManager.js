@@ -1,5 +1,10 @@
 'use strict'
 
+const CheckModes = {
+  Linked: 'linked',
+  Independent: 'independent'
+}
+
 function mapNodeToItem (node, parent = null, prevItem = null) {
   const idProp = this.treeOptions.idProp
   const id = node[idProp] != null ? node[idProp] : this.internalLastNodeId
@@ -16,6 +21,12 @@ function mapNodeToItem (node, parent = null, prevItem = null) {
       opened: node.opened || false,
       visible: true,
       matched: false
+    },
+    styleClasses: {
+      icon: null,
+      text: null,
+      checkbox: null,
+      expander: null
     },
     icon: node.icon || null
   }
@@ -34,9 +45,9 @@ function mapNodeToItem (node, parent = null, prevItem = null) {
   }
 
   item.children = mappedChildren
-  item.states.isIndeterminate = () => {
+  item.indeterminate = () => {
     const isSomeChildrenChecked = item.children.some(x => x.states.checked)
-    const isAllChildrenChecked = item.children.every(x => x.states.checked)
+    const isAllChildrenChecked = item.children.every(x => x.states.checked && !x.indeterminate())
     return isSomeChildrenChecked && !isAllChildrenChecked
   }
 
@@ -63,6 +74,15 @@ function mapNodeToItem (node, parent = null, prevItem = null) {
   item.uncheck = withChildren => this.uncheck(item, withChildren)
   item.uncheckChildren = () => this.uncheckChildren(item)
   item.visible = () => this.getVisibility(item)
+
+  item.setCheckboxStyle = (checkBoxClasses, withChildren) => this.setCheckboxStyle(item, checkBoxClasses, withChildren)
+  item.resetCheckboxStyle = withChildren => this.setCheckboxStyle(item, null, withChildren)
+  item.setTextStyle = (textClasses, withChildren) => this.setTextStyle(item, textClasses, withChildren)
+  item.resetTextStyle = withChildren => this.setTextStyle(item, null, withChildren)
+  item.setIconStyle = (iconClasses, withChildren) => this.setIconStyle(item, iconClasses, withChildren)
+  item.resetIconStyle = withChildren => this.setIconStyle(item, null, withChildren)
+  item.setExpanderStyle = (expanderClasses, withChildren) => this.setExpanderStyle(item, expanderClasses, withChildren)
+  item.resetExpanderStyle = withChildren => this.setExpanderStyle(item, withChildren)
 
   return item
 }
@@ -104,6 +124,42 @@ function visitAllParents (item, itemCallback) {
   while (parent) {
     itemCallback(parent)
     parent = parent.parent
+  }
+}
+
+function setCheckboxStyle (item, classList, withChildren = false) {
+  item.styleClasses.checkbox = classList
+  if (withChildren) {
+    this.visitAll(item.children, child => {
+      child.styleClasses.checkbox = classList
+    })
+  }
+}
+
+function setTextStyle (item, classList, withChildren = false) {
+  item.styleClasses.text = classList
+  if (withChildren) {
+    this.visitAll(item.children, child => {
+      child.styleClasses.text = classList
+    })
+  }
+}
+
+function setIconStyle (item, classList, withChildren = false) {
+  item.styleClasses.icon = classList
+  if (withChildren) {
+    this.visitAll(item.children, child => {
+      child.styleClasses.icon = classList
+    })
+  }
+}
+
+function setExpanderStyle (item, classList, withChildren = false) {
+  item.styleClasses.expander = classList
+  if (withChildren) {
+    this.visitAll(item.children, child => {
+      child.styleClasses.expander = classList
+    })
   }
 }
 
@@ -188,17 +244,37 @@ function uncheckVisibleNodes () {
   this.tree.$emit('tree:unchecked:visible')
 }
 
-function setNodeCheckState (item, state, withChildren = false) {
+function setSingleNodeCheckState (item, state) {
   item.states.checked = state
   this.tree.$emit(state ? 'node:checked' : 'node:unchecked', item)
-  if (withChildren) {
+}
+
+function setNodeCheckState (item, state, withChildren = false) {
+  this.setSingleNodeCheckState(item, state)
+  if (withChildren || this.treeOptions.checkMode === CheckModes.Linked) {
     this.setNodeChildrenCheckState(item, state)
+  }
+  if (this.treeOptions.checkMode === CheckModes.Linked) {
+    this.visitAllParents(item, parent => {
+      const visibleChildren = parent.children.filter(x => x.visible())
+      if (!visibleChildren.length) {
+        return
+      }
+      const checkCounts = visibleChildren.reduce((acc, curr) => (curr.states.checked && !curr.indeterminate()) ? acc + 1 : acc, 0)
+
+      if (checkCounts === 0) {
+        this.setSingleNodeCheckState(parent, false)
+      }
+      if (checkCounts === visibleChildren.length) {
+        this.setSingleNodeCheckState(parent, true)
+      }
+    })
   }
 }
 
 function setNodeChildrenCheckState (item, state) {
   this.visitAll(item.children, child => {
-    this.setNodeCheckState(child, state, true)
+    this.setSingleNodeCheckState(child, state)
   })
 }
 
@@ -207,7 +283,11 @@ function checkNode (node, withChildren = false) {
 }
 
 function checkChildren (node) {
-  this.setNodeChildrenCheckState(node, true)
+  if (this.treeOptions.checkMode === CheckModes.Linked) {
+    this.setNodeCheckState(node, true, true)
+  } else {
+    this.setNodeChildrenCheckState(node, true)
+  }
 }
 
 function uncheckNode (node, withChildren = false) {
@@ -215,7 +295,11 @@ function uncheckNode (node, withChildren = false) {
 }
 
 function uncheckChildren (node) {
-  this.setNodeChildrenCheckState(node, false)
+  if (this.treeOptions.checkMode === CheckModes.Linked) {
+    this.setNodeCheckState(node, false, true)
+  } else {
+    this.setNodeChildrenCheckState(node, false)
+  }
 }
 
 function setNodeOpenState (item, state, withChildren = false) {
@@ -492,6 +576,7 @@ function DefaultManager (treeComponent) {
   this.options = {
     inSearch: false
   }
+  this.CheckModes = CheckModes
   this.selectedNode = null
   this.originalItems = []
   this.items = []
@@ -519,6 +604,7 @@ function DefaultManager (treeComponent) {
   this.visitAll = visitAllNodes.bind(this)
   this.setAllNodesCheckState = setAllNodesCheckState.bind(this)
   this.setNodeCheckState = setNodeCheckState.bind(this)
+  this.setSingleNodeCheckState = setSingleNodeCheckState.bind(this)
   this.setNodeChildrenCheckState = setNodeChildrenCheckState.bind(this)
   this.check = checkNode.bind(this)
   this.checkChildren = checkChildren.bind(this)
@@ -549,6 +635,11 @@ function DefaultManager (treeComponent) {
   this.enableAll = enableAll.bind(this)
   this.sortNodes = sortNodes.bind(this)
   this.sortNodesRecursive = sortNodesRecursive.bind(this)
+  this.setCheckboxStyle = setCheckboxStyle.bind(this)
+  this.setTextStyle = setTextStyle.bind(this)
+  this.setIconStyle = setIconStyle.bind(this)
+  this.setExpanderStyle = setExpanderStyle.bind(this)
+
   this.sort = function (comparator) {
     this.sortNodesRecursive(this.items, comparator)
   }

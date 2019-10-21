@@ -48,6 +48,7 @@ export default {
         showIcon: false,
         hideEmptyIcon: true,
         checkOnSelect: false,
+        checkMode: 'linked',
         openOnSelect: false,
         autoSort: false,
         sortComparator: null,

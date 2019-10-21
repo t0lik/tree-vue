@@ -9,6 +9,10 @@ export default {
     value: {
       type: Boolean
     },
+    node: {
+      type: Object,
+      required: true
+    },
     disabled: {
       type: Boolean,
       default: false
@@ -33,6 +37,9 @@ export default {
       return this.styleManager.partialCheckedIcon
     },
     checkClass () {
+      if (this.node.indeterminate()) {
+        return this.partiallyCheckedIcon
+      }
       return this.value ? this.checkedIcon : this.uncheckedIcon
     }
   },
@@ -86,8 +93,8 @@ export default {
   box-sizing: content-box;
   left: 2px;
   top: 2px;
-  height: 10px;
-  width: 10px;
+  height: 75%;
+  width: 75%;
 }
 .treevue-node-checkbox.disabled {
   color: rgb(206, 212, 218)

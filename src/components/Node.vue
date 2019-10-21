@@ -1,7 +1,14 @@
 <template>
   <div class="treevue-tree-node-container" :class="nodeContainerClasses">
     <div class="treevue-tree-node" @click="onClick" :class="parentClasses(node)">
-      <node-expander :value="node.states.opened" @input="onNodeOpenStateChanging" :styleManager="styleManager" class="treevue-tree-node-element treevue-tree-node-expander" v-if="node.children.length" :disabled="node.states.disabled"/>
+      <node-expander
+        :value="node.states.opened"
+        @input="onNodeOpenStateChanging"
+        :styleManager="styleManager"
+        class="treevue-tree-node-element treevue-tree-node-expander"
+        :class="expanderClasses"
+        v-if="node.children.length"
+        :disabled="node.states.disabled"/>
       <node-checkbox 
         :value="node.states.checked"
         @input="onNodeCheckStateChanging"
@@ -75,20 +82,32 @@ export default {
   },
   computed: {
     textClasses () {
-      return {
+      const classes = {
         'filter-matched': this.node.states.matched,
         disabled: this.node.states.disabled
       }
+      return this.combineClasses(classes, this.node.styleClasses.text)
     },
     iconClasses () {
-      return {
+      const classes = {
         disabled: this.node.states.disabled
       }
+
+      return this.combineClasses(classes, this.node.styleClasses.icon)
     },
     checkClasses () {
-      return {
+      const classes = {
         disabled: this.node.states.disabled
       }
+
+      return this.combineClasses(classes, this.node.styleClasses.checkbox)
+    },
+    expanderClasses () {
+      const classes = {
+        disabled: this.node.states.disabled
+      }
+
+      return this.combineClasses(classes, this.node.styleClasses.expander)
     },
     styleManager () {
       return this.options.styleManager
@@ -121,6 +140,22 @@ export default {
     delete this.state.nodes[this.node.id]
   },
   methods: {
+    combineClasses (defaultClass, customClass) {
+      if (customClass) {
+        let classes = {}
+        if (typeof(customClass) === 'string') {
+          const classList = customClass.split(' ')
+
+          for (const className of classList) {
+            classes[className] = true
+          }
+          return Object.assign({}, defaultClass, classes)
+        }
+        return Object.assign({}, defaultClass, customClass)
+      }
+
+      return defaultClass
+    },
     onClicked (item) {
       this.$emit('clicked', item)
     },
