@@ -46,7 +46,7 @@ function mapNodeToItem (node, parent = null, prevItem = null) {
 
   item.children = mappedChildren
   item.indeterminate = () => {
-    const isSomeChildrenChecked = item.children.some(x => x.states.checked)
+    const isSomeChildrenChecked = item.children.some(x => x.states.checked || x.indeterminate())
     const isAllChildrenChecked = item.children.every(x => x.states.checked && !x.indeterminate())
     return isSomeChildrenChecked && !isAllChildrenChecked
   }
@@ -82,7 +82,7 @@ function mapNodeToItem (node, parent = null, prevItem = null) {
   item.setIconStyle = (iconClasses, withChildren) => this.setIconStyle(item, iconClasses, withChildren)
   item.resetIconStyle = withChildren => this.setIconStyle(item, null, withChildren)
   item.setExpanderStyle = (expanderClasses, withChildren) => this.setExpanderStyle(item, expanderClasses, withChildren)
-  item.resetExpanderStyle = withChildren => this.setExpanderStyle(item, withChildren)
+  item.resetExpanderStyle = withChildren => this.setExpanderStyle(item, null, withChildren)
 
   return item
 }
@@ -260,12 +260,21 @@ function setNodeCheckState (item, state, withChildren = false) {
       if (!visibleChildren.length) {
         return
       }
-      const checkCounts = visibleChildren.reduce((acc, curr) => (curr.states.checked && !curr.indeterminate()) ? acc + 1 : acc, 0)
-
-      if (checkCounts === 0) {
+      const checkCounts = visibleChildren.reduce((acc, curr) => {
+        acc.checked += curr.states.checked ? 1 : 0
+        acc.unchecked += curr.states.checked ? 0 : 1
+        acc.indeterminate += curr.indeterminate() ? 1 : 0
+        return acc
+      }, {
+        checked: 0,
+        unchecked: 0,
+        indeterminate: 0
+      })
+      console.log('checkCounts', parent.item.name, checkCounts)
+      if (checkCounts.checked === 0 && checkCounts.indeterminate === 0) {
         this.setSingleNodeCheckState(parent, false)
       }
-      if (checkCounts === visibleChildren.length) {
+      if (checkCounts.checked === visibleChildren.length) {
         this.setSingleNodeCheckState(parent, true)
       }
     })
