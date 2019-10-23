@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <tree :nodes="nodes" ref="tree" :options="treeOptions"
+    <tree :nodes="nodes3" ref="tree" :options="treeOptions"
       @tree:checked:all="onCheckedAll"
       @tree:filtered="onFiltered"
       @node:disabled="onNodeDisabled"
@@ -168,6 +168,10 @@ export default {
       searchString: null,
       descComparator: (item1, item2) => 0 - item1.item.name.localeCompare(item2.item.name),
       ascComparator: (item1, item2) => item1.item.name.localeCompare(item2.item.name),
+      nodes3: [{
+        id: 1,
+        name: 'test'
+      }],
       nodes: [{
         id: 0,
         name: 'ноль'
