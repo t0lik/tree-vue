@@ -1,5 +1,5 @@
 <template>
-  <span class="treevue-node-text" tabindex="-1" @focus="onFocus" ref="text">
+  <span class="treevue-node-text" tabindex="-1" @focus="onFocus" ref="text" @dblclick="onMouseDoubleClick">
     {{ title }}
   </span>
 </template>
@@ -9,6 +9,10 @@ export default {
   name: 'NodeText',
   props: {
     node: {
+      type: Object,
+      required: true
+    },
+    options: {
       type: Object,
       required: true
     },
@@ -24,8 +28,15 @@ export default {
     focus () {
       this.$refs.text.focus()
     },
-    onFocus(event) {
+    onFocus (event) {
       this.$emit('node:focused', this.node)
+    },
+    onMouseDoubleClick (event) {
+      if (!this.options.canEdit) {
+        return
+      }
+
+      this.$emit('startEdit', this.node)
     }
   }
 }

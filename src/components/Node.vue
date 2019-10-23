@@ -9,7 +9,7 @@
         :class="expanderClasses"
         v-if="node.children.length"
         :disabled="node.states.disabled"/>
-      <node-checkbox 
+      <node-checkbox
         :value="node.states.checked"
         @input="onNodeCheckStateChanging"
         :styleManager="styleManager"
@@ -21,13 +21,24 @@
       <slot name="icon" v-bind:iconClasses="iconClasses" v-if="showIcon && (!hideEmptyIcon || node.icon)">
         <node-icon class="treevue-tree-node-element treevue-tree-node-icon" :class="iconClasses" :iconClass="node.icon"/>
       </slot>
-      <slot name="text" v-bind:nodeText="nodeText" v-bind:textClasses="textClasses">
-        <node-text :title="nodeText" class="treevue-tree-node-element treevue-tree-node-text" :class="textClasses" :node="node" @node:focused="onFocused" ref="nodeText"/>
+      <slot name="text" v-bind:nodeText="nodeText" v-bind:textClasses="textClasses" v-if="!editMode">
+        <node-text
+          :title="nodeText"
+          class="treevue-tree-node-element treevue-tree-node-text"
+          :class="textClasses"
+          :node="node"
+          :options="options"
+          @node:focused="onFocused"
+          @startEdit="$emit('startEdit', $event)"
+          ref="nodeText"/>
+      </slot>
+      <slot name="editor" v-bind:node="node" v-if="editMode">
+        <node-editor :node="node" :manager="manager" @stopEdit="onStopEdit"/>
       </slot>
     </div>
     <div class="treevue-tree-node-children-container" v-if="node.states.opened">
-      <node 
-        :options="options" 
+      <node
+        :options="options"
         :state="state"
         :manager="manager"
         v-for="child in visibleItems" :key="child.id"
@@ -35,7 +46,9 @@
         class="treevue-tree-node-child"
         :parentClasses="parentClasses"
         @clicked="onClicked"
-        @node:focused="$emit('node:focused', $event)">
+        @node:focused="$emit('node:focused', $event)"
+        @startEdit="$emit('startEdit', $event)"
+        @stopEdit="$emit('stopEdit')">
         <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope"><slot :name="slot" v-bind="scope"/></template>
       </node>
     </div>
@@ -47,6 +60,7 @@ import NodeExpander from './NodeExpander'
 import NodeText from './NodeText'
 import NodeCheckbox from './NodeCheckbox'
 import NodeIcon from './NodeIcon'
+import NodeEditor from './NodeEditor'
 
 export default {
   name: 'Node',
@@ -74,7 +88,8 @@ export default {
     NodeExpander,
     NodeText,
     NodeCheckbox,
-    NodeIcon
+    NodeIcon,
+    NodeEditor
   },
   data () {
     return {
@@ -131,6 +146,9 @@ export default {
     },
     nodeText () {
       return this.manager.getName(this.node)
+    },
+    editMode () {
+      return this.state.editNode === this.node
     }
   },
   mounted () {
@@ -142,8 +160,8 @@ export default {
   methods: {
     combineClasses (defaultClass, customClass) {
       if (customClass) {
-        let classes = {}
-        if (typeof(customClass) === 'string') {
+        const classes = {}
+        if (typeof (customClass) === 'string') {
           const classList = customClass.split(' ')
 
           for (const className of classList) {
@@ -177,6 +195,9 @@ export default {
     },
     focus () {
       this.$refs.nodeText.focus()
+    },
+    onStopEdit () {
+      this.$emit('stopEdit')
     }
   }
 }

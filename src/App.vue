@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <tree :nodes="nodes" ref="tree" :options="treeOptions" 
-      @tree:checked:all="onCheckedAll" 
+    <tree :nodes="nodes" ref="tree" :options="treeOptions"
+      @tree:checked:all="onCheckedAll"
       @tree:filtered="onFiltered"
       @node:disabled="onNodeDisabled"
       @node:enabled="onNodeEnabled">
@@ -68,12 +68,12 @@
         <button @click="removeRootNode">remove root node id = 2</button>
       </div>
       <div class="button-group">
-        <label>search</label>
+        <label>filter</label>
         <input v-model="searchString" />
-        <button @click="startSearch">search by Text</button>
-        <button @click="startSearchWithChildren">search by Text (show children)</button>
-        <button @click="startRegexpSearch">search by Regexp</button>
-        <button @click="startFuncSearch">search by function</button>
+        <button @click="startSearch">by Text</button>
+        <button @click="startSearchWithChildren">by Text (show children)</button>
+        <button @click="startRegexpSearch">by Regexp</button>
+        <button @click="startFuncSearch">by function</button>
         <button @click="clearSearch">clear</button>
       </div>
       <div class="button-group">
@@ -90,6 +90,16 @@
         <label>checkboxes</label>
         <button @click="showCheckboxes">show</button>
         <button @click="hideCheckboxes">hide</button>
+      </div>
+      <div class="button-group">
+        <label>edit</label>
+        <button @click="enableEdit">enable</button>
+        <button @click="disableEdit">disable</button>
+      </div>
+      <div class="button-group">
+        <label>delete</label>
+        <button @click="enableDelete">enable</button>
+        <button @click="disableDelete">disable</button>
       </div>
       <div class="button-group">
         <label>text style</label>
@@ -149,7 +159,10 @@ export default {
         autoSort: false,
         styleManager: defaultStyleManager,
         childrenProp: 'kids',
-        nameProp: item => `${item.name} (${item.id})`
+        nameProp: item => `${item.name} (${item.id})`,
+        editNameProp: 'name',
+        canEdit: false,
+        canDelete: false
       },
       selectedNode: null,
       searchString: null,
@@ -163,33 +176,33 @@ export default {
         name: 'один',
         icon: 'fa fa-dice-one',
         kids: [{
-        id: 3,
-        name: 'три',
-        icon: 'fa fa-dice-three',
-        kids: [{
-        id: 8,
-        name: 'восемьдесят восемь тысяч семьсот пятьдесят два',
-        kids: []
-      }, {
-        id: 9,
-        name: 'девять'
-      }]
-      }, {
-        id: 4,
-        name: 'четыре',
-        icon: 'fa fa-dice-four',
-        kids: [{
-        id: 5,
-        name: 'пять',
-        icon: 'fa fa-dice-five',
-        kids: []
-      }, {
-        id: 6,
-        name: 'шесть',
-        icon: 'fa fa-dice-six',
-        kids: []
-      }]
-      }]
+          id: 3,
+          name: 'три',
+          icon: 'fa fa-dice-three',
+          kids: [{
+            id: 8,
+            name: 'восемьдесят восемь тысяч семьсот пятьдесят два',
+            kids: []
+          }, {
+            id: 9,
+            name: 'девять'
+          }]
+        }, {
+          id: 4,
+          name: 'четыре',
+          icon: 'fa fa-dice-four',
+          kids: [{
+            id: 5,
+            name: 'пять',
+            icon: 'fa fa-dice-five',
+            kids: []
+          }, {
+            id: 6,
+            name: 'шесть',
+            icon: 'fa fa-dice-six',
+            kids: []
+          }]
+        }]
       }, {
         id: 2,
         name: 'два',
@@ -202,20 +215,20 @@ export default {
         id: 1,
         name: 'двести',
         kids: [{
-        id: 3,
-        name: 'десять',
-        kids: [{
-        id: 8,
-        name: 'один',
-        kids: []
-      }, {
-        id: 9,
-        name: 'два'
-      }]
-      }, {
-        id: 4,
-        name: 'четыре'
-      }]
+          id: 3,
+          name: 'десять',
+          kids: [{
+            id: 8,
+            name: 'один',
+            kids: []
+          }, {
+            id: 9,
+            name: 'два'
+          }]
+        }, {
+          id: 4,
+          name: 'четыре'
+        }]
       }, {
         id: 2,
         name: 'триста'
@@ -233,7 +246,7 @@ export default {
     }
   },
   methods: {
-    outputMessage(message) {
+    outputMessage (message) {
       this.outputString += '\n' + message
     },
     getCheckNodes () {
@@ -350,11 +363,11 @@ export default {
     },
     removeChildNode () {
       const foundNode = this.nodeManager.findOne(item => item.item.id === 8)
-      nodeManager.removeNode(foundNode)
+      this.nodeManager.removeNode(foundNode)
     },
     removeRootNode () {
       const foundNode = this.nodeManager.findOne(item => item.item.id === 2)
-      nodeManager.removeNode(foundNode)
+      this.nodeManager.removeNode(foundNode)
     },
     startSearch () {
       this.nodeManager.filter(this.searchString)
@@ -456,6 +469,18 @@ export default {
     },
     setAnotherNodes () {
       this.nodeManager.setNodes(this.anotherNodes)
+    },
+    enableEdit () {
+      this.treeOptions.canEdit = true
+    },
+    disableEdit () {
+      this.treeOptions.canEdit = false
+    },
+    enableDelete () {
+      this.treeOptions.canDelete = true
+    },
+    disableDelete () {
+      this.treeOptions.canDelete = false
     }
   }
 }

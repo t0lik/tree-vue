@@ -3,12 +3,11 @@
 const Keys = {
   Space: 32,
   Delete: 46,
-  Enter: 13,
-  Esc: 27,
   Left: 37,
   Up: 38,
   Right: 39,
-  Down: 40
+  Down: 40,
+  F2: 113
 }
 
 const navigationKeys = [Keys.Left, Keys.Right, Keys.Up, Keys.Down, Keys.Space]
@@ -141,13 +140,31 @@ function switchNode (node) {
   }
 }
 
+function removeNode (tree, node) {
+  if (!tree.treeOptions.canDelete) {
+    return
+  }
+
+  tree.nodeManager.removeNode(node)
+}
+
+function editNode (tree, node) {
+  if (!tree.treeOptions.canEdit) {
+    return
+  }
+
+  tree.setEditNode(node)
+}
+
 function navigate (event) {
   if (!this.focusedNode) {
     return
   }
 
+  if (this.treeState.editNode) {
+    return
+  }
   const keyCode = event.keyCode
-
   if (navigationKeys.includes(keyCode)) {
     event.preventDefault()
     event.stopPropagation()
@@ -168,6 +185,12 @@ function navigate (event) {
       break
     case Keys.Space:
       switchNode(this.focusedNode)
+      break
+    case Keys.Delete:
+      removeNode(this, this.focusedNode)
+      break
+    case Keys.F2:
+      editNode(this, this.focusedNode)
       break
   }
 }
