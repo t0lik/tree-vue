@@ -1,6 +1,6 @@
 <template>
   <div class="treevue-tree-node-container" :class="nodeContainerClasses">
-    <div class="treevue-tree-node" @click="onClick" :class="parentClasses(node)">
+    <div class="treevue-tree-node" @click="onClick" :class="nodeClasses">
       <node-expander
         :value="node.states.opened"
         @input="onNodeOpenStateChanging"
@@ -21,7 +21,7 @@
       <slot name="icon" v-bind:iconClasses="iconClasses" v-if="showIcon && (!hideEmptyIcon || node.icon)">
         <node-icon class="treevue-tree-node-element treevue-tree-node-icon" :class="iconClasses" :iconClass="node.icon"/>
       </slot>
-      <slot name="text" v-bind:nodeText="nodeText" v-bind:textClasses="textClasses" v-if="!editMode">
+      <slot name="text" v-bind:nodeText="nodeText" v-bind:textClasses="textClasses" v-if="!editorMode">
         <node-text
           :title="nodeText"
           class="treevue-tree-node-element treevue-tree-node-text"
@@ -29,10 +29,10 @@
           :node="node"
           :options="options"
           @node:focused="onFocused"
-          @startEdit="$emit('startEdit', $event)"
+          @startEdit="startEdit"
           ref="nodeText"/>
       </slot>
-      <slot name="editor" v-bind:node="node" v-if="editMode">
+      <slot name="editor" v-bind:node="node" v-if="editorMode">
         <node-editor :node="node" :manager="manager" @stopEdit="onStopEdit"/>
       </slot>
     </div>
@@ -44,11 +44,8 @@
         v-for="child in visibleItems" :key="child.id"
         :node="child"
         class="treevue-tree-node-child"
-        :parentClasses="parentClasses"
         @clicked="onClicked"
-        @node:focused="$emit('node:focused', $event)"
-        @startEdit="$emit('startEdit', $event)"
-        @stopEdit="$emit('stopEdit')">
+        @node:focused="$emit('node:focused', $event)">
         <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope"><slot :name="slot" v-bind="scope"/></template>
       </node>
     </div>
@@ -67,9 +64,6 @@ export default {
   props: {
     node: {
       type: Object
-    },
-    parentClasses: {
-      type: Function
     },
     state: {
       type: Object,
@@ -93,9 +87,15 @@ export default {
   },
   data () {
     return {
+      editorMode: false
     }
   },
   computed: {
+    nodeClasses () {
+      return {
+        selected: this.manager.selectedNode === this.node
+      }
+    },
     textClasses () {
       const classes = {
         'filter-matched': this.node.states.matched,
@@ -146,9 +146,6 @@ export default {
     },
     nodeText () {
       return this.manager.getName(this.node)
-    },
-    editMode () {
-      return this.state.editNode === this.node
     }
   },
   mounted () {
@@ -197,7 +194,13 @@ export default {
       this.$refs.nodeText.focus()
     },
     onStopEdit () {
-      this.$emit('stopEdit')
+      this.editorMode = false
+      this.$nextTick(() => {
+        this.focus()
+      })
+    },
+    startEdit () {
+      this.editorMode = true
     }
   }
 }

@@ -152,8 +152,9 @@ function editNode (tree, node) {
   if (!tree.treeOptions.canEdit) {
     return
   }
-
-  tree.setEditNode(node)
+  const nodeComponents = tree.treeState.nodes
+  const nodeComponentToEdit = nodeComponents[node.id]
+  nodeComponentToEdit.startEdit()
 }
 
 function navigate (event) {
@@ -161,7 +162,9 @@ function navigate (event) {
     return
   }
 
-  if (this.treeState.editNode) {
+  const nodeComponents = this.treeState.nodes
+  const nodeComponentToEdit = nodeComponents[this.focusedNode.id]
+  if (nodeComponentToEdit && nodeComponentToEdit.editorMode) {
     return
   }
   const keyCode = event.keyCode

@@ -7,11 +7,9 @@
       :state="treeState"
       v-for="item in visibleItems" :key="item.id"
       :node="item"
-      :parentClasses="getNodeClasses"
       @clicked="onNodeClicked"
       @node:focused="onNodeFocused"
-      @stopEdit="onStopEdit"
-      @startEdit="onStartEdit">
+      >
       <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope"><slot :name="slot" v-bind="scope"/></template>
     </node>
   </div>
@@ -40,8 +38,7 @@ export default {
   data () {
     return {
       treeState: {
-        nodes: {},
-        editNode: null
+        nodes: {}
       },
       focusedNode: null,
       treeOptions: Object.assign({}, {
@@ -51,11 +48,11 @@ export default {
         showIcon: false,
         hideEmptyIcon: true,
         checkOnSelect: false,
-        checkMode: 'linked',
+        checkMode: 'independent',
         openOnSelect: false,
         autoSort: false,
         sortComparator: null,
-        idProp: 'id_',
+        idProp: 'id',
         nameProp: 'name',
         childrenProp: 'children',
         notFoundText: 'no nodes are found',
@@ -92,16 +89,8 @@ export default {
     this.nodeManager.setNodes(this.nodes)
   },
   methods: {
-    getCheckedNodes () {
-      return this.nodeManager.getCheckedNodes()
-    },
     getNodeManager () {
       return this.nodeManager
-    },
-    getNodeClasses (item) {
-      return {
-        selected: this.nodeManager.selectedNode === item
-      }
     },
     onNodeClicked (item) {
       this.$emit('node:clicked', item)
@@ -119,18 +108,6 @@ export default {
         node.select()
         nodeComponent.focus()
       }
-    },
-    setEditNode (node) {
-      this.treeState.editNode = node
-    },
-    onStopEdit () {
-      this.treeState.editNode = null
-      this.$nextTick(() => {
-        this.setFocusedNode(this.focusedNode)
-      })
-    },
-    onStartEdit (node) {
-      this.setEditNode(node)
     }
   }
 }
