@@ -617,6 +617,7 @@ function showNode (item) {
 function setSelectedNode (node) {
   this.selectedNode = node
   this.tree.$emit('node:selected', node)
+
   if (!node) {
     return
   }

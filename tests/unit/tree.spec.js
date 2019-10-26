@@ -1,3 +1,4 @@
+'use strict'
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai'
 import { mount } from '@vue/test-utils'
@@ -37,6 +38,7 @@ describe('Tree.vue', () => {
       checkOnSelect: false
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
+    // console.log('wrapper.html()', wrapper.html())
 
     expect(wrapper.findAll(Node).length).to.be.eq(nodes.length)
   })
@@ -180,33 +182,6 @@ describe('Tree.vue', () => {
       done()
     })
   })
-  it('key Down selects next node', done => {
-    const nodes = [{
-      id: 1,
-      name: 'name'
-    }, {
-      id: 2,
-      name: 'name2'
-    }]
-    const options = {
-    }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
-    const clickableText = wrapper.find('.treevue-tree-node .treevue-node-text')
-    clickableText.trigger('click')
-    clickableText.trigger('focus')
-    wrapper.vm.$nextTick(() => {
-      expect(wrapper.emitted()['node:selected'][0]).to.be.not.null
-      wrapper.trigger('keydown.down')
-      wrapper.vm.$nextTick(() => {
-        expect(wrapper.vm.nodeManager.selectedNode).to.be.not.null
-        expect(wrapper.vm.nodeManager.selectedNode.item.id).to.be.eq(nodes[1].id)
-        expect(wrapper.emitted()['node:selected'][1]).to.be.not.null
-        expect(wrapper.emitted()['node:selected'][1][0]).to.be.not.null
-        expect(wrapper.emitted()['node:selected'][1][0].item.id).to.be.eq(nodes[1].id)
-        done()
-      })
-    })
-  })
   it('setFocusedNode sets focusedNode', () => {
     const nodes = [{
       id: 1,
@@ -239,5 +214,19 @@ describe('Tree.vue', () => {
     expect(wrapper.emitted()['node:selected'][0]).to.be.not.null
     expect(wrapper.vm.nodeManager.selectedNode).to.be.not.null
     expect(wrapper.vm.nodeManager.selectedNode.id).to.be.eq(secondNode.id)
+  })
+  it('treeState.nodes has all the nodes', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }, {
+      id: 2,
+      name: 'name2'
+    }]
+    const options = {
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const allNodeComponents = wrapper.findAll(Node)
+    expect(allNodeComponents.length).to.be.eq(Object.keys(wrapper.vm.treeState.nodes).length)
   })
 })
