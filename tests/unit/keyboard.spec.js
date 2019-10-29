@@ -62,6 +62,34 @@ describe('keyboard mixin', () => {
       })
     })
   })
+  it('key Down on second node does not change selected node', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }, {
+      id: 2,
+      name: 'name2'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+
+    wrapper.vm.$nextTick(() => {
+      const clickableNodes = wrapper.findAll('.treevue-tree-node')
+      expect(clickableNodes.length).to.be.eq(2)
+      const secondNode = clickableNodes.at(1)
+      const clickableText = secondNode.find('.treevue-tree-node .treevue-node-text')
+      clickableText.trigger('click')
+      clickableText.trigger('focus')
+      wrapper.trigger('keydown.down')
+      wrapper.vm.$nextTick(() => {
+        expectSelectedNodeId(wrapper, 2)
+        expectFirstSelectedEventWithNodeId(wrapper, 2)
+        done()
+      })
+    })
+  })
   it('key Down on first node selects next enabled sibling', done => {
     const nodes = [{
       id: 1,
@@ -207,34 +235,6 @@ describe('keyboard mixin', () => {
       done()
     })
   })
-  it('key Down on second node does not change selected node', done => {
-    const nodes = [{
-      id: 1,
-      name: 'name'
-    }, {
-      id: 2,
-      name: 'name2'
-    }]
-    const options = {
-      checkOnSelect: false
-    }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
-
-    wrapper.vm.$nextTick(() => {
-      const clickableNodes = wrapper.findAll('.treevue-tree-node')
-      expect(clickableNodes.length).to.be.eq(2)
-      const secondNode = clickableNodes.at(1)
-      const clickableText = secondNode.find('.treevue-tree-node .treevue-node-text')
-      clickableText.trigger('click')
-      clickableText.trigger('focus')
-      wrapper.trigger('keydown.down')
-      wrapper.vm.$nextTick(() => {
-        expectSelectedNodeId(wrapper, 2)
-        expectFirstSelectedEventWithNodeId(wrapper, 2)
-        done()
-      })
-    })
-  })
   it('key Up on second node selects first node', done => {
     const nodes = [{
       id: 1,
@@ -284,6 +284,141 @@ describe('keyboard mixin', () => {
         expectFirstSelectedEventWithNodeId(wrapper, 1)
         done()
       })
+    })
+  })
+  it('key Up on last node selects previous enabled sibling', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }, {
+      id: 2,
+      disabled: true,
+      name: 'name2'
+    }, {
+      id: 3,
+      name: 'name3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+
+    const clickableNodes = wrapper.findAll('.treevue-tree-node')
+    expect(clickableNodes.length).to.be.eq(3)
+    const secondNode = clickableNodes.at(2)
+    const clickableText = secondNode.find('.treevue-tree-node .treevue-node-text')
+    clickableText.trigger('click')
+    clickableText.trigger('focus')
+    wrapper.vm.$nextTick(() => {
+      wrapper.trigger('keydown.up')
+      wrapper.vm.$nextTick(() => {
+        expectSelectedNodeId(wrapper, 1)
+        expectSecondSelectedEventWithNodeId(wrapper, 1)
+        done()
+      })
+    })
+  })
+  it('key Up on last node selects first prev sibing child', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }, {
+      id: 2,
+      name: 'name2',
+      opened: true,
+      children: [{
+        id: 4,
+        name: 'child1'
+      }]
+    }, {
+      id: 3,
+      name: 'name3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const clickableNodes = wrapper.findAll('.treevue-tree-root-node > .treevue-tree-node')
+    expect(clickableNodes.length).to.be.eq(3)
+    const thirdNode = clickableNodes.at(2)
+    const clickableText = thirdNode.find('.treevue-tree-node .treevue-node-text')
+    clickableText.trigger('click')
+    clickableText.trigger('focus')
+
+    wrapper.vm.$nextTick(() => {
+      wrapper.trigger('keydown.up')
+
+      wrapper.vm.$nextTick(() => {
+        expectSelectedNodeId(wrapper, 4)
+        expectSecondSelectedEventWithNodeId(wrapper, 4)
+        done()
+      })
+    })
+  })
+  it('key Up on last node selects next closed sibling with children', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }, {
+      id: 2,
+      name: 'name2',
+      opened: false,
+      children: [{
+        id: 4,
+        name: 'child1'
+      }]
+    }, {
+      id: 3,
+      name: 'name3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const clickableNodes = wrapper.findAll('.treevue-tree-root-node > .treevue-tree-node')
+    expect(clickableNodes.length).to.be.eq(3)
+    const thirdNode = clickableNodes.at(2)
+    const clickableText = thirdNode.find('.treevue-tree-node .treevue-node-text')
+    clickableText.trigger('click')
+    clickableText.trigger('focus')
+
+    wrapper.vm.$nextTick(() => {
+      wrapper.trigger('keydown.up')
+
+      wrapper.vm.$nextTick(() => {
+        expectSelectedNodeId(wrapper, 2)
+        expectSecondSelectedEventWithNodeId(wrapper, 2)
+        done()
+      })
+    })
+  })
+  it('key Up on first child node selects its parent', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }, {
+      id: 2,
+      name: 'name2',
+      opened: true,
+      children: [{
+        id: 4,
+        name: 'child1'
+      }]
+    }, {
+      id: 3,
+      name: 'name3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    clickFirstFoundChildNodeText(wrapper)
+    wrapper.trigger('keydown.up')
+
+    wrapper.vm.$nextTick(() => {
+      expectSelectedNodeId(wrapper, 2)
+      expectSecondSelectedEventWithNodeId(wrapper, 2)
+      done()
     })
   })
 })

@@ -744,7 +744,6 @@ function removeNode (item) {
     throw new Error('parameter "item" is not set')
   }
 
-  // TODO: учесть что children могут быть функцией
   const parent = item.parent
   if (!parent) {
     this.removeRootNode(this.items, this.originalItems, item)
@@ -752,6 +751,9 @@ function removeNode (item) {
       this.setSelected(null)
     }
     return
+  }
+  if (isFunction(this.treeOptions.childrenProp)) {
+    throw new Error('cannot remove the child item while childrenProp is a function')
   }
   const parentItem = parent.item
   const itemChildren = this.getChildren(parentItem)
