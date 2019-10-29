@@ -12,6 +12,12 @@ describe('keyboard mixin', () => {
     clickableText.trigger('focus')
   }
 
+  function clickFirstFoundChildNodeText (wrapper) {
+    const clickableText = wrapper.find('.treevue-tree-node-child .treevue-tree-node .treevue-node-text')
+    clickableText.trigger('click')
+    clickableText.trigger('focus')
+  }
+
   function expectSelectedNodeId (wrapper, nodeId) {
     expect(wrapper.vm.nodeManager.selectedNode).to.be.not.null
     expect(wrapper.vm.nodeManager.selectedNode.item.id).to.be.eq(nodeId)
@@ -103,15 +109,102 @@ describe('keyboard mixin', () => {
       checkOnSelect: false
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
+    clickFirstFoundNodeText(wrapper)
+    wrapper.trigger('keydown.down')
 
     wrapper.vm.$nextTick(() => {
-      clickFirstFoundNodeText(wrapper)
-      wrapper.trigger('keydown.down')
-      wrapper.vm.$nextTick(() => {
-        expectSelectedNodeId(wrapper, 4)
-        expectSecondSelectedEventWithNodeId(wrapper, 4)
-        done()
-      })
+      expectSelectedNodeId(wrapper, 4)
+      expectSecondSelectedEventWithNodeId(wrapper, 4)
+      done()
+    })
+  })
+  it('key Down on closed node with children selects next sibling', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      opened: false,
+      children: [{
+        id: 4,
+        name: 'child1'
+      }]
+    }, {
+      id: 2,
+      name: 'name2'
+    }, {
+      id: 3,
+      name: 'name3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    clickFirstFoundNodeText(wrapper)
+    wrapper.trigger('keydown.down')
+
+    wrapper.vm.$nextTick(() => {
+      expectSelectedNodeId(wrapper, 2)
+      expectSecondSelectedEventWithNodeId(wrapper, 2)
+      done()
+    })
+  })
+  it('key Down on last child node selects next parent', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      opened: true,
+      children: [{
+        id: 4,
+        name: 'child1'
+      }]
+    }, {
+      id: 2,
+      name: 'name2'
+    }, {
+      id: 3,
+      name: 'name3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    clickFirstFoundChildNodeText(wrapper)
+    wrapper.trigger('keydown.down')
+
+    wrapper.vm.$nextTick(() => {
+      expectSelectedNodeId(wrapper, 2)
+      expectSecondSelectedEventWithNodeId(wrapper, 2)
+      done()
+    })
+  })
+  it('key Down on first node selects next available node', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      opened: true,
+      children: [{
+        id: 4,
+        disabled: true,
+        name: 'child1'
+      }]
+    }, {
+      id: 2,
+      disabled: true,
+      name: 'name2'
+    }, {
+      id: 3,
+      name: 'name3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    clickFirstFoundNodeText(wrapper)
+    wrapper.trigger('keydown.down')
+
+    wrapper.vm.$nextTick(() => {
+      expectSelectedNodeId(wrapper, 3)
+      expectSecondSelectedEventWithNodeId(wrapper, 3)
+      done()
     })
   })
   it('key Down on second node does not change selected node', done => {
