@@ -596,4 +596,117 @@ describe('keyboard mixin', () => {
       done()
     })
   })
+  it('key Space on disabled node does nothing', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      checked: false,
+      disabled: true
+    }, {
+      id: 2,
+      name: 'name2'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    clickFirstFoundNodeText(wrapper)
+    wrapper.trigger('keydown.space')
+
+    wrapper.vm.$nextTick(() => {
+      expect(wrapper.vm.nodeManager.getById(1).states.checked).to.be.false
+
+      done()
+    })
+  })
+  it('key Space on unchecked node checks it', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      checked: false
+    }, {
+      id: 2,
+      name: 'name2'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    clickFirstFoundNodeText(wrapper)
+    wrapper.trigger('keydown.space')
+
+    wrapper.vm.$nextTick(() => {
+      expect(wrapper.vm.nodeManager.getById(1).states.checked).to.be.true
+
+      done()
+    })
+  })
+  it('key Space on checked node unchecks it', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      checked: true
+    }, {
+      id: 2,
+      name: 'name2'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    clickFirstFoundNodeText(wrapper)
+    wrapper.trigger('keydown.space')
+
+    wrapper.vm.$nextTick(() => {
+      expect(wrapper.vm.nodeManager.getById(1).states.checked).to.be.false
+
+      done()
+    })
+  })
+  it('key Del on node deletes it with canDelete option checked', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }, {
+      id: 2,
+      name: 'name2'
+    }]
+    const options = {
+      checkOnSelect: false,
+      canDelete: true
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    clickFirstFoundNodeText(wrapper)
+
+    wrapper.vm.$nextTick(() => {
+      wrapper.trigger('keydown.delete')
+      expect(wrapper.vm.nodeManager.items.length).to.be.eq(1)
+      expect(wrapper.vm.nodeManager.getById(1)).to.be.null
+
+      done()
+    })
+  })
+  it('key Del on node does nothing with canDelete option unchecked', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }, {
+      id: 2,
+      name: 'name2'
+    }]
+    const options = {
+      checkOnSelect: false,
+      canDelete: false
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    clickFirstFoundNodeText(wrapper)
+
+    wrapper.vm.$nextTick(() => {
+      wrapper.trigger('keydown.delete')
+      expect(wrapper.vm.nodeManager.items.length).to.be.eq(2)
+      expect(wrapper.vm.nodeManager.getById(1)).to.be.not.null
+
+      done()
+    })
+  })
 })
