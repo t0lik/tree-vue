@@ -421,4 +421,179 @@ describe('keyboard mixin', () => {
       done()
     })
   })
+  it('key Left on opened node collapses it', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      opened: true,
+      children: [{
+        id: 4,
+        name: 'child1'
+      }]
+    }, {
+      id: 2,
+      name: 'name2'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    clickFirstFoundNodeText(wrapper)
+    wrapper.trigger('keydown.left')
+
+    wrapper.vm.$nextTick(() => {
+      expectSelectedNodeId(wrapper, 1)
+      expect(wrapper.vm.nodeManager.selectedNode.states.opened).to.be.false
+
+      done()
+    })
+  })
+  it('key Left on child node selectes its parent', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      opened: true,
+      children: [{
+        id: 4,
+        name: 'child1'
+      }]
+    }, {
+      id: 2,
+      name: 'name2'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    clickFirstFoundChildNodeText(wrapper)
+    wrapper.trigger('keydown.left')
+
+    wrapper.vm.$nextTick(() => {
+      expectSelectedNodeId(wrapper, 1)
+      expectSecondSelectedEventWithNodeId(wrapper, 1)
+
+      done()
+    })
+  })
+  it('key Left on root node does nothing', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }, {
+      id: 2,
+      name: 'name2',
+      opened: false,
+      children: [{
+        id: 4,
+        name: 'child1'
+      }]
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const clickableNodes = wrapper.findAll('.treevue-tree-node')
+    expect(clickableNodes.length).to.be.eq(2)
+    const secondNode = clickableNodes.at(1)
+    const clickableText = secondNode.find('.treevue-tree-node .treevue-node-text')
+    clickableText.trigger('click')
+    clickableText.trigger('focus')
+
+    wrapper.vm.$nextTick(() => {
+      expectSelectedNodeId(wrapper, 2)
+      expectFirstSelectedEventWithNodeId(wrapper, 2)
+
+      done()
+    })
+  })
+  it('key Right on closed node expands it', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      opened: false,
+      children: [{
+        id: 4,
+        name: 'child1'
+      }]
+    }, {
+      id: 2,
+      name: 'name2'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    clickFirstFoundNodeText(wrapper)
+    wrapper.trigger('keydown.right')
+
+    wrapper.vm.$nextTick(() => {
+      expectSelectedNodeId(wrapper, 1)
+      expect(wrapper.vm.nodeManager.selectedNode.states.opened).to.be.true
+
+      done()
+    })
+  })
+  it('key Right on opened node selectes its first enabled child', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      opened: true,
+      children: [{
+        id: 4,
+        name: 'child1',
+        disabled: true
+      }, {
+        id: 5,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'name2'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    clickFirstFoundNodeText(wrapper)
+    wrapper.trigger('keydown.right')
+
+    wrapper.vm.$nextTick(() => {
+      expectSelectedNodeId(wrapper, 5)
+      expectSecondSelectedEventWithNodeId(wrapper, 5)
+
+      done()
+    })
+  })
+  it('key Right on opened node with disabled children does nothing', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      opened: true,
+      children: [{
+        id: 4,
+        name: 'child1',
+        disabled: true
+      }, {
+        id: 5,
+        name: 'child2',
+        disabled: true
+      }]
+    }, {
+      id: 2,
+      name: 'name2'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    clickFirstFoundNodeText(wrapper)
+    wrapper.trigger('keydown.right')
+
+    wrapper.vm.$nextTick(() => {
+      expectSelectedNodeId(wrapper, 1)
+      expectFirstSelectedEventWithNodeId(wrapper, 1)
+
+      done()
+    })
+  })
 })
