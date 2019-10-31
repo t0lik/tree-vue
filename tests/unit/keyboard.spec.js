@@ -709,4 +709,54 @@ describe('keyboard mixin', () => {
       done()
     })
   })
+  it('key F2 on node does nothing with canEdit option unchecked', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }, {
+      id: 2,
+      name: 'name2'
+    }]
+    const options = {
+      checkOnSelect: false,
+      canEdit: false
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    clickFirstFoundNodeText(wrapper)
+
+    wrapper.vm.$nextTick(() => {
+      wrapper.trigger('keydown', {
+        key: 'F2'
+      })
+      expect(wrapper.vm.nodeManager.items.length).to.be.eq(2)
+      expect(wrapper.vm.nodeManager.getById(1)).to.be.not.null
+
+      done()
+    })
+  })
+  it('key F2 on node switches it to edit mode with canEdit option checked', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }, {
+      id: 2,
+      name: 'name2'
+    }]
+    const options = {
+      checkOnSelect: false,
+      canEdit: true
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    clickFirstFoundNodeText(wrapper)
+
+    wrapper.vm.$nextTick(() => {
+      wrapper.trigger('keydown', {
+        key: 'F2'
+      })
+      const editorWrapper = wrapper.find('.treevue-node-editor')
+      expect(editorWrapper).to.be.not.null
+
+      done()
+    })
+  })
 })
