@@ -355,6 +355,7 @@ describe('nodeManager default item states', () => {
     expect(node).to.be.not.null
     expect(node.icon).to.be.eq('fa fa-plus')
   })
+  // TODO: test for visible()
   it('item is in the indeterminate state when some but not all its children are checked', () => {
     const nodes = [{
       id: 1,

@@ -117,10 +117,17 @@ function visitNodeAndChildren (item, itemCallback, onlyVisible) {
     return
   }
 
-  itemCallback(item)
+  const stopVisiting = itemCallback(item)
+
+  if (stopVisiting === true) {
+    return true
+  }
 
   for (const child of item.children) {
-    this.visitNodeAndChildren(child, itemCallback, onlyVisible)
+    const stopVisiting = this.visitNodeAndChildren(child, itemCallback, onlyVisible)
+    if (stopVisiting === true) {
+      return true
+    }
   }
 }
 
@@ -133,7 +140,10 @@ function visitAllNodes (items, itemCallback, onlyVisible = false) {
   }
 
   for (const item of items) {
-    this.visitNodeAndChildren(item, itemCallback, onlyVisible)
+    const stopVisiting = this.visitNodeAndChildren(item, itemCallback, onlyVisible)
+    if (stopVisiting === true) {
+      return
+    }
   }
 }
 
@@ -579,6 +589,7 @@ function findOne (selector) {
   this.visitAll(this.items, item => {
     if (selector(item)) {
       foundNode = item
+      return true
     }
   })
 
