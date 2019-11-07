@@ -365,11 +365,11 @@ export default {
     },
     removeChildNode () {
       const foundNode = this.nodeManager.findOne(item => item.item.id === 8)
-      this.nodeManager.removeNode(foundNode)
+      this.nodeManager.remove(foundNode)
     },
     removeRootNode () {
       const foundNode = this.nodeManager.findOne(item => item.item.id === 2)
-      this.nodeManager.removeNode(foundNode)
+      this.nodeManager.remove(foundNode)
     },
     startSearch () {
       this.nodeManager.filter(this.searchString)
@@ -495,7 +495,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   margin-left: 50px;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 40px;
 }
 .checked-nodes-text {
   white-space: pre-wrap

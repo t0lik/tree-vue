@@ -82,7 +82,7 @@ export default {
   },
   computed: {
     visibleItems () {
-      return this.nodeManager.items.filter(x => this.nodeManager.getVisibility(x))
+      return this.nodeManager.items.filter(x => x.visible())
     }
   },
   mounted () {

@@ -142,7 +142,7 @@ export default {
       }
     },
     visibleItems () {
-      return this.node.children.filter(x => this.manager.getVisibility(x))
+      return this.node.children.filter(x => x.visible())
     },
     nodeText () {
       return this.manager.getName(this.node)
@@ -175,10 +175,10 @@ export default {
       this.$emit('clicked', item)
     },
     onNodeCheckStateChanging (state) {
-      this.manager.setNodeCheckState(this.node, state)
+      this.manager.setCheckState(this.node, state)
     },
     onNodeOpenStateChanging (state) {
-      this.manager.setNodeOpenState(this.node, state)
+      this.manager.setOpenState(this.node, state)
     },
     onClick () {
       if (this.node.states.disabled) {

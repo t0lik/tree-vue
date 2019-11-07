@@ -145,7 +145,7 @@ function removeNode (tree, node) {
     return
   }
 
-  tree.nodeManager.removeNode(node)
+  tree.nodeManager.remove(node)
 }
 
 function editNode (tree, node) {

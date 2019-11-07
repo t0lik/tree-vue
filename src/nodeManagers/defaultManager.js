@@ -5,20 +5,20 @@ const CheckModes = {
   Independent: 'independent'
 }
 
-function mapNodeToItem (node, parent = null, prevItem = null) {
-  const idProp = this.treeOptions.idProp
-  const id = node[idProp] != null ? node[idProp] : this.internalLastNodeId
-  this.internalLastNodeId += 1
-  const item = {
-    item: node,
+function mapItemToNode (manager, item, parent = null, prevNode = null) {
+  const idProp = manager.treeOptions.idProp
+  const id = item[idProp] != null ? item[idProp] : manager.internalLastNodeId
+  manager.internalLastNodeId += 1
+  const node = {
+    item,
     id,
     parent,
-    prev: prevItem,
+    prev: prevNode,
     next: null,
     states: {
-      checked: node.checked || false,
-      disabled: node.disabled || false,
-      opened: node.opened || false,
+      checked: item.checked || false,
+      disabled: item.disabled || false,
+      opened: item.opened || false,
       visible: true,
       matched: false
     },
@@ -28,66 +28,66 @@ function mapNodeToItem (node, parent = null, prevItem = null) {
       checkbox: null,
       expander: null
     },
-    icon: node.icon || null
+    icon: item.icon || null
   }
-  const children = this.getChildren(node) || []
-  const mappedChildren = children.map(x => this.mapNodeToItem(x, item))
-  if (this.treeOptions.autoSort) {
-    this.sortNodes(mappedChildren, this.treeOptions.sortComparator)
+  const children = manager.getChildren(item) || []
+  const mappedChildren = children.map(x => mapItemToNode(manager, x, node))
+  if (manager.treeOptions.autoSort) {
+    sortNodes(manager, mappedChildren, manager.treeOptions.sortComparator)
   }
   let prevChild = null
-  for (const item of mappedChildren) {
-    item.prev = prevChild
+  for (const child of mappedChildren) {
+    child.prev = prevChild
     if (prevChild) {
-      prevChild.next = item
+      prevChild.next = child
     }
-    prevChild = item
+    prevChild = child
   }
 
-  item.children = mappedChildren
-  item.indeterminate = () => {
-    const isSomeChildrenChecked = item.children.some(x => x.states.checked || x.indeterminate())
-    const isAllChildrenChecked = item.children.every(x => x.states.checked && !x.indeterminate())
+  node.children = mappedChildren
+  node.indeterminate = () => {
+    const isSomeChildrenChecked = node.children.some(x => x.states.checked || x.indeterminate())
+    const isAllChildrenChecked = node.children.every(x => x.states.checked && !x.indeterminate())
     return isSomeChildrenChecked && !isAllChildrenChecked
   }
 
-  item.addChild = child => this.addChild(item, child)
-  item.insertChild = (child, beforeChild) => this.insertChild(item, child, beforeChild)
+  node.addChild = child => manager.addChild(node, child)
+  node.insertChild = (child, beforeChild) => manager.insertChild(node, child, beforeChild)
 
-  item.expand = withChildren => this.expand(item, withChildren)
-  item.expandChildren = () => this.expandChildren(item)
-  item.collapse = withChildren => this.collapse(item, withChildren)
-  item.collapseChildren = () => this.collapseChildren(item)
+  node.expand = withChildren => manager.expand(node, withChildren)
+  node.expandChildren = () => manager.expandChildren(node)
+  node.collapse = withChildren => manager.collapse(node, withChildren)
+  node.collapseChildren = () => manager.collapseChildren(node)
 
-  item.select = () => this.setSelected(item)
-  item.deselect = () => this.setSelected(null)
+  node.select = () => manager.setSelected(node)
+  node.deselect = () => manager.setSelected(null)
 
-  item.show = () => this.showNode(item)
+  node.show = () => manager.showNode(node)
 
-  item.disable = withChildren => this.disable(item, withChildren)
-  item.disableChildren = () => this.disableChildren(item)
-  item.enable = withChildren => this.enable(item, withChildren)
-  item.enableChildren = () => this.enableChildren(item)
+  node.disable = withChildren => manager.disable(node, withChildren)
+  node.disableChildren = () => manager.disableChildren(node)
+  node.enable = withChildren => manager.enable(node, withChildren)
+  node.enableChildren = () => manager.enableChildren(node)
 
-  item.check = withChildren => this.check(item, withChildren)
-  item.checkChildren = () => this.checkChildren(item)
-  item.uncheck = withChildren => this.uncheck(item, withChildren)
-  item.uncheckChildren = () => this.uncheckChildren(item)
-  item.visible = () => this.getVisibility(item)
+  node.check = withChildren => manager.check(node, withChildren)
+  node.checkChildren = () => manager.checkChildren(node)
+  node.uncheck = withChildren => manager.uncheck(node, withChildren)
+  node.uncheckChildren = () => manager.uncheckChildren(node)
+  node.visible = () => getVisibility(node)
 
-  item.setCheckboxStyle = (checkBoxClasses, withChildren) => this.setCheckboxStyle(item, checkBoxClasses, withChildren)
-  item.resetCheckboxStyle = withChildren => this.setCheckboxStyle(item, null, withChildren)
-  item.setTextStyle = (textClasses, withChildren) => this.setTextStyle(item, textClasses, withChildren)
-  item.resetTextStyle = withChildren => this.setTextStyle(item, null, withChildren)
-  item.setIconStyle = (iconClasses, withChildren) => this.setIconStyle(item, iconClasses, withChildren)
-  item.resetIconStyle = withChildren => this.setIconStyle(item, null, withChildren)
-  item.setExpanderStyle = (expanderClasses, withChildren) => this.setExpanderStyle(item, expanderClasses, withChildren)
-  item.resetExpanderStyle = withChildren => this.setExpanderStyle(item, null, withChildren)
+  node.setCheckboxStyle = (checkBoxClasses, withChildren) => manager.setCheckboxStyle(node, checkBoxClasses, withChildren)
+  node.resetCheckboxStyle = withChildren => manager.setCheckboxStyle(node, null, withChildren)
+  node.setTextStyle = (textClasses, withChildren) => manager.setTextStyle(node, textClasses, withChildren)
+  node.resetTextStyle = withChildren => manager.setTextStyle(node, null, withChildren)
+  node.setIconStyle = (iconClasses, withChildren) => manager.setIconStyle(node, iconClasses, withChildren)
+  node.resetIconStyle = withChildren => manager.setIconStyle(node, null, withChildren)
+  node.setExpanderStyle = (expanderClasses, withChildren) => manager.setExpanderStyle(node, expanderClasses, withChildren)
+  node.resetExpanderStyle = withChildren => manager.setExpanderStyle(node, null, withChildren)
 
-  item.findParent = selector => this.findParent(item, selector)
-  item.findParents = selector => this.findParents(item, selector)
+  node.findParent = selector => manager.findParent(node, selector)
+  node.findParents = selector => manager.findParents(node, selector)
 
-  return item
+  return node
 }
 
 function isFunction (obj) {
@@ -138,7 +138,7 @@ function visitNodeAndChildren (item, itemCallback, onlyVisible) {
   }
 
   for (const child of item.children) {
-    const stopVisiting = this.visitNodeAndChildren(child, itemCallback, onlyVisible)
+    const stopVisiting = visitNodeAndChildren(child, itemCallback, onlyVisible)
     if (stopVisiting === true) {
       return true
     }
@@ -154,7 +154,7 @@ function visitAllNodes (items, itemCallback, onlyVisible = false) {
   }
 
   for (const item of items) {
-    const stopVisiting = this.visitNodeAndChildren(item, itemCallback, onlyVisible)
+    const stopVisiting = visitNodeAndChildren(item, itemCallback, onlyVisible)
     if (stopVisiting === true) {
       return
     }
@@ -294,48 +294,52 @@ function setAllNodesCheckState (items, state, onlyVisible = false) {
     throw new Error('parameter "items" is not set')
   }
 
-  this.visitAll(items, item => {
+  visitAllNodes(items, item => {
     item.states.checked = state
   }, onlyVisible)
 }
 
 function checkAllNodes (onlyVisible = false) {
-  this.setAllNodesCheckState(this.items, true, onlyVisible)
+  setAllNodesCheckState(this.items, true, onlyVisible)
   this.tree.$emit('tree:checked:all')
 }
 
 function checkVisibleNodes () {
-  this.setAllNodesCheckState(this.items, true, true)
+  setAllNodesCheckState(this.items, true, true)
   this.tree.$emit('tree:checked:visible')
 }
 
 function uncheckAllNodes (onlyVisible = false) {
-  this.setAllNodesCheckState(this.items, false, onlyVisible)
+  setAllNodesCheckState(this.items, false, onlyVisible)
   this.tree.$emit('tree:unchecked:all')
 }
 
 function uncheckVisibleNodes () {
-  this.setAllNodesCheckState(this.items, false, true)
+  setAllNodesCheckState(this.items, false, true)
   this.tree.$emit('tree:unchecked:visible')
 }
 
-function setSingleNodeCheckState (item, state) {
+function setSingleNodeCheckState (manager, item, state) {
+  if (!manager) {
+    throw new Error('parameter "manager" is not set')
+  }
+
   if (!item) {
     throw new Error('parameter "item" is not set')
   }
 
-  item.states.checked = state
-  this.tree.$emit(state ? 'node:checked' : 'node:unchecked', item)
+  item.states.checked = !!state
+  manager.tree.$emit(state ? 'node:checked' : 'node:unchecked', item)
 }
 
-function setNodeCheckState (item, state, withChildren = false) {
+function setCheckState (item, state, withChildren = false) {
   if (!item) {
     throw new Error('parameter "item" is not set')
   }
 
-  this.setSingleNodeCheckState(item, state)
+  setSingleNodeCheckState(this, item, state)
   if (withChildren || this.treeOptions.checkMode === CheckModes.Linked) {
-    this.setNodeChildrenCheckState(item, state)
+    setNodeChildrenCheckState(this, item, state)
   }
   if (this.treeOptions.checkMode === CheckModes.Linked) {
     this.visitAllParents(item, parent => {
@@ -355,22 +359,26 @@ function setNodeCheckState (item, state, withChildren = false) {
       })
 
       if (checkCounts.checked === 0 && checkCounts.indeterminate === 0) {
-        this.setSingleNodeCheckState(parent, false)
+        setSingleNodeCheckState(this, parent, false)
       }
       if (checkCounts.checked === visibleChildren.length) {
-        this.setSingleNodeCheckState(parent, true)
+        setSingleNodeCheckState(this, parent, true)
       }
     })
   }
 }
 
-function setNodeChildrenCheckState (item, state) {
+function setNodeChildrenCheckState (manager, item, state) {
+  if (!manager) {
+    throw new Error('parameter "manager" is not set')
+  }
+
   if (!item) {
     throw new Error('parameter "item" is not set')
   }
 
-  this.visitAll(item.children, child => {
-    this.setSingleNodeCheckState(child, state)
+  visitAllNodes(item.children, child => {
+    setSingleNodeCheckState(manager, child, state)
   })
 }
 
@@ -379,7 +387,7 @@ function checkNode (item, withChildren = false) {
     throw new Error('parameter "item" is not set')
   }
 
-  this.setNodeCheckState(item, true, withChildren)
+  this.setCheckState(item, true, withChildren)
 }
 
 function checkChildren (item) {
@@ -388,9 +396,9 @@ function checkChildren (item) {
   }
 
   if (this.treeOptions.checkMode === CheckModes.Linked) {
-    this.setNodeCheckState(item, true, true)
+    this.setCheckState(item, true, true)
   } else {
-    this.setNodeChildrenCheckState(item, true)
+    this.setNodeChildrenCheckState(this, item, true)
   }
 }
 
@@ -399,7 +407,7 @@ function uncheckNode (item, withChildren = false) {
     throw new Error('parameter "item" is not set')
   }
 
-  this.setNodeCheckState(item, false, withChildren)
+  this.setCheckState(item, false, withChildren)
 }
 
 function uncheckChildren (item) {
@@ -408,13 +416,13 @@ function uncheckChildren (item) {
   }
 
   if (this.treeOptions.checkMode === CheckModes.Linked) {
-    this.setNodeCheckState(item, false, true)
+    this.setCheckState(item, false, true)
   } else {
-    this.setNodeChildrenCheckState(item, false)
+    this.setNodeChildrenCheckState(this, item, false)
   }
 }
 
-function setNodeOpenState (item, state, withChildren = false) {
+function setOpenState (item, state, withChildren = false) {
   if (!item) {
     throw new Error('parameter "item" is not set')
   }
@@ -422,17 +430,21 @@ function setNodeOpenState (item, state, withChildren = false) {
   item.states.opened = state
   this.tree.$emit(state ? 'node:expand' : 'node:collapse', item)
   if (withChildren) {
-    this.setNodeChildrenOpenState(item, state)
+    setNodeChildrenOpenState(this, item, state)
   }
 }
 
-function setNodeChildrenOpenState (item, state) {
+function setNodeChildrenOpenState (manager, item, state) {
+  if (!manager) {
+    throw new Error('parameter "manager" is not set')
+  }
+
   if (!item) {
     throw new Error('parameter "item" is not set')
   }
 
-  this.visitAll(item.children, child => {
-    this.setNodeOpenState(child, state, true)
+  visitAllNodes(item.children, child => {
+    manager.setOpenState(child, state, true)
   })
 }
 
@@ -441,7 +453,7 @@ function setAllNodesOpenState (items, state) {
     throw new Error('parameter "items" is not set')
   }
 
-  this.visitAll(items, item => {
+  visitAllNodes(items, item => {
     item.states.opened = state
   })
 }
@@ -451,7 +463,7 @@ function expandNode (item, withChildren = false) {
     throw new Error('parameter "item" is not set')
   }
 
-  this.setNodeOpenState(item, true, withChildren)
+  this.setOpenState(item, true, withChildren)
 }
 
 function expandChildren (item) {
@@ -459,11 +471,11 @@ function expandChildren (item) {
     throw new Error('parameter "item" is not set')
   }
 
-  this.setNodeChildrenOpenState(item, true)
+  setNodeChildrenOpenState(this, item, true)
 }
 
 function expandAll () {
-  this.setAllNodesOpenState(this.items, true)
+  setAllNodesOpenState(this.items, true)
   this.tree.$emit('tree:expand:all')
 }
 
@@ -472,7 +484,7 @@ function collapseNode (item, withChildren = false) {
     throw new Error('parameter "item" is not set')
   }
 
-  this.setNodeOpenState(item, false, withChildren)
+  this.setOpenState(item, false, withChildren)
 }
 
 function collapseChildren (item) {
@@ -480,66 +492,82 @@ function collapseChildren (item) {
     throw new Error('parameter "item" is not set')
   }
 
-  this.setNodeChildrenOpenState(item, false)
+  setNodeChildrenOpenState(this, item, false)
 }
 
 function collapseAll () {
-  this.setAllNodesOpenState(this.items, false)
+  setAllNodesOpenState(this.items, false)
   if (this.selectedNode && !this.selectedNode.visible()) {
     this.setSelected(null)
   }
   this.tree.$emit('tree:collapse:all')
 }
 
-function setSingleNodeDisableState (item, state) {
+function setSingleNodeDisableState (manager, item, state) {
+  if (!manager) {
+    throw new Error('parameter "manager" is not set')
+  }
+
   if (!item) {
     throw new Error('parameter "item" is not set')
   }
 
   item.states.disabled = state
-  if (this.selectedNode === item && state) {
-    this.setSelected(null)
+  if (manager.selectedNode === item && state) {
+    manager.setSelected(null)
   }
   if (state) {
-    this.tree.$emit('node:disabled', item)
+    manager.tree.$emit('node:disabled', item)
   } else {
-    this.tree.$emit('node:enabled', item)
+    manager.tree.$emit('node:enabled', item)
   }
 }
 
-function setNodeDisableState (item, state, withChildren = false) {
+function setNodeDisableState (manager, item, state, withChildren = false) {
+  if (!manager) {
+    throw new Error('parameter "manager" is not set')
+  }
+
   if (!item) {
     throw new Error('parameter "item" is not set')
   }
 
-  this.setSingleNodeDisableState(item, state)
+  setSingleNodeDisableState(this, item, state)
   if (withChildren) {
-    this.visitAll(item.children, child => {
-      this.setSingleNodeDisableState(child, state)
+    visitAllNodes(item.children, child => {
+      setSingleNodeDisableState(this, child, state)
     })
   }
 }
 
-function setNodeChildrenDisableState (item, state) {
+function setNodeChildrenDisableState (manager, item, state) {
+  if (!manager) {
+    throw new Error('parameter "manager" is not set')
+  }
+
   if (!item) {
     throw new Error('parameter "item" is not set')
   }
 
-  this.visitAll(item.children, child => {
-    this.setSingleNodeDisableState(child, state)
+  visitAllNodes(item.children, child => {
+    setSingleNodeDisableState(manager, child, state)
   })
 }
 
-function setAllNodesDisableState (items, state) {
+function setAllNodesDisableState (manager, items, state) {
+  if (!manager) {
+    throw new Error('parameter "manager" is not set')
+  }
+
   if (!items) {
     throw new Error('parameter "items" is not set')
   }
 
-  this.visitAll(items, item => {
+  visitAllNodes(items, item => {
     item.states.disabled = state
   })
   if (state) {
-    this.setSelected(null)
+    manager.setSelected(null)
   }
 }
 
@@ -548,7 +576,7 @@ function disable (item, withChildren = false) {
     throw new Error('parameter "item" is not set')
   }
 
-  this.setNodeDisableState(item, true, withChildren)
+  setNodeDisableState(this, item, true, withChildren)
 }
 
 function disableChildren (item) {
@@ -556,11 +584,11 @@ function disableChildren (item) {
     throw new Error('parameter "item" is not set')
   }
 
-  this.setNodeChildrenDisableState(item, true)
+  setNodeChildrenDisableState(this, item, true)
 }
 
 function disableAll () {
-  this.setAllNodesDisableState(this.items, true)
+  setAllNodesDisableState(this, this.items, true)
   this.tree.$emit('tree:disabled:all')
 }
 
@@ -569,7 +597,7 @@ function enable (item, withChildren = false) {
     throw new Error('parameter "item" is not set')
   }
 
-  this.setNodeDisableState(item, false, withChildren)
+  setNodeDisableState(this, item, false, withChildren)
 }
 
 function enableChildren (node) {
@@ -577,11 +605,11 @@ function enableChildren (node) {
     throw new Error('parameter "item" is not set')
   }
 
-  this.setNodeChildrenDisableState(node, false)
+  setNodeChildrenDisableState(this, node, false)
 }
 
 function enableAll () {
-  this.setAllNodesDisableState(this.items, false)
+  setAllNodesDisableState(this, this.items, false)
   this.tree.$emit('tree:enabled:all')
 }
 
@@ -700,7 +728,7 @@ function setSelectedNode (node) {
     return
   }
   if (this.treeOptions.checkOnSelect) {
-    this.setNodeCheckState(node, true)
+    this.setCheckState(node, true)
   }
   if (this.treeOptions.openOnSelect) {
     this.expand(node)
@@ -770,10 +798,10 @@ function addChild (parent, node) {
     throw new Error('parameter "node" is not set')
   }
 
-  const child = this.mapNodeToItem(node, parent)
+  const child = mapItemToNode(this, node, parent)
   parent.children.push(child)
   if (this.treeOptions.autoSort) {
-    this.sortNodes(parent.children, this.treeOptions.sortComparator)
+    sortNodes(this, parent.children, this.treeOptions.sortComparator)
   }
   this.tree.$emit('node:child:added', node, child)
 }
@@ -787,7 +815,7 @@ function insertChild (parent, node, beforeNode) {
     throw new Error('parameter "node" is not set')
   }
 
-  const child = this.mapNodeToItem(node, parent)
+  const child = mapItemToNode(this, node, parent)
   if (beforeNode) {
     const insertIndex = parent.children.indexOf(beforeNode)
     parent.children.splice(insertIndex, 0, child)
@@ -795,7 +823,7 @@ function insertChild (parent, node, beforeNode) {
     parent.children.unshift(child)
   }
   if (this.treeOptions.autoSort) {
-    this.sortNodes(parent.children, this.treeOptions.sortComparator)
+    this.sortNodes(this, parent.children, this.treeOptions.sortComparator)
   }
   this.tree.$emit('node:child:added', node, child)
 }
@@ -806,7 +834,6 @@ function removeRootNode (items, originalItems, node) {
   const item = node.item
   const removingItemIndex = originalItems.indexOf(item)
   originalItems.splice(removingItemIndex, 1)
-  this.tree.$emit('node:child:removed', node)
 }
 
 function removeChildNode (parent, itemChildren, node) {
@@ -814,7 +841,6 @@ function removeChildNode (parent, itemChildren, node) {
   parent.children.splice(removingIndex, 1)
   const removingItemIndex = itemChildren.indexOf(node.item)
   itemChildren.splice(removingItemIndex, 1)
-  this.tree.$emit('node:child:removed', node)
 }
 
 function removeNode (item) {
@@ -824,7 +850,8 @@ function removeNode (item) {
 
   const parent = item.parent
   if (!parent) {
-    this.removeRootNode(this.items, this.originalItems, item)
+    removeRootNode(this.items, this.originalItems, item)
+    this.tree.$emit('node:removed', item)
     if (this.selectedNode === item) {
       this.setSelected(null)
     }
@@ -835,13 +862,18 @@ function removeNode (item) {
   }
   const parentItem = parent.item
   const itemChildren = this.getChildren(parentItem)
-  this.removeChildNode(parent, itemChildren, item)
+  removeChildNode(parent, itemChildren, item)
+  this.tree.$emit('node:child:removed', item)
   if (this.selectedNode === item) {
     this.setSelected(null)
   }
 }
 
-function sortNodes (nodes, comparator) {
+function sortNodes (manager, nodes, comparator) {
+  if (!manager) {
+    throw new Error('parameter "manager" is not set')
+  }
+
   if (!nodes) {
     throw new Error('parameter "nodes" is not set')
   }
@@ -849,20 +881,24 @@ function sortNodes (nodes, comparator) {
   if (comparator) {
     nodes.sort(comparator)
   } else {
-    nodes.sort((node1, node2) => this.getName(node1).localeCompare(this.getName(node2)))
+    nodes.sort((node1, node2) => manager.getName(node1).localeCompare(manager.getName(node2)))
   }
 }
 
-function sortNodesRecursive (nodes, comparator) {
+function sortNodesRecursive (manager, nodes, comparator) {
+  if (!manager) {
+    throw new Error('parameter "manager" is not set')
+  }
+
   if (!nodes) {
     throw new Error('parameter "nodes" is not set')
   }
 
-  const compareFunc = comparator || this.treeOptions.sortComparator
-  this.sortNodes(nodes, compareFunc)
+  const compareFunc = comparator || manager.treeOptions.sortComparator
+  sortNodes(manager, nodes, compareFunc)
 
   for (const item of nodes) {
-    this.sortNodesRecursive(item.children, comparator)
+    sortNodesRecursive(manager, item.children, comparator)
   }
 }
 
@@ -903,74 +939,58 @@ function DefaultManager (treeComponent) {
   this.findParent = findParent.bind(this)
   this.findParents = findParents.bind(this)
   this.setSelected = setSelectedNode.bind(this)
-  this.getVisibility = getVisibility.bind(this)
   this.getVisible = getVisibleNodes.bind(this)
-  this.visitNodeAndChildren = visitNodeAndChildren.bind(this)
   this.filter = filter.bind(this)
   this.clearFilter = clearFilter.bind(this)
   this.visitAll = visitAllNodes.bind(this)
-  this.setAllNodesCheckState = setAllNodesCheckState.bind(this)
-  this.setNodeCheckState = setNodeCheckState.bind(this)
-  this.setSingleNodeCheckState = setSingleNodeCheckState.bind(this)
-  this.setNodeChildrenCheckState = setNodeChildrenCheckState.bind(this)
+  this.setCheckState = setCheckState.bind(this)
   this.check = checkNode.bind(this)
   this.checkChildren = checkChildren.bind(this)
   this.uncheck = uncheckNode.bind(this)
   this.uncheckChildren = uncheckChildren.bind(this)
-  this.setAllNodesOpenState = setAllNodesOpenState.bind(this)
-  this.setNodeOpenState = setNodeOpenState.bind(this)
-  this.setNodeChildrenOpenState = setNodeChildrenOpenState.bind(this)
+  this.setOpenState = setOpenState.bind(this)
   this.showNode = showNode.bind(this)
   this.visitAllParents = visitAllParents.bind(this)
-  this.mapNodeToItem = mapNodeToItem.bind(this)
   this.getName = getName.bind(this)
   this.getEditName = getEditName.bind(this)
   this.setName = setName.bind(this)
   this.getChildren = getChildren.bind(this)
   this.addChild = addChild.bind(this)
   this.insertChild = insertChild.bind(this)
-  this.removeRootNode = removeRootNode.bind(this)
-  this.removeChildNode = removeChildNode.bind(this)
-  this.removeNode = removeNode.bind(this)
-  this.setSingleNodeDisableState = setSingleNodeDisableState.bind(this)
-  this.setNodeDisableState = setNodeDisableState.bind(this)
-  this.setNodeChildrenDisableState = setNodeChildrenDisableState.bind(this)
-  this.setAllNodesDisableState = setAllNodesDisableState.bind(this)
+  this.remove = removeNode.bind(this)
   this.disable = disable.bind(this)
   this.disableChildren = disableChildren.bind(this)
   this.disableAll = disableAll.bind(this)
   this.enable = enable.bind(this)
   this.enableChildren = enableChildren.bind(this)
   this.enableAll = enableAll.bind(this)
-  this.sortNodes = sortNodes.bind(this)
-  this.sortNodesRecursive = sortNodesRecursive.bind(this)
   this.setCheckboxStyle = setCheckboxStyle.bind(this)
   this.setTextStyle = setTextStyle.bind(this)
   this.setIconStyle = setIconStyle.bind(this)
   this.setExpanderStyle = setExpanderStyle.bind(this)
 
   this.sort = function (comparator) {
-    this.sortNodesRecursive(this.items, comparator)
+    sortNodesRecursive(this, this.items, comparator)
   }
-  this.setNodes = function (nodes) {
-    if (!nodes) {
+  this.setNodes = function (items) {
+    if (!items) {
       throw new Error('parameter "nodes" is not set')
     }
 
-    this.originalItems = nodes
-    const items = nodes.map(x => this.mapNodeToItem(x))
+    this.originalItems = items
+    const nodes = items.map(x => mapItemToNode(this, x))
     if (this.treeOptions.autoSort) {
-      this.sortNodes(items, this.treeOptions.sortComparator)
+      sortNodes(this, nodes, this.treeOptions.sortComparator)
     }
     let prevItem = null
-    for (const item of items) {
+    for (const item of nodes) {
       item.prev = prevItem
       if (prevItem) {
         prevItem.next = item
       }
       prevItem = item
     }
-    this.items = items
+    this.items = nodes
   }.bind(this)
 }
 

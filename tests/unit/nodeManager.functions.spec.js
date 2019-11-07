@@ -766,59 +766,6 @@ describe('nodeManager functions', () => {
     expect(manager.selectedNode).to.be.eq(node)
     expect(node.states.opened).to.be.true
   })
-  it('getVisibility with closed node returns false', () => {
-    const nodes = [{
-      id: 1,
-      name: 'node1',
-      children: [{
-        id: 3,
-        name: 'child1'
-      }, {
-        id: 4,
-        name: 'child2'
-      }]
-    }, {
-      id: 2,
-      name: 'node2',
-      children: [{
-        id: 8,
-        name: 'child3'
-      }]
-    }, {
-      id: 5,
-      name: 'node3'
-    }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(3)
-    expect(manager.getVisibility(node)).to.be.false
-  })
-  it('getVisibility with opened node returns true', () => {
-    const nodes = [{
-      id: 1,
-      name: 'node1',
-      opened: true,
-      children: [{
-        id: 3,
-        name: 'child1'
-      }, {
-        id: 4,
-        name: 'child2'
-      }]
-    }, {
-      id: 2,
-      name: 'node2',
-      children: [{
-        id: 8,
-        name: 'child3'
-      }]
-    }, {
-      id: 5,
-      name: 'node3'
-    }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(3)
-    expect(manager.getVisibility(node)).to.be.true
-  })
   it('getVisible returns all visible nodes', () => {
     const nodes = [{
       id: 1,
@@ -842,109 +789,6 @@ describe('nodeManager functions', () => {
     const visibleNodes = manager.getVisible()
     expect(visibleNodes.length).to.be.eq(3)
     expect(visibleNodes.map(x => x.id)).to.have.members([1, 2, 5])
-  })
-  it('visitNodeAndChildren iterates through node and its children', () => {
-    const nodes = [{
-      id: 1,
-      name: 'node1',
-      opened: true,
-      children: [{
-        id: 3,
-        name: 'child1',
-        children: [{
-          id: 9,
-          name: 'grandchild1'
-        }]
-      }, {
-        id: 4,
-        name: 'child2'
-      }]
-    }, {
-      id: 2,
-      name: 'node2',
-      children: [{
-        id: 8,
-        name: 'child3'
-      }]
-    }, {
-      id: 5,
-      name: 'node3'
-    }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const visitedNodes = []
-    manager.visitNodeAndChildren(node, item => { visitedNodes.push(item) })
-    expect(visitedNodes.map(x => x.id)).to.be.members([1, 3, 9, 4])
-  })
-  it('visitNodeAndChildren with onlyVisible=true iterates through node and its visible children', () => {
-    const nodes = [{
-      id: 1,
-      name: 'node1',
-      opened: true,
-      children: [{
-        id: 3,
-        name: 'child1',
-        children: [{
-          id: 9,
-          name: 'grandchild1'
-        }]
-      }, {
-        id: 4,
-        name: 'child2'
-      }]
-    }, {
-      id: 2,
-      name: 'node2',
-      children: [{
-        id: 8,
-        name: 'child3'
-      }]
-    }, {
-      id: 5,
-      name: 'node3'
-    }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const visitedNodes = []
-    manager.visitNodeAndChildren(node, item => { visitedNodes.push(item) }, true)
-    expect(visitedNodes.map(x => x.id)).to.be.members([1, 3, 4])
-  })
-  it('visitNodeAndChildren and callback returning true on first child iterates through node and its first child only', () => {
-    const nodes = [{
-      id: 1,
-      name: 'node1',
-      children: [{
-        id: 3,
-        name: 'child1',
-        children: [{
-          id: 9,
-          name: 'grandchild1'
-        }]
-      }, {
-        id: 4,
-        name: 'child2'
-      }]
-    }, {
-      id: 2,
-      name: 'node2',
-      children: [{
-        id: 8,
-        name: 'child3'
-      }]
-    }, {
-      id: 5,
-      name: 'node3'
-    }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const visitedNodes = []
-    manager.visitNodeAndChildren(node, item => {
-      visitedNodes.push(item)
-      if (item.id === 3) {
-        return true
-      }
-    })
-    expect(visitedNodes.map(x => x.id)).to.be.members([1, 3])
   })
   it('filter with no text throws Error', () => {
     const nodes = [{
@@ -1176,5 +1020,165 @@ describe('nodeManager functions', () => {
     const visibleNodes = manager.getVisible()
     expect(visibleNodes).to.be.lengthOf(3)
     expect(visibleNodes.map(x => x.id)).to.have.members([1, 2, 5])
+  })
+  it('visitAll with default options iterates through all passed nodes', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const visitedNodes = []
+    manager.visitAll(manager.items, x => { visitedNodes.push(x.id) })
+    expect(visitedNodes).to.be.lengthOf(7)
+    expect(visitedNodes).to.have.members([1, 2, 3, 4, 5, 8, 9])
+  })
+  it('visitAll with onlyVisible=true iterates through all passed and visible nodes', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const visitedNodes = []
+    manager.visitAll(manager.items, x => { visitedNodes.push(x.id) }, true)
+    expect(visitedNodes).to.be.lengthOf(3)
+    expect(visitedNodes).to.have.members([1, 2, 5])
+  })
+  it('visitAll with null as passed nodes throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const visitedNodes = []
+    expect(() => manager.visitAll(null, x => { visitedNodes.push(x.id) })).throw('parameter "items" is not set')
+  })
+  it('visitAll with null as passed callback throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    expect(() => manager.visitAll(manager.items, null)).throw('parameter "itemCallback" is not set')
+  })
+  it('visitAll and callback returning true on first child iterates through node and its first child only', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const node = manager.getById(1)
+    const visitedNodes = []
+    manager.visitAll([node], item => {
+      visitedNodes.push(item)
+      if (item.id === 3) {
+        return true
+      }
+    })
+    expect(visitedNodes.map(x => x.id)).to.be.members([1, 3])
   })
 })
