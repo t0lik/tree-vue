@@ -87,6 +87,8 @@ function mapItemToNode (manager, item, parent = null, prevNode = null) {
   node.findParent = selector => manager.findParent(node, selector)
   node.findParents = selector => manager.findParents(node, selector)
 
+  node.getName = () => manager.getName(node)
+
   return node
 }
 
@@ -261,7 +263,7 @@ function filter (searchObject, options) {
   this.visitAll(this.items, node => {
     node.states.visible = node.parent && node.parent.states.visible && filterOptions.showChildren
     node.states.matched = false
-    const itemName = this.getName(node)
+    const itemName = node.getName()
     if (searchFunc(itemName, node.item)) {
       node.states.visible = true
       node.states.matched = true
@@ -398,7 +400,7 @@ function checkChildren (node) {
   if (this.treeOptions.checkMode === CheckModes.Linked) {
     this.setCheckState(node, true, true)
   } else {
-    this.setNodeChildrenCheckState(this, node, true)
+    setNodeChildrenCheckState(this, node, true)
   }
 }
 
@@ -418,7 +420,7 @@ function uncheckChildren (node) {
   if (this.treeOptions.checkMode === CheckModes.Linked) {
     this.setCheckState(node, false, true)
   } else {
-    this.setNodeChildrenCheckState(this, node, false)
+    setNodeChildrenCheckState(this, node, false)
   }
 }
 
@@ -881,7 +883,7 @@ function sortNodes (manager, nodes, comparator) {
   if (comparator) {
     nodes.sort(comparator)
   } else {
-    nodes.sort((node1, node2) => manager.getName(node1).localeCompare(manager.getName(node2)))
+    nodes.sort((node1, node2) => node1.getName().localeCompare(node2.getName()))
   }
 }
 

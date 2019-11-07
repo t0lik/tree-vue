@@ -145,7 +145,7 @@ export default {
       return this.node.children.filter(x => x.visible())
     },
     nodeText () {
-      return this.manager.getName(this.node)
+      return this.node.getName()
     }
   },
   mounted () {

@@ -1181,4 +1181,1076 @@ describe('nodeManager functions', () => {
     })
     expect(visitedNodes.map(x => x.id)).to.be.members([1, 3])
   })
+  it('setCheckState with node=null throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      opened: true,
+      children: [{
+        id: 3,
+        name: 'child1',
+        opened: true,
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+
+    expect(() => manager.setCheckState(null, true)).throw('parameter "node" is not set')
+  })
+  it('setCheckState with state=true checks specified node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const node = manager.getById(1)
+    manager.setCheckState(node, true)
+    expect(node.states.checked).to.be.true
+  })
+  it('setCheckState with state=false unchecks specified node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      checked: true,
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const node = manager.getById(1)
+    manager.setCheckState(node, false)
+    expect(node.states.checked).to.be.false
+  })
+  it('setCheckState with state=true and withChildren=true checks specified node and its children', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const node = manager.getById(1)
+    manager.setCheckState(node, true, true)
+    const checkedNodes = manager.getChecked()
+    expect(checkedNodes).to.be.lengthOf(4)
+    expect(checkedNodes.map(x => x.id)).to.be.members([1, 3, 9, 4])
+  })
+  it('setCheckState with state=true and treeOptions.CheckModes=Linked checks specified node and its children', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes, { checkMode: 'linked' })
+    const node = manager.getById(1)
+    manager.setCheckState(node, true)
+    const checkedNodes = manager.getChecked()
+    expect(checkedNodes).to.be.lengthOf(4)
+    expect(checkedNodes.map(x => x.id)).to.be.members([1, 3, 9, 4])
+  })
+  it('setCheckState with state=true and treeOptions.CheckModes=Linked checks specified single child node and its opened parent', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      opened: true,
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes, { checkMode: 'linked' })
+    const node = manager.getById(8)
+    manager.setCheckState(node, true)
+    const checkedNodes = manager.getChecked()
+    expect(checkedNodes).to.be.lengthOf(2)
+    expect(checkedNodes.map(x => x.id)).to.be.members([2, 8])
+  })
+  it('setCheckState with state=false and treeOptions.CheckModes=Linked unchecks specified single child node and its opened parent', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      opened: true,
+      checked: true,
+      children: [{
+        id: 8,
+        name: 'child3',
+        checked: true
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes, { checkMode: 'linked' })
+    const node = manager.getById(8)
+    manager.setCheckState(node, false)
+    const checkedNodes = manager.getChecked()
+    expect(checkedNodes).to.be.lengthOf(0)
+  })
+  it('check checks specified node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const node = manager.getById(1)
+    manager.check(node)
+    expect(node.states.checked).to.be.true
+  })
+  it('check with node=null throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      opened: true,
+      children: [{
+        id: 3,
+        name: 'child1',
+        opened: true,
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+
+    expect(() => manager.check(null)).throw('parameter "node" is not set')
+  })
+  it('check with withChildren=true checks specified node and its children', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const node = manager.getById(1)
+    manager.check(node, true)
+    const checkedNodes = manager.getChecked()
+    expect(checkedNodes).to.be.lengthOf(4)
+    expect(checkedNodes.map(x => x.id)).to.be.members([1, 3, 9, 4])
+  })
+  it('checkChildren checks specified node children', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const node = manager.getById(1)
+    manager.checkChildren(node)
+    const checkedNodes = manager.getChecked()
+    expect(checkedNodes).to.be.lengthOf(3)
+    expect(checkedNodes.map(x => x.id)).to.be.members([3, 9, 4])
+  })
+  it('checkChildren with node=null throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      opened: true,
+      children: [{
+        id: 3,
+        name: 'child1',
+        opened: true,
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+
+    expect(() => manager.checkChildren(null)).throw('parameter "node" is not set')
+  })
+  it('uncheck unchecks specified node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      checked: true,
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const node = manager.getById(1)
+    manager.uncheck(node)
+    expect(node.states.checked).to.be.false
+  })
+  it('uncheck with node=null throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      opened: true,
+      children: [{
+        id: 3,
+        name: 'child1',
+        opened: true,
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+
+    expect(() => manager.uncheck(null)).throw('parameter "node" is not set')
+  })
+  it('uncheck with withChildren=true unchecks specified node and its children', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      checked: true,
+      children: [{
+        id: 3,
+        name: 'child1',
+        checked: true,
+        children: [{
+          id: 9,
+          name: 'grandchild1',
+          checked: true
+        }]
+      }, {
+        id: 4,
+        name: 'child2',
+        checked: true
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const node = manager.getById(1)
+    manager.uncheck(node, true)
+    const checkedNodes = manager.getChecked()
+    expect(checkedNodes).to.be.lengthOf(0)
+  })
+  it('uncheckChildren unchecks specified node children', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      checked: true,
+      children: [{
+        id: 3,
+        name: 'child1',
+        checked: true,
+        children: [{
+          id: 9,
+          name: 'grandchild1',
+          checked: true
+        }]
+      }, {
+        id: 4,
+        name: 'child2',
+        checked: true
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const node = manager.getById(1)
+    manager.uncheckChildren(node)
+    const checkedNodes = manager.getChecked()
+    expect(checkedNodes.map(x => x.id)).to.be.members([1])
+  })
+  it('uncheckChildren with node=null throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      opened: true,
+      children: [{
+        id: 3,
+        name: 'child1',
+        opened: true,
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+
+    expect(() => manager.uncheckChildren(null)).throw('parameter "node" is not set')
+  })
+  it('setOpenState with state=true opens specified node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const node = manager.getById(1)
+    manager.setOpenState(node, true)
+    expect(node.states.opened).to.be.true
+  })
+  it('setOpenState with state=false closes specified node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      opened: true,
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const node = manager.getById(1)
+    manager.setOpenState(node, false)
+    expect(node.states.opened).to.be.false
+  })
+  it('setOpenState with state=true and withChildren=true opens specified node and all its children', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const node = manager.getById(1)
+    manager.setOpenState(node, true, true)
+    expect(node.states.opened).to.be.true
+    expect(manager.getById(3).states.opened).to.be.true
+  })
+  it('setOpenState with state=false and withChildren=true closes specified node and all its children', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      opened: true,
+      children: [{
+        id: 3,
+        name: 'child1',
+        opened: true,
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const node = manager.getById(1)
+    manager.setOpenState(node, false, true)
+    expect(node.states.opened).to.be.false
+    expect(manager.getById(3).states.opened).to.be.false
+  })
+  it('setOpenState with node=null throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      opened: true,
+      children: [{
+        id: 3,
+        name: 'child1',
+        opened: true,
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+
+    expect(() => manager.setOpenState(null, true)).throw('parameter "node" is not set')
+  })
+  it('showNode expands all parents of specified node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const node = manager.getById(9)
+    manager.showNode(node)
+    expect(node.visible()).to.be.true
+    expect(manager.getById(1).states.opened).to.be.true
+    expect(manager.getById(3).states.opened).to.be.true
+  })
+  it('showNode with node=null throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+
+    expect(() => manager.showNode(null)).throw('parameter "node" is not set')
+  })
+  it('visitAllParents iterates through all node parents', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const node = manager.getById(9)
+    const visitedNodes = []
+    manager.visitAllParents(node, x => { visitedNodes.push(x.id) })
+    expect(visitedNodes).to.be.lengthOf(2)
+    expect(visitedNodes).to.have.members([1, 3])
+  })
+  it('visitAllParents with node=null throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+
+    expect(() => manager.visitAllParents(null, x => true)).throw('parameter "node" is not set')
+  })
+  it('visitAllParents with nodeCallback=null throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const node = manager.getById(9)
+
+    expect(() => manager.visitAllParents(node, null)).throw('parameter "nodeCallback" is not set')
+  })
+  it('visitAllParents and callback returning true on first parent iterates through this parent only', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const node = manager.getById(9)
+    const visitedNodes = []
+    manager.visitAllParents(node, item => {
+      visitedNodes.push(item)
+      if (item.id === 3) {
+        return true
+      }
+    })
+    expect(visitedNodes.map(x => x.id)).to.be.members([3])
+  })
+  it('visitAllParents on root node does not iterate through any nodes', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const node = manager.getById(1)
+    const visitedNodes = []
+    manager.visitAllParents(node, item => {
+      visitedNodes.push(item)
+    })
+    expect(visitedNodes).to.be.empty
+  })
+  it('getName returns item name prop value ', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const node = manager.getById(1)
+    expect(manager.getName(node)).to.be.eq('node1')
+  })
+  it('getName with treeOptions.nameProp=id returns item id value ', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes, {
+      nameProp: 'id'
+    })
+    const node = manager.getById(1)
+    expect(manager.getName(node)).to.be.eq(node.id)
+  })
+  it('getName with treeOptions.nameProp=function returns item name function value ', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes, {
+      nameProp: item => item.name + ':' + item.id
+    })
+    const node = manager.getById(1)
+    expect(manager.getName(node)).to.be.eq('node1:1')
+  })
+  it('getName with node=null throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+
+    expect(() => manager.getName(null)).throw('parameter "node" is not set')
+  })
 })
