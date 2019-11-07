@@ -1113,7 +1113,7 @@ describe('nodeManager functions', () => {
     }]
     const manager = getNodeManager(nodes)
     const visitedNodes = []
-    expect(() => manager.visitAll(null, x => { visitedNodes.push(x.id) })).throw('parameter "items" is not set')
+    expect(() => manager.visitAll(null, x => { visitedNodes.push(x.id) })).throw('parameter "nodes" is not set')
   })
   it('visitAll with null as passed callback throws Error', () => {
     const nodes = [{
@@ -1142,7 +1142,7 @@ describe('nodeManager functions', () => {
       name: 'node3'
     }]
     const manager = getNodeManager(nodes)
-    expect(() => manager.visitAll(manager.items, null)).throw('parameter "itemCallback" is not set')
+    expect(() => manager.visitAll(manager.items, null)).throw('parameter "nodeCallback" is not set')
   })
   it('visitAll and callback returning true on first child iterates through node and its first child only', () => {
     const nodes = [{

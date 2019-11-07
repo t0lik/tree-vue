@@ -110,68 +110,68 @@ function getVisibility (node) {
 
 function getVisibleNodes () {
   const visibleNodes = []
-  this.visitAll(this.items, item => {
-    if (item.visible()) {
-      visibleNodes.push(item)
+  this.visitAll(this.items, node => {
+    if (node.visible()) {
+      visibleNodes.push(node)
     }
   })
 
   return visibleNodes
 }
 
-function visitNodeAndChildren (item, itemCallback, onlyVisible) {
-  if (!item) {
-    throw new Error('parameter "items" is not set')
+function visitNodeAndChildren (node, nodeCallback, onlyVisible) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
-  if (!itemCallback) {
-    throw new Error('parameter "itemCallback" is not set')
+  if (!nodeCallback) {
+    throw new Error('parameter "nodeCallback" is not set')
   }
 
-  if (onlyVisible && !item.visible()) {
+  if (onlyVisible && !node.visible()) {
     return
   }
 
-  const stopVisiting = itemCallback(item)
+  const stopVisiting = nodeCallback(node)
 
   if (stopVisiting === true) {
     return true
   }
 
-  for (const child of item.children) {
-    const stopVisiting = visitNodeAndChildren(child, itemCallback, onlyVisible)
+  for (const child of node.children) {
+    const stopVisiting = visitNodeAndChildren(child, nodeCallback, onlyVisible)
     if (stopVisiting === true) {
       return true
     }
   }
 }
 
-function visitAllNodes (items, itemCallback, onlyVisible = false) {
-  if (!items) {
-    throw new Error('parameter "items" is not set')
+function visitAllNodes (nodes, nodeCallback, onlyVisible = false) {
+  if (!nodes) {
+    throw new Error('parameter "nodes" is not set')
   }
-  if (!itemCallback) {
-    throw new Error('parameter "itemCallback" is not set')
+  if (!nodeCallback) {
+    throw new Error('parameter "nodeCallback" is not set')
   }
 
-  for (const item of items) {
-    const stopVisiting = visitNodeAndChildren(item, itemCallback, onlyVisible)
+  for (const node of nodes) {
+    const stopVisiting = visitNodeAndChildren(node, nodeCallback, onlyVisible)
     if (stopVisiting === true) {
       return
     }
   }
 }
 
-function visitAllParents (item, itemCallback) {
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+function visitAllParents (node, nodeCallback) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
-  if (!itemCallback) {
-    throw new Error('parameter "itemCallback" is not set')
+  if (!nodeCallback) {
+    throw new Error('parameter "nodeCallback" is not set')
   }
 
-  let parent = item.parent
+  let parent = node.parent
   while (parent) {
-    const stopVisiting = itemCallback(parent)
+    const stopVisiting = nodeCallback(parent)
     if (stopVisiting === true) {
       return
     }
@@ -179,53 +179,53 @@ function visitAllParents (item, itemCallback) {
   }
 }
 
-function setCheckboxStyle (item, classList, withChildren = false) {
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+function setCheckboxStyle (node, classList, withChildren = false) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
-  item.styleClasses.checkbox = classList
+  node.styleClasses.checkbox = classList
   if (withChildren) {
-    this.visitAll(item.children, child => {
+    this.visitAll(node.children, child => {
       child.styleClasses.checkbox = classList
     })
   }
 }
 
-function setTextStyle (item, classList, withChildren = false) {
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+function setTextStyle (node, classList, withChildren = false) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
-  item.styleClasses.text = classList
+  node.styleClasses.text = classList
   if (withChildren) {
-    this.visitAll(item.children, child => {
+    this.visitAll(node.children, child => {
       child.styleClasses.text = classList
     })
   }
 }
 
-function setIconStyle (item, classList, withChildren = false) {
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+function setIconStyle (node, classList, withChildren = false) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
-  item.styleClasses.icon = classList
+  node.styleClasses.icon = classList
   if (withChildren) {
-    this.visitAll(item.children, child => {
+    this.visitAll(node.children, child => {
       child.styleClasses.icon = classList
     })
   }
 }
 
-function setExpanderStyle (item, classList, withChildren = false) {
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+function setExpanderStyle (node, classList, withChildren = false) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
-  item.styleClasses.expander = classList
+  node.styleClasses.expander = classList
   if (withChildren) {
-    this.visitAll(item.children, child => {
+    this.visitAll(node.children, child => {
       child.styleClasses.expander = classList
     })
   }
@@ -233,9 +233,9 @@ function setExpanderStyle (item, classList, withChildren = false) {
 
 function clearFilter () {
   this.options.inSearch = false
-  this.visitAll(this.items, item => {
-    item.states.visible = true
-    item.states.matched = false
+  this.visitAll(this.items, node => {
+    node.states.visible = true
+    node.states.matched = false
   })
   this.collapseAll()
   this.tree.$emit('tree:filter:cleared')
@@ -258,15 +258,15 @@ function filter (searchObject, options) {
     searchFunc = (name, item) => searchObject(item)
   }
   const matchedNodes = []
-  this.visitAll(this.items, item => {
-    item.states.visible = item.parent && item.parent.states.visible && filterOptions.showChildren
-    item.states.matched = false
-    const itemName = this.getName(item)
-    if (searchFunc(itemName, item.item)) {
-      item.states.visible = true
-      item.states.matched = true
-      matchedNodes.push(item)
-      this.visitAllParents(item, parent => {
+  this.visitAll(this.items, node => {
+    node.states.visible = node.parent && node.parent.states.visible && filterOptions.showChildren
+    node.states.matched = false
+    const itemName = this.getName(node)
+    if (searchFunc(itemName, node.item)) {
+      node.states.visible = true
+      node.states.matched = true
+      matchedNodes.push(node)
+      this.visitAllParents(node, parent => {
         parent.states.visible = true
       })
     }
@@ -280,22 +280,22 @@ function filter (searchObject, options) {
 
 function getCheckedNodes () {
   const checkedNodes = []
-  this.visitAll(this.items, item => {
-    if (item.states.checked) {
-      checkedNodes.push(item)
+  this.visitAll(this.items, node => {
+    if (node.states.checked) {
+      checkedNodes.push(node)
     }
   })
 
   return checkedNodes
 }
 
-function setAllNodesCheckState (items, state, onlyVisible = false) {
-  if (!items) {
-    throw new Error('parameter "items" is not set')
+function setAllNodesCheckState (nodes, state, onlyVisible = false) {
+  if (!nodes) {
+    throw new Error('parameter "nodes" is not set')
   }
 
-  visitAllNodes(items, item => {
-    item.states.checked = state
+  visitAllNodes(nodes, node => {
+    node.states.checked = state
   }, onlyVisible)
 }
 
@@ -319,30 +319,30 @@ function uncheckVisibleNodes () {
   this.tree.$emit('tree:unchecked:visible')
 }
 
-function setSingleNodeCheckState (manager, item, state) {
+function setSingleNodeCheckState (manager, node, state) {
   if (!manager) {
     throw new Error('parameter "manager" is not set')
   }
 
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
-  item.states.checked = !!state
-  manager.tree.$emit(state ? 'node:checked' : 'node:unchecked', item)
+  node.states.checked = !!state
+  manager.tree.$emit(state ? 'node:checked' : 'node:unchecked', node)
 }
 
-function setCheckState (item, state, withChildren = false) {
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+function setCheckState (node, state, withChildren = false) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
-  setSingleNodeCheckState(this, item, state)
+  setSingleNodeCheckState(this, node, state)
   if (withChildren || this.treeOptions.checkMode === CheckModes.Linked) {
-    setNodeChildrenCheckState(this, item, state)
+    setNodeChildrenCheckState(this, node, state)
   }
   if (this.treeOptions.checkMode === CheckModes.Linked) {
-    this.visitAllParents(item, parent => {
+    this.visitAllParents(node, parent => {
       const visibleChildren = parent.children.filter(x => x.visible())
       if (!visibleChildren.length) {
         return
@@ -368,110 +368,110 @@ function setCheckState (item, state, withChildren = false) {
   }
 }
 
-function setNodeChildrenCheckState (manager, item, state) {
+function setNodeChildrenCheckState (manager, node, state) {
   if (!manager) {
     throw new Error('parameter "manager" is not set')
   }
 
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
-  visitAllNodes(item.children, child => {
+  visitAllNodes(node.children, child => {
     setSingleNodeCheckState(manager, child, state)
   })
 }
 
-function checkNode (item, withChildren = false) {
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+function checkNode (node, withChildren = false) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
-  this.setCheckState(item, true, withChildren)
+  this.setCheckState(node, true, withChildren)
 }
 
-function checkChildren (item) {
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+function checkChildren (node) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
   if (this.treeOptions.checkMode === CheckModes.Linked) {
-    this.setCheckState(item, true, true)
+    this.setCheckState(node, true, true)
   } else {
-    this.setNodeChildrenCheckState(this, item, true)
+    this.setNodeChildrenCheckState(this, node, true)
   }
 }
 
-function uncheckNode (item, withChildren = false) {
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+function uncheckNode (node, withChildren = false) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
-  this.setCheckState(item, false, withChildren)
+  this.setCheckState(node, false, withChildren)
 }
 
-function uncheckChildren (item) {
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+function uncheckChildren (node) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
   if (this.treeOptions.checkMode === CheckModes.Linked) {
-    this.setCheckState(item, false, true)
+    this.setCheckState(node, false, true)
   } else {
-    this.setNodeChildrenCheckState(this, item, false)
+    this.setNodeChildrenCheckState(this, node, false)
   }
 }
 
-function setOpenState (item, state, withChildren = false) {
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+function setOpenState (node, state, withChildren = false) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
-  item.states.opened = state
-  this.tree.$emit(state ? 'node:expand' : 'node:collapse', item)
+  node.states.opened = state
+  this.tree.$emit(state ? 'node:expand' : 'node:collapse', node)
   if (withChildren) {
-    setNodeChildrenOpenState(this, item, state)
+    setNodeChildrenOpenState(this, node, state)
   }
 }
 
-function setNodeChildrenOpenState (manager, item, state) {
+function setNodeChildrenOpenState (manager, node, state) {
   if (!manager) {
     throw new Error('parameter "manager" is not set')
   }
 
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
-  visitAllNodes(item.children, child => {
+  visitAllNodes(node.children, child => {
     manager.setOpenState(child, state, true)
   })
 }
 
-function setAllNodesOpenState (items, state) {
-  if (!items) {
-    throw new Error('parameter "items" is not set')
+function setAllNodesOpenState (nodes, state) {
+  if (!nodes) {
+    throw new Error('parameter "nodes" is not set')
   }
 
-  visitAllNodes(items, item => {
-    item.states.opened = state
+  visitAllNodes(nodes, node => {
+    node.states.opened = state
   })
 }
 
-function expandNode (item, withChildren = false) {
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+function expandNode (node, withChildren = false) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
-  this.setOpenState(item, true, withChildren)
+  this.setOpenState(node, true, withChildren)
 }
 
-function expandChildren (item) {
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+function expandChildren (node) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
-  setNodeChildrenOpenState(this, item, true)
+  setNodeChildrenOpenState(this, node, true)
 }
 
 function expandAll () {
@@ -479,20 +479,20 @@ function expandAll () {
   this.tree.$emit('tree:expand:all')
 }
 
-function collapseNode (item, withChildren = false) {
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+function collapseNode (node, withChildren = false) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
-  this.setOpenState(item, false, withChildren)
+  this.setOpenState(node, false, withChildren)
 }
 
-function collapseChildren (item) {
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+function collapseChildren (node) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
-  setNodeChildrenOpenState(this, item, false)
+  setNodeChildrenOpenState(this, node, false)
 }
 
 function collapseAll () {
@@ -503,88 +503,88 @@ function collapseAll () {
   this.tree.$emit('tree:collapse:all')
 }
 
-function setSingleNodeDisableState (manager, item, state) {
+function setSingleNodeDisableState (manager, node, state) {
   if (!manager) {
     throw new Error('parameter "manager" is not set')
   }
 
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
-  item.states.disabled = state
-  if (manager.selectedNode === item && state) {
+  node.states.disabled = state
+  if (manager.selectedNode === node && state) {
     manager.setSelected(null)
   }
   if (state) {
-    manager.tree.$emit('node:disabled', item)
+    manager.tree.$emit('node:disabled', node)
   } else {
-    manager.tree.$emit('node:enabled', item)
+    manager.tree.$emit('node:enabled', node)
   }
 }
 
-function setNodeDisableState (manager, item, state, withChildren = false) {
+function setNodeDisableState (manager, node, state, withChildren = false) {
   if (!manager) {
     throw new Error('parameter "manager" is not set')
   }
 
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
-  setSingleNodeDisableState(this, item, state)
+  setSingleNodeDisableState(this, node, state)
   if (withChildren) {
-    visitAllNodes(item.children, child => {
+    visitAllNodes(node.children, child => {
       setSingleNodeDisableState(this, child, state)
     })
   }
 }
 
-function setNodeChildrenDisableState (manager, item, state) {
+function setNodeChildrenDisableState (manager, node, state) {
   if (!manager) {
     throw new Error('parameter "manager" is not set')
   }
 
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
-  visitAllNodes(item.children, child => {
+  visitAllNodes(node.children, child => {
     setSingleNodeDisableState(manager, child, state)
   })
 }
 
-function setAllNodesDisableState (manager, items, state) {
+function setAllNodesDisableState (manager, nodes, state) {
   if (!manager) {
     throw new Error('parameter "manager" is not set')
   }
 
-  if (!items) {
-    throw new Error('parameter "items" is not set')
+  if (!nodes) {
+    throw new Error('parameter "nodes" is not set')
   }
 
-  visitAllNodes(items, item => {
-    item.states.disabled = state
+  visitAllNodes(nodes, node => {
+    node.states.disabled = state
   })
   if (state) {
     manager.setSelected(null)
   }
 }
 
-function disable (item, withChildren = false) {
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+function disable (node, withChildren = false) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
-  setNodeDisableState(this, item, true, withChildren)
+  setNodeDisableState(this, node, true, withChildren)
 }
 
-function disableChildren (item) {
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+function disableChildren (node) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
-  setNodeChildrenDisableState(this, item, true)
+  setNodeChildrenDisableState(this, node, true)
 }
 
 function disableAll () {
@@ -592,17 +592,17 @@ function disableAll () {
   this.tree.$emit('tree:disabled:all')
 }
 
-function enable (item, withChildren = false) {
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+function enable (node, withChildren = false) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
-  setNodeDisableState(this, item, false, withChildren)
+  setNodeDisableState(this, node, false, withChildren)
 }
 
 function enableChildren (node) {
   if (!node) {
-    throw new Error('parameter "item" is not set')
+    throw new Error('parameter "node" is not set')
   }
 
   setNodeChildrenDisableState(this, node, false)
@@ -615,9 +615,9 @@ function enableAll () {
 
 function getNodeById (id) {
   let foundNode = null
-  this.visitAll(this.items, item => {
-    if (item.id === id) {
-      foundNode = item
+  this.visitAll(this.items, node => {
+    if (node.id === id) {
+      foundNode = node
     }
   })
 
@@ -634,9 +634,9 @@ function findOne (selector) {
   }
 
   let foundNode = null
-  this.visitAll(this.items, item => {
-    if (selector(item)) {
-      foundNode = item
+  this.visitAll(this.items, node => {
+    if (selector(node)) {
+      foundNode = node
       return true
     }
   })
@@ -657,15 +657,15 @@ function findParent (node, selector) {
     throw new Error('selector is not a function')
   }
 
-  let foundNode = null
-  this.visitAllParents(node, item => {
-    if (selector(item)) {
-      foundNode = item
+  let foundParent = null
+  this.visitAllParents(node, parent => {
+    if (selector(parent)) {
+      foundParent = parent
       return true
     }
   })
 
-  return foundNode
+  return foundParent
 }
 
 function findParents (node, selector) {
@@ -681,14 +681,14 @@ function findParents (node, selector) {
     throw new Error('selector is not a function')
   }
 
-  const foundNodes = []
-  this.visitAllParents(node, item => {
-    if (selector(item)) {
-      foundNodes.push(item)
+  const foundParents = []
+  this.visitAllParents(node, parent => {
+    if (selector(parent)) {
+      foundParents.push(parent)
     }
   })
 
-  return foundNodes
+  return foundParents
 }
 
 function findAll (selector) {
@@ -701,21 +701,21 @@ function findAll (selector) {
   }
 
   const foundNodes = []
-  this.visitAll(this.items, item => {
-    if (selector(item)) {
-      foundNodes.push(item)
+  this.visitAll(this.items, node => {
+    if (selector(node)) {
+      foundNodes.push(node)
     }
   })
 
   return foundNodes
 }
 
-function showNode (item) {
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+function showNode (node) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
-  this.visitAllParents(item, parent => {
+  this.visitAllParents(node, parent => {
     this.expand(parent)
   })
 }
@@ -735,45 +735,45 @@ function setSelectedNode (node) {
   }
 }
 
-function getName (item) {
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+function getName (node) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
   const nameProp = this.treeOptions.nameProp
   if (typeof nameProp === 'function') {
-    return nameProp(item.item)
+    return nameProp(node.item)
   }
-  return item.item[nameProp]
+  return node.item[nameProp]
 }
 
-function getEditName (item) {
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+function getEditName (node) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
   const editNameProp = this.treeOptions.editNameProp || this.treeOptions.nameProp
   if (typeof editNameProp === 'function') {
     throw new Error('editNameProp cannot be function')
   }
-  return item.item[editNameProp]
+  return node.item[editNameProp]
 }
 
-function setName (item, newName) {
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+function setName (node, newName) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
   const editNameProp = this.treeOptions.editNameProp
   const setNameFunc = this.treeOptions.setNameFunc
   if (!setNameFunc) {
-    item.item[editNameProp] = newName
+    node.item[editNameProp] = newName
     return
   }
   if (typeof setNameFunc !== 'function') {
     throw new Error('setNameFunc must be function')
   }
-  setNameFunc(item.item, newName)
+  setNameFunc(node.item, newName)
 }
 
 function getChildren (item) {
@@ -789,33 +789,33 @@ function getChildren (item) {
   return item[childrenProp]
 }
 
-function addChild (parent, node) {
+function addChild (parent, item) {
   if (!parent) {
     throw new Error('parameter "parent" is not set')
   }
 
-  if (!node) {
-    throw new Error('parameter "node" is not set')
+  if (!item) {
+    throw new Error('parameter "item" is not set')
   }
 
-  const child = mapItemToNode(this, node, parent)
+  const child = mapItemToNode(this, item, parent)
   parent.children.push(child)
   if (this.treeOptions.autoSort) {
     sortNodes(this, parent.children, this.treeOptions.sortComparator)
   }
-  this.tree.$emit('node:child:added', node, child)
+  this.tree.$emit('node:child:added', item, child)
 }
 
-function insertChild (parent, node, beforeNode) {
+function insertChild (parent, item, beforeNode) {
   if (!parent) {
     throw new Error('parameter "parent" is not set')
   }
 
-  if (!node) {
-    throw new Error('parameter "node" is not set')
+  if (!item) {
+    throw new Error('parameter "item" is not set')
   }
 
-  const child = mapItemToNode(this, node, parent)
+  const child = mapItemToNode(this, item, parent)
   if (beforeNode) {
     const insertIndex = parent.children.indexOf(beforeNode)
     parent.children.splice(insertIndex, 0, child)
@@ -825,12 +825,12 @@ function insertChild (parent, node, beforeNode) {
   if (this.treeOptions.autoSort) {
     this.sortNodes(this, parent.children, this.treeOptions.sortComparator)
   }
-  this.tree.$emit('node:child:added', node, child)
+  this.tree.$emit('node:child:added', item, child)
 }
 
-function removeRootNode (items, originalItems, node) {
-  const removingIndex = items.indexOf(node)
-  items.splice(removingIndex, 1)
+function removeRootNode (nodes, originalItems, node) {
+  const removingIndex = nodes.indexOf(node)
+  nodes.splice(removingIndex, 1)
   const item = node.item
   const removingItemIndex = originalItems.indexOf(item)
   originalItems.splice(removingItemIndex, 1)
@@ -843,16 +843,16 @@ function removeChildNode (parent, itemChildren, node) {
   itemChildren.splice(removingItemIndex, 1)
 }
 
-function removeNode (item) {
-  if (!item) {
-    throw new Error('parameter "item" is not set')
+function removeNode (node) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
   }
 
-  const parent = item.parent
+  const parent = node.parent
   if (!parent) {
-    removeRootNode(this.items, this.originalItems, item)
-    this.tree.$emit('node:removed', item)
-    if (this.selectedNode === item) {
+    removeRootNode(this.items, this.originalItems, node)
+    this.tree.$emit('node:removed', node)
+    if (this.selectedNode === node) {
       this.setSelected(null)
     }
     return
@@ -862,9 +862,9 @@ function removeNode (item) {
   }
   const parentItem = parent.item
   const itemChildren = this.getChildren(parentItem)
-  removeChildNode(parent, itemChildren, item)
-  this.tree.$emit('node:child:removed', item)
-  if (this.selectedNode === item) {
+  removeChildNode(parent, itemChildren, node)
+  this.tree.$emit('node:child:removed', node)
+  if (this.selectedNode === node) {
     this.setSelected(null)
   }
 }
@@ -897,8 +897,8 @@ function sortNodesRecursive (manager, nodes, comparator) {
   const compareFunc = comparator || manager.treeOptions.sortComparator
   sortNodes(manager, nodes, compareFunc)
 
-  for (const item of nodes) {
-    sortNodesRecursive(manager, item.children, comparator)
+  for (const node of nodes) {
+    sortNodesRecursive(manager, node.children, comparator)
   }
 }
 
@@ -983,12 +983,12 @@ function DefaultManager (treeComponent) {
       sortNodes(this, nodes, this.treeOptions.sortComparator)
     }
     let prevItem = null
-    for (const item of nodes) {
-      item.prev = prevItem
+    for (const node of nodes) {
+      node.prev = prevItem
       if (prevItem) {
-        prevItem.next = item
+        prevItem.next = node
       }
-      prevItem = item
+      prevItem = node
     }
     this.items = nodes
   }.bind(this)
