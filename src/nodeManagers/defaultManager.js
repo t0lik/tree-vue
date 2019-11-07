@@ -84,6 +84,9 @@ function mapNodeToItem (node, parent = null, prevItem = null) {
   item.setExpanderStyle = (expanderClasses, withChildren) => this.setExpanderStyle(item, expanderClasses, withChildren)
   item.resetExpanderStyle = withChildren => this.setExpanderStyle(item, null, withChildren)
 
+  item.findParent = selector => this.findParent(item, selector)
+  item.findParents = selector => this.findParents(item, selector)
+
   return item
 }
 
@@ -103,6 +106,17 @@ function getVisibility (node) {
     return false
   }
   return true
+}
+
+function getVisibleNodes () {
+  const visibleNodes = []
+  this.visitAll(this.items, item => {
+    if (item.visible()) {
+      visibleNodes.push(item)
+    }
+  })
+
+  return visibleNodes
 }
 
 function visitNodeAndChildren (item, itemCallback, onlyVisible) {
@@ -157,7 +171,10 @@ function visitAllParents (item, itemCallback) {
 
   let parent = item.parent
   while (parent) {
-    itemCallback(parent)
+    const stopVisiting = itemCallback(parent)
+    if (stopVisiting === true) {
+      return
+    }
     parent = parent.parent
   }
 }
@@ -220,6 +237,7 @@ function clearFilter () {
     item.states.visible = true
     item.states.matched = false
   })
+  this.collapseAll()
   this.tree.$emit('tree:filter:cleared')
 }
 
@@ -256,6 +274,8 @@ function filter (searchObject, options) {
   this.options.inSearch = true
   this.expandAll()
   this.tree.$emit('tree:filtered', matchedNodes, searchObject)
+
+  return matchedNodes
 }
 
 function getCheckedNodes () {
@@ -596,6 +616,53 @@ function findOne (selector) {
   return foundNode
 }
 
+function findParent (node, selector) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
+  }
+
+  if (!selector) {
+    throw new Error('parameter "selector" is not set')
+  }
+
+  if (!isFunction(selector)) {
+    throw new Error('selector is not a function')
+  }
+
+  let foundNode = null
+  this.visitAllParents(node, item => {
+    if (selector(item)) {
+      foundNode = item
+      return true
+    }
+  })
+
+  return foundNode
+}
+
+function findParents (node, selector) {
+  if (!node) {
+    throw new Error('parameter "node" is not set')
+  }
+
+  if (!selector) {
+    throw new Error('parameter "selector" is not set')
+  }
+
+  if (!isFunction(selector)) {
+    throw new Error('selector is not a function')
+  }
+
+  const foundNodes = []
+  this.visitAllParents(node, item => {
+    if (selector(item)) {
+      foundNodes.push(item)
+    }
+  })
+
+  return foundNodes
+}
+
 function findAll (selector) {
   if (!selector) {
     throw new Error('parameter "selector" is not set')
@@ -833,8 +900,11 @@ function DefaultManager (treeComponent) {
   this.getById = getNodeById.bind(this)
   this.findOne = findOne.bind(this)
   this.findAll = findAll.bind(this)
+  this.findParent = findParent.bind(this)
+  this.findParents = findParents.bind(this)
   this.setSelected = setSelectedNode.bind(this)
   this.getVisibility = getVisibility.bind(this)
+  this.getVisible = getVisibleNodes.bind(this)
   this.visitNodeAndChildren = visitNodeAndChildren.bind(this)
   this.filter = filter.bind(this)
   this.clearFilter = clearFilter.bind(this)
