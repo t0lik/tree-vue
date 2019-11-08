@@ -301,8 +301,8 @@ function setAllNodesCheckState (nodes, state, onlyVisible = false) {
   }, onlyVisible)
 }
 
-function checkAllNodes (onlyVisible = false) {
-  setAllNodesCheckState(this.items, true, onlyVisible)
+function checkAllNodes () {
+  setAllNodesCheckState(this.items, true, false)
   this.tree.$emit('tree:checked:all')
 }
 
@@ -311,8 +311,8 @@ function checkVisibleNodes () {
   this.tree.$emit('tree:checked:visible')
 }
 
-function uncheckAllNodes (onlyVisible = false) {
-  setAllNodesCheckState(this.items, false, onlyVisible)
+function uncheckAllNodes () {
+  setAllNodesCheckState(this.items, false, false)
   this.tree.$emit('tree:unchecked:all')
 }
 
@@ -430,7 +430,7 @@ function setOpenState (node, state, withChildren = false) {
   }
 
   node.states.opened = state
-  this.tree.$emit(state ? 'node:expand' : 'node:collapse', node)
+  this.tree.$emit(state ? 'node:expanded' : 'node:collapsed', node)
   if (withChildren) {
     setNodeChildrenOpenState(this, node, state)
   }
@@ -478,7 +478,7 @@ function expandChildren (node) {
 
 function expandAll () {
   setAllNodesOpenState(this.items, true)
-  this.tree.$emit('tree:expand:all')
+  this.tree.$emit('tree:expanded:all')
 }
 
 function collapseNode (node, withChildren = false) {
@@ -502,7 +502,7 @@ function collapseAll () {
   if (this.selectedNode && !this.selectedNode.visible()) {
     this.setSelected(null)
   }
-  this.tree.$emit('tree:collapse:all')
+  this.tree.$emit('tree:collapsed:all')
 }
 
 function setSingleNodeDisableState (manager, node, state) {

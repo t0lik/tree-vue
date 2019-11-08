@@ -132,40 +132,6 @@ describe('Tree.vue', () => {
     const wrapper = mount(Tree, { propsData: { nodes, options } })
     expect(wrapper.vm.getNodeManager()).to.be.eq(wrapper.vm.nodeManager)
   })
-  it('click on node emits node:clicked', done => {
-    const nodes = [{
-      id: 1,
-      name: 'name'
-    }]
-    const options = {
-    }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
-    const clickableNode = wrapper.find('.treevue-tree-node')
-    clickableNode.trigger('click')
-    wrapper.vm.$nextTick(() => {
-      expect(wrapper.emitted()['node:clicked'][0]).to.be.not.null
-      expect(wrapper.emitted()['node:clicked'][0][0]).to.be.not.null
-      expect(wrapper.emitted()['node:clicked'][0][0].item).to.be.eq(nodes[0])
-      done()
-    })
-  })
-  it('click on node text emits node:selected', done => {
-    const nodes = [{
-      id: 1,
-      name: 'name'
-    }]
-    const options = {
-    }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
-    const clickableText = wrapper.find('.treevue-tree-node .treevue-node-text')
-    clickableText.trigger('click')
-    wrapper.vm.$nextTick(() => {
-      expect(wrapper.emitted()['node:selected'][0]).to.be.not.null
-      expect(wrapper.emitted()['node:selected'][0][0]).to.be.not.null
-      expect(wrapper.emitted()['node:selected'][0][0].item).to.be.eq(nodes[0])
-      done()
-    })
-  })
   it('click and focus on node text sets focusedNode', done => {
     const nodes = [{
       id: 1,
@@ -211,7 +177,6 @@ describe('Tree.vue', () => {
     const wrapper = mount(Tree, { propsData: { nodes, options } })
     const secondNode = wrapper.vm.nodeManager.getById(2)
     wrapper.vm.setFocusedNode(secondNode)
-    expect(wrapper.emitted()['node:selected'][0]).to.be.not.null
     expect(wrapper.vm.nodeManager.selectedNode).to.be.not.null
     expect(wrapper.vm.nodeManager.selectedNode.id).to.be.eq(secondNode.id)
   })
