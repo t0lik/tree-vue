@@ -534,10 +534,10 @@ function setNodeDisableState (manager, node, state, withChildren = false) {
     throw new Error('parameter "node" is not set')
   }
 
-  setSingleNodeDisableState(this, node, state)
+  setSingleNodeDisableState(manager, node, state)
   if (withChildren) {
     visitAllNodes(node.children, child => {
-      setSingleNodeDisableState(this, child, state)
+      setSingleNodeDisableState(manager, child, state)
     })
   }
 }
@@ -756,7 +756,7 @@ function getEditName (node) {
 
   const editNameProp = this.treeOptions.editNameProp || this.treeOptions.nameProp
   if (typeof editNameProp === 'function') {
-    throw new Error('editNameProp cannot be function')
+    throw new Error('"editNameProp" cannot be function')
   }
   return node.item[editNameProp]
 }
@@ -766,14 +766,22 @@ function setName (node, newName) {
     throw new Error('parameter "node" is not set')
   }
 
-  const editNameProp = this.treeOptions.editNameProp
+  if (!newName) {
+    throw new Error('parameter "newName" is not set')
+  }
+
+  const editNameProp = this.treeOptions.editNameProp || this.treeOptions.nameProp
+  if (typeof editNameProp === 'function') {
+    throw new Error('"editNameProp" cannot be function')
+  }
+
   const setNameFunc = this.treeOptions.setNameFunc
   if (!setNameFunc) {
     node.item[editNameProp] = newName
     return
   }
   if (typeof setNameFunc !== 'function') {
-    throw new Error('setNameFunc must be function')
+    throw new Error('"setNameFunc" must be function')
   }
   setNameFunc(node.item, newName)
 }
@@ -806,6 +814,8 @@ function addChild (parent, item) {
     sortNodes(this, parent.children, this.treeOptions.sortComparator)
   }
   this.tree.$emit('node:child:added', item, child)
+
+  return child
 }
 
 function insertChild (parent, item, beforeNode) {
@@ -825,9 +835,11 @@ function insertChild (parent, item, beforeNode) {
     parent.children.unshift(child)
   }
   if (this.treeOptions.autoSort) {
-    this.sortNodes(this, parent.children, this.treeOptions.sortComparator)
+    sortNodes(this, parent.children, this.treeOptions.sortComparator)
   }
   this.tree.$emit('node:child:added', item, child)
+
+  return child
 }
 
 function removeRootNode (nodes, originalItems, node) {
@@ -860,7 +872,7 @@ function removeNode (node) {
     return
   }
   if (isFunction(this.treeOptions.childrenProp)) {
-    throw new Error('cannot remove the child item while childrenProp is a function')
+    throw new Error('cannot remove the child item while "childrenProp" is a function')
   }
   const parentItem = parent.item
   const itemChildren = this.getChildren(parentItem)
@@ -976,7 +988,7 @@ function DefaultManager (treeComponent) {
   }
   this.setNodes = function (items) {
     if (!items) {
-      throw new Error('parameter "nodes" is not set')
+      throw new Error('parameter "items" is not set')
     }
 
     this.originalItems = items
