@@ -44,7 +44,7 @@
         v-for="child in visibleItems" :key="child.id"
         :node="child"
         class="treevue-tree-node-child"
-        @clicked="onClicked"
+        @clicked="onChildClicked"
         @node:focused="$emit('node:focused', $event)">
         <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope"><slot :name="slot" v-bind="scope"/></template>
       </node>
@@ -171,7 +171,7 @@ export default {
 
       return defaultClass
     },
-    onClicked (item) {
+    onChildClicked (item) {
       this.$emit('clicked', item)
     },
     onNodeCheckStateChanging (state) {
@@ -220,9 +220,6 @@ export default {
 .treevue-tree-node-element.treevue-tree-node-expander {
   margin-right: 2px;
 }
-/* .treevue-tree-node-container.no-children .treevue-tree-node-element.treevue-tree-node-checkbox {
-  margin-left: 20px;
-} */
 .treevue-tree-node-container .treevue-tree-node-element.treevue-tree-node-checkbox {
   margin-right: 5px;
 }

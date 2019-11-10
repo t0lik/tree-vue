@@ -54,7 +54,9 @@ describe('keyboard mixin', () => {
 
     wrapper.vm.$nextTick(() => {
       clickFirstFoundNodeText(wrapper)
-      wrapper.trigger('keydown.down')
+      wrapper.trigger('keydown', {
+        key: 'ArrowDown'
+      })
       wrapper.vm.$nextTick(() => {
         expectSelectedNodeId(wrapper, 2)
         expectSecondSelectedEventWithNodeId(wrapper, 2)
@@ -82,7 +84,10 @@ describe('keyboard mixin', () => {
       const clickableText = secondNode.find('.treevue-tree-node .treevue-node-text')
       clickableText.trigger('click')
       clickableText.trigger('focus')
-      wrapper.trigger('keydown.down')
+      wrapper.trigger('keydown', {
+        key: 'ArrowDown'
+      })
+
       wrapper.vm.$nextTick(() => {
         expectSelectedNodeId(wrapper, 2)
         expectFirstSelectedEventWithNodeId(wrapper, 2)
@@ -109,7 +114,9 @@ describe('keyboard mixin', () => {
 
     wrapper.vm.$nextTick(() => {
       clickFirstFoundNodeText(wrapper)
-      wrapper.trigger('keydown.down')
+      wrapper.trigger('keydown', {
+        key: 'ArrowDown'
+      })
       wrapper.vm.$nextTick(() => {
         expectSelectedNodeId(wrapper, 3)
         expectSecondSelectedEventWithNodeId(wrapper, 3)
@@ -138,7 +145,9 @@ describe('keyboard mixin', () => {
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
     clickFirstFoundNodeText(wrapper)
-    wrapper.trigger('keydown.down')
+    wrapper.trigger('keydown', {
+      key: 'ArrowDown'
+    })
 
     wrapper.vm.$nextTick(() => {
       expectSelectedNodeId(wrapper, 4)
@@ -167,7 +176,9 @@ describe('keyboard mixin', () => {
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
     clickFirstFoundNodeText(wrapper)
-    wrapper.trigger('keydown.down')
+    wrapper.trigger('keydown', {
+      key: 'ArrowDown'
+    })
 
     wrapper.vm.$nextTick(() => {
       expectSelectedNodeId(wrapper, 2)
@@ -196,7 +207,9 @@ describe('keyboard mixin', () => {
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
     clickFirstFoundChildNodeText(wrapper)
-    wrapper.trigger('keydown.down')
+    wrapper.trigger('keydown', {
+      key: 'ArrowDown'
+    })
 
     wrapper.vm.$nextTick(() => {
       expectSelectedNodeId(wrapper, 2)
@@ -227,7 +240,9 @@ describe('keyboard mixin', () => {
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
     clickFirstFoundNodeText(wrapper)
-    wrapper.trigger('keydown.down')
+    wrapper.trigger('keydown', {
+      key: 'ArrowDown'
+    })
 
     wrapper.vm.$nextTick(() => {
       expectSelectedNodeId(wrapper, 3)
@@ -254,7 +269,9 @@ describe('keyboard mixin', () => {
       const secondNode = clickableNodes.at(1)
       clickFirstFoundNodeText(secondNode)
 
-      wrapper.trigger('keydown.up')
+      wrapper.trigger('keydown', {
+        key: 'ArrowUp'
+      })
       wrapper.vm.$nextTick(() => {
         expectSelectedNodeId(wrapper, 1)
         expectSecondSelectedEventWithNodeId(wrapper, 1)
@@ -277,7 +294,9 @@ describe('keyboard mixin', () => {
 
     wrapper.vm.$nextTick(() => {
       clickFirstFoundNodeText(wrapper)
-      wrapper.trigger('keydown.up')
+      wrapper.trigger('keydown', {
+        key: 'ArrowUp'
+      })
 
       wrapper.vm.$nextTick(() => {
         expectSelectedNodeId(wrapper, 1)
@@ -310,7 +329,9 @@ describe('keyboard mixin', () => {
     clickableText.trigger('click')
     clickableText.trigger('focus')
     wrapper.vm.$nextTick(() => {
-      wrapper.trigger('keydown.up')
+      wrapper.trigger('keydown', {
+        key: 'ArrowUp'
+      })
       wrapper.vm.$nextTick(() => {
         expectSelectedNodeId(wrapper, 1)
         expectSecondSelectedEventWithNodeId(wrapper, 1)
@@ -346,7 +367,9 @@ describe('keyboard mixin', () => {
     clickableText.trigger('focus')
 
     wrapper.vm.$nextTick(() => {
-      wrapper.trigger('keydown.up')
+      wrapper.trigger('keydown', {
+        key: 'ArrowUp'
+      })
 
       wrapper.vm.$nextTick(() => {
         expectSelectedNodeId(wrapper, 4)
@@ -383,7 +406,9 @@ describe('keyboard mixin', () => {
     clickableText.trigger('focus')
 
     wrapper.vm.$nextTick(() => {
-      wrapper.trigger('keydown.up')
+      wrapper.trigger('keydown', {
+        key: 'ArrowUp'
+      })
 
       wrapper.vm.$nextTick(() => {
         expectSelectedNodeId(wrapper, 2)
@@ -413,7 +438,9 @@ describe('keyboard mixin', () => {
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
     clickFirstFoundChildNodeText(wrapper)
-    wrapper.trigger('keydown.up')
+    wrapper.trigger('keydown', {
+      key: 'ArrowUp'
+    })
 
     wrapper.vm.$nextTick(() => {
       expectSelectedNodeId(wrapper, 2)
@@ -439,7 +466,9 @@ describe('keyboard mixin', () => {
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
     clickFirstFoundNodeText(wrapper)
-    wrapper.trigger('keydown.left')
+    wrapper.trigger('keydown', {
+      key: 'ArrowLeft'
+    })
 
     wrapper.vm.$nextTick(() => {
       expectSelectedNodeId(wrapper, 1)
@@ -466,7 +495,9 @@ describe('keyboard mixin', () => {
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
     clickFirstFoundChildNodeText(wrapper)
-    wrapper.trigger('keydown.left')
+    wrapper.trigger('keydown', {
+      key: 'ArrowLeft'
+    })
 
     wrapper.vm.$nextTick(() => {
       expectSelectedNodeId(wrapper, 1)
@@ -498,6 +529,9 @@ describe('keyboard mixin', () => {
     const clickableText = secondNode.find('.treevue-tree-node .treevue-node-text')
     clickableText.trigger('click')
     clickableText.trigger('focus')
+    wrapper.trigger('keydown', {
+      key: 'ArrowLeft'
+    })
 
     wrapper.vm.$nextTick(() => {
       expectSelectedNodeId(wrapper, 2)
@@ -524,7 +558,9 @@ describe('keyboard mixin', () => {
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
     clickFirstFoundNodeText(wrapper)
-    wrapper.trigger('keydown.right')
+    wrapper.trigger('keydown', {
+      key: 'ArrowRight'
+    })
 
     wrapper.vm.$nextTick(() => {
       expectSelectedNodeId(wrapper, 1)
@@ -555,7 +591,9 @@ describe('keyboard mixin', () => {
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
     clickFirstFoundNodeText(wrapper)
-    wrapper.trigger('keydown.right')
+    wrapper.trigger('keydown', {
+      key: 'ArrowRight'
+    })
 
     wrapper.vm.$nextTick(() => {
       expectSelectedNodeId(wrapper, 5)
@@ -587,7 +625,9 @@ describe('keyboard mixin', () => {
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
     clickFirstFoundNodeText(wrapper)
-    wrapper.trigger('keydown.right')
+    wrapper.trigger('keydown', {
+      key: 'ArrowRight'
+    })
 
     wrapper.vm.$nextTick(() => {
       expectSelectedNodeId(wrapper, 1)
@@ -611,7 +651,9 @@ describe('keyboard mixin', () => {
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
     clickFirstFoundNodeText(wrapper)
-    wrapper.trigger('keydown.space')
+    wrapper.trigger('keydown', {
+      key: ' '
+    })
 
     wrapper.vm.$nextTick(() => {
       expect(wrapper.vm.nodeManager.getById(1).states.checked).to.be.false
@@ -633,7 +675,9 @@ describe('keyboard mixin', () => {
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
     clickFirstFoundNodeText(wrapper)
-    wrapper.trigger('keydown.space')
+    wrapper.trigger('keydown', {
+      key: ' '
+    })
 
     wrapper.vm.$nextTick(() => {
       expect(wrapper.vm.nodeManager.getById(1).states.checked).to.be.true
@@ -655,7 +699,9 @@ describe('keyboard mixin', () => {
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
     clickFirstFoundNodeText(wrapper)
-    wrapper.trigger('keydown.space')
+    wrapper.trigger('keydown', {
+      key: ' '
+    })
 
     wrapper.vm.$nextTick(() => {
       expect(wrapper.vm.nodeManager.getById(1).states.checked).to.be.false
@@ -679,7 +725,9 @@ describe('keyboard mixin', () => {
     clickFirstFoundNodeText(wrapper)
 
     wrapper.vm.$nextTick(() => {
-      wrapper.trigger('keydown.delete')
+      wrapper.trigger('keydown', {
+        key: 'Delete'
+      })
       expect(wrapper.vm.nodeManager.items.length).to.be.eq(1)
       expect(wrapper.vm.nodeManager.getById(1)).to.be.null
 
@@ -702,7 +750,9 @@ describe('keyboard mixin', () => {
     clickFirstFoundNodeText(wrapper)
 
     wrapper.vm.$nextTick(() => {
-      wrapper.trigger('keydown.delete')
+      wrapper.trigger('keydown', {
+        key: 'Delete'
+      })
       expect(wrapper.vm.nodeManager.items.length).to.be.eq(2)
       expect(wrapper.vm.nodeManager.getById(1)).to.be.not.null
 

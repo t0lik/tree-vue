@@ -1,13 +1,13 @@
 'use strict'
 
 const Keys = {
-  Space: 32,
-  Delete: 46,
-  Left: 37,
-  Up: 38,
-  Right: 39,
-  Down: 40,
-  F2: 113
+  Space: ' ',
+  Delete: 'Delete',
+  Left: 'ArrowLeft',
+  Up: 'ArrowUp',
+  Right: 'ArrowRight',
+  Down: 'ArrowDown',
+  F2: 'F2'
 }
 
 const navigationKeys = [Keys.Left, Keys.Right, Keys.Up, Keys.Down, Keys.Space]
@@ -167,13 +167,13 @@ function navigate (event) {
   if (nodeComponentToEdit && nodeComponentToEdit.editorMode) {
     return
   }
-  const keyCode = event.keyCode
-  if (navigationKeys.includes(keyCode)) {
+  const key = event.key
+  if (navigationKeys.includes(key)) {
     event.preventDefault()
     event.stopPropagation()
   }
 
-  switch (keyCode) {
+  switch (key) {
     case Keys.Left:
       moveLeft(this, this.focusedNode)
       break

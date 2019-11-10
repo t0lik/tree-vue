@@ -23,7 +23,7 @@ export default {
       this.$emit('input', this.editValue)
     },
     onKeyUp (event) {
-      if (event.keyCode === 13) {
+      if (event.key === 'Enter') {
         this.confirmEdit()
       }
     }

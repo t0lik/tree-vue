@@ -38,7 +38,6 @@ describe('Tree.vue', () => {
       checkOnSelect: false
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
-    // console.log('wrapper.html()', wrapper.html())
 
     expect(wrapper.findAll(Node).length).to.be.eq(nodes.length)
   })
@@ -131,22 +130,6 @@ describe('Tree.vue', () => {
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
     expect(wrapper.vm.getNodeManager()).to.be.eq(wrapper.vm.nodeManager)
-  })
-  it('click and focus on node text sets focusedNode', done => {
-    const nodes = [{
-      id: 1,
-      name: 'name'
-    }]
-    const options = {
-    }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
-    const clickableText = wrapper.find('.treevue-tree-node .treevue-node-text')
-    clickableText.trigger('click')
-    clickableText.trigger('focus')
-    wrapper.vm.$nextTick(() => {
-      expect(wrapper.vm.focusedNode).to.be.not.null
-      done()
-    })
   })
   it('setFocusedNode sets focusedNode', () => {
     const nodes = [{

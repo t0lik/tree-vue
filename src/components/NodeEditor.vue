@@ -43,10 +43,10 @@ export default {
       this.confirmEdit()
     },
     onKeyUp (event) {
-      if (event.keyCode === 13) {
+      if (event.key === 'Enter') {
         this.confirmEdit()
       }
-      if (event.keyCode === 27) {
+      if (event.key === 'Escape') {
         this.cancelEdit()
       }
     }
