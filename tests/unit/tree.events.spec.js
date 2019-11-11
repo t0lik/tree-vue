@@ -358,7 +358,7 @@ describe('Tree.vue events', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
-      opened: true,
+      open: true,
       children: [{
         id: 3,
         name: 'child1',

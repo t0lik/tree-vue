@@ -5,12 +5,12 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
+    "test:unit": "vue-cli-service test:unit --reporter min",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.11.2",
-    "core-js": "^3.3.2",
+    "core-js": "^3.4.0",
     "vue": "^2.6.10"
   },
   "devDependencies": {
@@ -27,7 +27,7 @@
     "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "eslint-plugin-vue": "^5.0.0",
+    "eslint-plugin-vue": "^6.0.0",
     "vue-template-compiler": "^2.6.10"
   },
   "eslintConfig": {

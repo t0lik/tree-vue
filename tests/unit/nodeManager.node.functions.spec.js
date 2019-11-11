@@ -37,11 +37,11 @@ describe('nodeManager node functions', () => {
     const node = manager.getById(3)
     expect(node.visible()).to.be.false
   })
-  it('visible() with opened node returns true', () => {
+  it('visible() with open node returns true', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
-      opened: true,
+      open: true,
       children: [{
         id: 3,
         name: 'child1'

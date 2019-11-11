@@ -124,11 +124,11 @@ describe('keyboard mixin', () => {
       })
     })
   })
-  it('key Down on first opened node selects first its child', done => {
+  it('key Down on first open node selects first its child', done => {
     const nodes = [{
       id: 1,
       name: 'name',
-      opened: true,
+      open: true,
       children: [{
         id: 4,
         name: 'child1'
@@ -159,7 +159,7 @@ describe('keyboard mixin', () => {
     const nodes = [{
       id: 1,
       name: 'name',
-      opened: false,
+      open: false,
       children: [{
         id: 4,
         name: 'child1'
@@ -190,7 +190,7 @@ describe('keyboard mixin', () => {
     const nodes = [{
       id: 1,
       name: 'name',
-      opened: true,
+      open: true,
       children: [{
         id: 4,
         name: 'child1'
@@ -221,7 +221,7 @@ describe('keyboard mixin', () => {
     const nodes = [{
       id: 1,
       name: 'name',
-      opened: true,
+      open: true,
       children: [{
         id: 4,
         disabled: true,
@@ -346,7 +346,7 @@ describe('keyboard mixin', () => {
     }, {
       id: 2,
       name: 'name2',
-      opened: true,
+      open: true,
       children: [{
         id: 4,
         name: 'child1'
@@ -385,7 +385,7 @@ describe('keyboard mixin', () => {
     }, {
       id: 2,
       name: 'name2',
-      opened: false,
+      open: false,
       children: [{
         id: 4,
         name: 'child1'
@@ -424,7 +424,7 @@ describe('keyboard mixin', () => {
     }, {
       id: 2,
       name: 'name2',
-      opened: true,
+      open: true,
       children: [{
         id: 4,
         name: 'child1'
@@ -448,11 +448,11 @@ describe('keyboard mixin', () => {
       done()
     })
   })
-  it('key Left on opened node collapses it', done => {
+  it('key Left on open node collapses it', done => {
     const nodes = [{
       id: 1,
       name: 'name',
-      opened: true,
+      open: true,
       children: [{
         id: 4,
         name: 'child1'
@@ -472,7 +472,7 @@ describe('keyboard mixin', () => {
 
     wrapper.vm.$nextTick(() => {
       expectSelectedNodeId(wrapper, 1)
-      expect(wrapper.vm.nodeManager.selectedNode.states.opened).to.be.false
+      expect(wrapper.vm.nodeManager.selectedNode.states.open).to.be.false
 
       done()
     })
@@ -481,7 +481,7 @@ describe('keyboard mixin', () => {
     const nodes = [{
       id: 1,
       name: 'name',
-      opened: true,
+      open: true,
       children: [{
         id: 4,
         name: 'child1'
@@ -513,7 +513,7 @@ describe('keyboard mixin', () => {
     }, {
       id: 2,
       name: 'name2',
-      opened: false,
+      open: false,
       children: [{
         id: 4,
         name: 'child1'
@@ -544,7 +544,7 @@ describe('keyboard mixin', () => {
     const nodes = [{
       id: 1,
       name: 'name',
-      opened: false,
+      open: false,
       children: [{
         id: 4,
         name: 'child1'
@@ -564,16 +564,16 @@ describe('keyboard mixin', () => {
 
     wrapper.vm.$nextTick(() => {
       expectSelectedNodeId(wrapper, 1)
-      expect(wrapper.vm.nodeManager.selectedNode.states.opened).to.be.true
+      expect(wrapper.vm.nodeManager.selectedNode.states.open).to.be.true
 
       done()
     })
   })
-  it('key Right on opened node selectes its first enabled child', done => {
+  it('key Right on open node selectes its first enabled child', done => {
     const nodes = [{
       id: 1,
       name: 'name',
-      opened: true,
+      open: true,
       children: [{
         id: 4,
         name: 'child1',
@@ -602,11 +602,11 @@ describe('keyboard mixin', () => {
       done()
     })
   })
-  it('key Right on opened node with disabled children does nothing', done => {
+  it('key Right on open node with disabled children does nothing', done => {
     const nodes = [{
       id: 1,
       name: 'name',
-      opened: true,
+      open: true,
       children: [{
         id: 4,
         name: 'child1',

@@ -61,7 +61,7 @@ function findAvailableNextNode (tree, node) {
 }
 
 function moveLeft (tree, node) {
-  if (node.states.opened) {
+  if (node.states.open) {
     node.collapse()
   } else {
     const parent = node.parent
@@ -73,7 +73,7 @@ function moveLeft (tree, node) {
 }
 
 function moveRight (tree, node) {
-  if (!node.states.opened) {
+  if (!node.states.open) {
     node.expand()
   } else {
     const firstChild = node.children.find(x => !x.states.disabled && x.visible())
@@ -104,7 +104,7 @@ function moveUp (tree, node) {
 }
 
 function moveDown (tree, node) {
-  if (node.states.opened) {
+  if (node.states.open) {
     const firstAvailableChild = node.children[0]
     if (firstAvailableChild && firstAvailableChild.visible() && !firstAvailableChild.states.disabled) {
       tree.setFocusedNode(firstAvailableChild)
@@ -112,7 +112,7 @@ function moveDown (tree, node) {
     }
   }
   const nextNode = node.next
-  if (!node.states.opened && nextNode && nextNode.visible() && !nextNode.states.disabled) {
+  if (!node.states.open && nextNode && nextNode.visible() && !nextNode.states.disabled) {
     tree.setFocusedNode(nextNode)
     return
   }

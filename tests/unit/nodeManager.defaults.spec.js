@@ -181,7 +181,7 @@ describe('nodeManager default item states', () => {
     expect(node.states).to.be.not.null
     expect(node.states.checked).to.be.false
     expect(node.states.disabled).to.be.false
-    expect(node.states.opened).to.be.false
+    expect(node.states.open).to.be.false
     expect(node.states.visible).to.be.true
     expect(node.states.matched).to.be.false
   })
@@ -209,7 +209,7 @@ describe('nodeManager default item states', () => {
         states: {
           checked: false,
           disabled: false,
-          opened: false,
+          open: false,
           visible: true,
           matched: false
         }
@@ -299,7 +299,7 @@ describe('nodeManager default item states', () => {
     expect(node.states).to.be.not.null
     expect(node.states.checked).to.be.true
     expect(node.states.disabled).to.be.false
-    expect(node.states.opened).to.be.false
+    expect(node.states.open).to.be.false
     expect(node.states.visible).to.be.true
     expect(node.states.matched).to.be.false
   })
@@ -318,15 +318,15 @@ describe('nodeManager default item states', () => {
     expect(node.states).to.be.not.null
     expect(node.states.checked).to.be.false
     expect(node.states.disabled).to.be.true
-    expect(node.states.opened).to.be.false
+    expect(node.states.open).to.be.false
     expect(node.states.visible).to.be.true
     expect(node.states.matched).to.be.false
   })
-  it('opened item has states.opened === true', () => {
+  it('open item has states.open === true', () => {
     const nodes = [{
       id: 1,
       name: 'test',
-      opened: true
+      open: true
     }]
     const options = {
       checkOnSelect: false
@@ -337,7 +337,7 @@ describe('nodeManager default item states', () => {
     expect(node.states).to.be.not.null
     expect(node.states.checked).to.be.false
     expect(node.states.disabled).to.be.false
-    expect(node.states.opened).to.be.true
+    expect(node.states.open).to.be.true
     expect(node.states.visible).to.be.true
     expect(node.states.matched).to.be.false
   })

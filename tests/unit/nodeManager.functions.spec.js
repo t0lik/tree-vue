@@ -98,7 +98,7 @@ describe('nodeManager functions', () => {
     const nodes = [{
       id: 1,
       name: 'test',
-      opened: true,
+      open: true,
       children: [{
         id: 3,
         name: 'child1'
@@ -184,7 +184,7 @@ describe('nodeManager functions', () => {
     const nodes = [{
       id: 1,
       name: 'test',
-      opened: true,
+      open: true,
       children: [{
         id: 3,
         name: 'child1',
@@ -237,8 +237,8 @@ describe('nodeManager functions', () => {
     const manager = getNodeManager(nodes, options)
     const node = manager.getById(1)
     manager.expand(node)
-    expect(node.states.opened).to.be.true
-    expect(node.children[0].states.opened).to.be.false
+    expect(node.states.open).to.be.true
+    expect(node.children[0].states.open).to.be.false
   })
   it('expand with withChildren=true expands node and its children', () => {
     const nodes = [{
@@ -268,8 +268,8 @@ describe('nodeManager functions', () => {
     const manager = getNodeManager(nodes, options)
     const node = manager.getById(1)
     manager.expand(node, true)
-    expect(node.states.opened).to.be.true
-    expect(node.children[0].states.opened).to.be.true
+    expect(node.states.open).to.be.true
+    expect(node.children[0].states.open).to.be.true
   })
   it('expandChildren expands node children only', () => {
     const nodes = [{
@@ -299,18 +299,18 @@ describe('nodeManager functions', () => {
     const manager = getNodeManager(nodes, options)
     const node = manager.getById(1)
     manager.expandChildren(node)
-    expect(node.states.opened).to.be.false
-    expect(node.children[0].states.opened).to.be.true
+    expect(node.states.open).to.be.false
+    expect(node.children[0].states.open).to.be.true
   })
   it('collapse collapses node itself only', () => {
     const nodes = [{
       id: 1,
       name: 'test',
-      opened: true,
+      open: true,
       children: [{
         id: 3,
         name: 'child1',
-        opened: true,
+        open: true,
         children: [{
           id: 6,
           name: 'grandchild1'
@@ -332,18 +332,18 @@ describe('nodeManager functions', () => {
     const manager = getNodeManager(nodes, options)
     const node = manager.getById(1)
     manager.collapse(node)
-    expect(node.states.opened).to.be.false
-    expect(node.children[0].states.opened).to.be.true
+    expect(node.states.open).to.be.false
+    expect(node.children[0].states.open).to.be.true
   })
   it('collapse with withChildren=true collapses node and its children', () => {
     const nodes = [{
       id: 1,
       name: 'test',
-      opened: true,
+      open: true,
       children: [{
         id: 3,
         name: 'child1',
-        opened: true,
+        open: true,
         children: [{
           id: 6,
           name: 'grandchild1'
@@ -365,18 +365,18 @@ describe('nodeManager functions', () => {
     const manager = getNodeManager(nodes, options)
     const node = manager.getById(1)
     manager.collapse(node, true)
-    expect(node.states.opened).to.be.false
-    expect(node.children[0].states.opened).to.be.false
+    expect(node.states.open).to.be.false
+    expect(node.children[0].states.open).to.be.false
   })
   it('collapseChildren collapses node children only', () => {
     const nodes = [{
       id: 1,
       name: 'test',
-      opened: true,
+      open: true,
       children: [{
         id: 3,
         name: 'child1',
-        opened: true,
+        open: true,
         children: [{
           id: 6,
           name: 'grandchild1'
@@ -398,18 +398,18 @@ describe('nodeManager functions', () => {
     const manager = getNodeManager(nodes, options)
     const node = manager.getById(1)
     manager.collapseChildren(node)
-    expect(node.states.opened).to.be.true
-    expect(node.children[0].states.opened).to.be.false
+    expect(node.states.open).to.be.true
+    expect(node.children[0].states.open).to.be.false
   })
   it('expandAll expands all nodes', () => {
     const nodes = [{
       id: 1,
       name: 'test',
-      opened: false,
+      open: false,
       children: [{
         id: 3,
         name: 'child1',
-        opened: false,
+        open: false,
         children: [{
           id: 6,
           name: 'grandchild1'
@@ -421,7 +421,7 @@ describe('nodeManager functions', () => {
     }, {
       id: 2,
       name: 'test2',
-      opened: false,
+      open: false,
       children: [{
         id: 8,
         name: 'grandchild2'
@@ -435,19 +435,19 @@ describe('nodeManager functions', () => {
     }
     const manager = getNodeManager(nodes, options)
     manager.expandAll()
-    expect(manager.getById(1).states.opened).to.be.true
-    expect(manager.getById(3).states.opened).to.be.true
-    expect(manager.getById(2).states.opened).to.be.true
+    expect(manager.getById(1).states.open).to.be.true
+    expect(manager.getById(3).states.open).to.be.true
+    expect(manager.getById(2).states.open).to.be.true
   })
   it('collapseAll collapses all nodes', () => {
     const nodes = [{
       id: 1,
       name: 'test',
-      opened: true,
+      open: true,
       children: [{
         id: 3,
         name: 'child1',
-        opened: true,
+        open: true,
         children: [{
           id: 6,
           name: 'grandchild1'
@@ -459,7 +459,7 @@ describe('nodeManager functions', () => {
     }, {
       id: 2,
       name: 'test2',
-      opened: true,
+      open: true,
       children: [{
         id: 8,
         name: 'grandchild2'
@@ -473,9 +473,9 @@ describe('nodeManager functions', () => {
     }
     const manager = getNodeManager(nodes, options)
     manager.collapseAll()
-    expect(manager.getById(1).states.opened).to.be.false
-    expect(manager.getById(3).states.opened).to.be.false
-    expect(manager.getById(2).states.opened).to.be.false
+    expect(manager.getById(1).states.open).to.be.false
+    expect(manager.getById(3).states.open).to.be.false
+    expect(manager.getById(2).states.open).to.be.false
   })
   it('getById gets node by its id', () => {
     const nodes = [{
@@ -735,7 +735,7 @@ describe('nodeManager functions', () => {
     expect(manager.selectedNode).to.be.eq(node)
     expect(node.states.checked).to.be.true
   })
-  it('setSelected with treeOptions.openOnSelect=true set node both selected and opened', () => {
+  it('setSelected with treeOptions.openOnSelect=true set node both selected and open', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -764,7 +764,7 @@ describe('nodeManager functions', () => {
     const node = manager.getById(1)
     manager.setSelected(node)
     expect(manager.selectedNode).to.be.eq(node)
-    expect(node.states.opened).to.be.true
+    expect(node.states.open).to.be.true
   })
   it('getVisible returns all visible nodes', () => {
     const nodes = [{
@@ -1185,11 +1185,11 @@ describe('nodeManager functions', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
-      opened: true,
+      open: true,
       children: [{
         id: 3,
         name: 'child1',
-        opened: true,
+        open: true,
         children: [{
           id: 9,
           name: 'grandchild1'
@@ -1342,7 +1342,7 @@ describe('nodeManager functions', () => {
     expect(checkedNodes).to.be.lengthOf(4)
     expect(checkedNodes.map(x => x.id)).to.be.members([1, 3, 9, 4])
   })
-  it('setCheckState with state=true and treeOptions.CheckModes=Linked checks specified single child node and its opened parent', () => {
+  it('setCheckState with state=true and treeOptions.CheckModes=Linked checks specified single child node and its open parent', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -1360,7 +1360,7 @@ describe('nodeManager functions', () => {
     }, {
       id: 2,
       name: 'node2',
-      opened: true,
+      open: true,
       children: [{
         id: 8,
         name: 'child3'
@@ -1376,7 +1376,7 @@ describe('nodeManager functions', () => {
     expect(checkedNodes).to.be.lengthOf(2)
     expect(checkedNodes.map(x => x.id)).to.be.members([2, 8])
   })
-  it('setCheckState with state=false and treeOptions.CheckModes=Linked unchecks specified single child node and its opened parent', () => {
+  it('setCheckState with state=false and treeOptions.CheckModes=Linked unchecks specified single child node and its open parent', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -1394,7 +1394,7 @@ describe('nodeManager functions', () => {
     }, {
       id: 2,
       name: 'node2',
-      opened: true,
+      open: true,
       checked: true,
       children: [{
         id: 8,
@@ -1446,11 +1446,11 @@ describe('nodeManager functions', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
-      opened: true,
+      open: true,
       children: [{
         id: 3,
         name: 'child1',
-        opened: true,
+        open: true,
         children: [{
           id: 9,
           name: 'grandchild1'
@@ -1544,11 +1544,11 @@ describe('nodeManager functions', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
-      opened: true,
+      open: true,
       children: [{
         id: 3,
         name: 'child1',
-        opened: true,
+        open: true,
         children: [{
           id: 9,
           name: 'grandchild1'
@@ -1608,11 +1608,11 @@ describe('nodeManager functions', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
-      opened: true,
+      open: true,
       children: [{
         id: 3,
         name: 'child1',
-        opened: true,
+        open: true,
         children: [{
           id: 9,
           name: 'grandchild1'
@@ -1712,11 +1712,11 @@ describe('nodeManager functions', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
-      opened: true,
+      open: true,
       children: [{
         id: 3,
         name: 'child1',
-        opened: true,
+        open: true,
         children: [{
           id: 9,
           name: 'grandchild1'
@@ -1769,13 +1769,13 @@ describe('nodeManager functions', () => {
     const manager = getNodeManager(nodes)
     const node = manager.getById(1)
     manager.setOpenState(node, true)
-    expect(node.states.opened).to.be.true
+    expect(node.states.open).to.be.true
   })
   it('setOpenState with state=false closes specified node', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
-      opened: true,
+      open: true,
       children: [{
         id: 3,
         name: 'child1',
@@ -1801,7 +1801,7 @@ describe('nodeManager functions', () => {
     const manager = getNodeManager(nodes)
     const node = manager.getById(1)
     manager.setOpenState(node, false)
-    expect(node.states.opened).to.be.false
+    expect(node.states.open).to.be.false
   })
   it('setOpenState with state=true and withChildren=true opens specified node and all its children', () => {
     const nodes = [{
@@ -1832,18 +1832,18 @@ describe('nodeManager functions', () => {
     const manager = getNodeManager(nodes)
     const node = manager.getById(1)
     manager.setOpenState(node, true, true)
-    expect(node.states.opened).to.be.true
-    expect(manager.getById(3).states.opened).to.be.true
+    expect(node.states.open).to.be.true
+    expect(manager.getById(3).states.open).to.be.true
   })
   it('setOpenState with state=false and withChildren=true closes specified node and all its children', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
-      opened: true,
+      open: true,
       children: [{
         id: 3,
         name: 'child1',
-        opened: true,
+        open: true,
         children: [{
           id: 9,
           name: 'grandchild1'
@@ -1866,18 +1866,18 @@ describe('nodeManager functions', () => {
     const manager = getNodeManager(nodes)
     const node = manager.getById(1)
     manager.setOpenState(node, false, true)
-    expect(node.states.opened).to.be.false
-    expect(manager.getById(3).states.opened).to.be.false
+    expect(node.states.open).to.be.false
+    expect(manager.getById(3).states.open).to.be.false
   })
   it('setOpenState with node=null throws Error', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
-      opened: true,
+      open: true,
       children: [{
         id: 3,
         name: 'child1',
-        opened: true,
+        open: true,
         children: [{
           id: 9,
           name: 'grandchild1'
@@ -1931,8 +1931,8 @@ describe('nodeManager functions', () => {
     const node = manager.getById(9)
     manager.showNode(node)
     expect(node.visible()).to.be.true
-    expect(manager.getById(1).states.opened).to.be.true
-    expect(manager.getById(3).states.opened).to.be.true
+    expect(manager.getById(1).states.open).to.be.true
+    expect(manager.getById(3).states.open).to.be.true
   })
   it('showNode with node=null throws Error', () => {
     const nodes = [{

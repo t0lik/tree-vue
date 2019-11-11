@@ -9,6 +9,8 @@ import NodeCheckbox from '@/components/NodeCheckbox.vue'
 import NodeIcon from '@/components/NodeIcon.vue'
 import NodeText from '@/components/NodeText.vue'
 import NodeEditor from '@/components/NodeEditor.vue'
+import fontawesomeManager from '@/styleManagers/fontawesomeManager'
+import defaultStyleManager from '@/styleManagers/defaultStyleManager'
 
 describe('Node.vue', () => {
   function clickFirstFoundNodeText (wrapper) {
@@ -75,6 +77,7 @@ describe('Node.vue', () => {
     const node = wrapper.vm.nodeManager.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.classes('no-children')).to.be.true
+    expect(nodeWrapper.vm.nodeContainerClasses).to.have.property('no-children', true)
   })
   it('node with children has no no-children class', () => {
     const nodes = [{
@@ -89,6 +92,7 @@ describe('Node.vue', () => {
     const node = wrapper.vm.nodeManager.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.classes('no-children')).to.be.false
+    expect(nodeWrapper.vm.nodeContainerClasses).to.have.property('no-children', false)
   })
   it('not selected node has no selected class', () => {
     const nodes = [{
@@ -104,6 +108,7 @@ describe('Node.vue', () => {
     const nodeWrapper = getNodeWrapper(wrapper, node)
     const innerNodeTag = nodeWrapper.find('.treevue-tree-node-container > .treevue-tree-node')
     expect(innerNodeTag.classes('selected')).to.be.false
+    expect(nodeWrapper.vm.nodeClasses).to.have.property('selected', false)
   })
   it('selected node has selected class', () => {
     const nodes = [{
@@ -120,6 +125,7 @@ describe('Node.vue', () => {
     const nodeWrapper = getNodeWrapper(wrapper, node)
     const innerNodeTag = nodeWrapper.find('.treevue-tree-node-container > .treevue-tree-node')
     expect(innerNodeTag.classes('selected')).to.be.true
+    expect(nodeWrapper.vm.nodeClasses).to.have.property('selected', true)
   })
   it('node without children has no NodeExpander', () => {
     const nodes = [{
@@ -257,11 +263,11 @@ describe('Node.vue', () => {
     const nodeWrapper = wrapper.find(Node)
     expect(nodeWrapper.contains(NodeEditor)).to.be.true
   })
-  it('opened node with child nodes has child Node components', () => {
+  it('open node with child nodes has child Node components', () => {
     const nodes = [{
       id: 1,
       name: 'name',
-      opened: true,
+      open: true,
       children: [{
         id: 2,
         name: 'child'
@@ -278,7 +284,7 @@ describe('Node.vue', () => {
     const nodes = [{
       id: 1,
       name: 'name',
-      opened: false,
+      open: false,
       children: [{
         id: 2,
         name: 'child'
@@ -289,5 +295,562 @@ describe('Node.vue', () => {
     })
     const childrenContainer = wrapper.find('.treevue-tree-node-children-container')
     expect(childrenContainer.exists()).to.be.false
+  })
+  it('textClasses = empty class on enabled and not filter-matched node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes)
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.textClasses).to.have.property('filter-matched', false)
+    expect(nodeWrapper.vm.textClasses).to.have.property('disabled', false)
+  })
+  it('textClasses class contains disabled=true on disabled node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      disabled: true,
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes)
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.textClasses).to.have.property('disabled', true)
+  })
+  it('textClasses class contains filter-matched=true on matched node after filter function', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes)
+    wrapper.vm.nodeManager.filter('name')
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.textClasses).to.have.property('filter-matched', true)
+  })
+  it('textClasses class contains custom text class that is set in node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes)
+    const node = wrapper.vm.nodeManager.getById(1)
+    wrapper.vm.nodeManager.setTextStyle(node, 'text-class')
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.textClasses).to.have.property('text-class', true)
+  })
+  it('iconClasses = empty class on enabled node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes)
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.iconClasses).to.have.property('disabled', false)
+  })
+  it('iconClasses class contains disabled=true on disabled node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      disabled: true,
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes)
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.iconClasses).to.have.property('disabled', true)
+  })
+  it('iconClasses class contains custom icon class that is set in node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes)
+    const node = wrapper.vm.nodeManager.getById(1)
+    wrapper.vm.nodeManager.setIconStyle(node, 'icon-class')
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.iconClasses).to.have.property('icon-class', true)
+  })
+  it('checkClasses = empty class on enabled node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes)
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.checkClasses).to.have.property('disabled', false)
+  })
+  it('checkClasses class contains disabled=true on disabled node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      disabled: true,
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes)
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.checkClasses).to.have.property('disabled', true)
+  })
+  it('checkClasses class contains custom checkbox class that is set in node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes)
+    const node = wrapper.vm.nodeManager.getById(1)
+    wrapper.vm.nodeManager.setCheckboxStyle(node, 'checkbox-class')
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.checkClasses).to.have.property('checkbox-class', true)
+  })
+  it('expanderClasses = empty class on enabled node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes)
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.expanderClasses).to.have.property('disabled', false)
+  })
+  it('expanderClasses class contains disabled=true on disabled node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      disabled: true,
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes)
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.expanderClasses).to.have.property('disabled', true)
+  })
+  it('expanderClasses class contains custom expander class that is set in node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes)
+    const node = wrapper.vm.nodeManager.getById(1)
+    wrapper.vm.nodeManager.setExpanderStyle(node, 'expander-class')
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.expanderClasses).to.have.property('expander-class', true)
+  })
+  it('styleManager prop = defaultStyleManager with default treeOptions', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes)
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.styleManager).to.be.eq(defaultStyleManager)
+  })
+  it('styleManager prop = treeOptions.styleManager', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+      styleManager: fontawesomeManager
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.styleManager).to.be.eq(fontawesomeManager)
+  })
+  it('showCheckbox prop = true with default treeOptions', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes)
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.showCheckbox).to.be.true
+  })
+  it('showCheckbox prop = treeOptions.showCheckbox', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+      showCheckbox: false
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.showCheckbox).to.be.false
+  })
+  it('showIcon prop = false with default treeOptions', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes)
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.showIcon).to.be.false
+  })
+  it('showIcon prop = treeOptions.showIcon', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+      showIcon: true
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.showIcon).to.be.true
+  })
+  it('hideEmptyIcon prop = true with default treeOptions', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes)
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.hideEmptyIcon).to.be.true
+  })
+  it('hideEmptyIcon prop = treeOptions.hideEmptyIcon', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+      hideEmptyIcon: false
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.hideEmptyIcon).to.be.false
+  })
+  it('visibleItems prop = [] with no visible node children', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.visibleItems).to.be.empty
+  })
+  it('visibleItems prop = visible node children', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      open: true,
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.visibleItems).to.be.not.empty
+    expect(nodeWrapper.vm.visibleItems[0].id).to.be.eq(2)
+  })
+  it('nodeText prop = node name prop by default', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.nodeText).to.be.eq('name')
+  })
+  it('nodeText prop = node title prop with treeOptions.nameProp=title', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      title: 'title',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+      nameProp: 'title'
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.nodeText).to.be.eq('title')
+  })
+  it('treeState.nodes has node after Node.vue is mounted', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = wrapper.find(Node)
+    expect(nodeWrapper.vm.state.nodes).to.have.property(node.id, nodeWrapper.vm)
+  })
+  it('treeState.nodes has no node after Node.vue is destroyed', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    wrapper.vm.nodeManager.remove(node)
+    expect(wrapper.vm.treeState.nodes).to.not.have.property(node.id)
+  })
+  it('combineClasses function returns combined object with first and secord arguments as objects', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    const defaultClass = { 'default-class': true }
+    const otherClass = { 'test-class': true }
+    const combinesClass = nodeWrapper.vm.combineClasses(defaultClass, otherClass)
+    expect(combinesClass).to.have.property('default-class', true)
+    expect(combinesClass).to.have.property('test-class', true)
+  })
+  it('combineClasses function returns combined object with first argument as object and secord argument as string with class names', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    const defaultClass = { 'default-class': true }
+    const otherClass = 'test-class test-class-2'
+    const combinesClass = nodeWrapper.vm.combineClasses(defaultClass, otherClass)
+
+    expect(combinesClass).to.have.property('default-class', true)
+    expect(combinesClass).to.have.property('test-class', true)
+    expect(combinesClass).to.have.property('test-class-2', true)
+  })
+  it('combineClasses function returns object from first argument if secord argument = null', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    const defaultClass = { 'default-class': true }
+    const combinesClass = nodeWrapper.vm.combineClasses(defaultClass, null)
+
+    expect(combinesClass).to.have.property('default-class', true)
+  })
+  it('onChildClicked function emits clicked event with node specifies as first argument to the function', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    nodeWrapper.vm.onChildClicked(node)
+
+    expect(nodeWrapper.emitted().clicked[0]).to.be.not.null
+    expect(nodeWrapper.emitted().clicked[0][0]).to.be.not.null
+    expect(nodeWrapper.emitted().clicked[0][0].item).to.be.eq(nodes[0])
+  })
+  it('onNodeCheckStateChanging with state=true sets node as checked', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    nodeWrapper.vm.onNodeCheckStateChanging(true)
+
+    expect(node.states.checked).to.be.true
+  })
+  it('onNodeCheckStateChanging with state=false sets node as unchecked', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    nodeWrapper.vm.onNodeCheckStateChanging(false)
+
+    expect(node.states.checked).to.be.false
+  })
+  it('onNodeOpenStateChanging with state=true sets node as open', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    nodeWrapper.vm.onNodeOpenStateChanging(true)
+
+    expect(node.states.open).to.be.true
+  })
+  it('onNodeCheckStateChanging with state=false sets node as closed', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    nodeWrapper.vm.onNodeOpenStateChanging(false)
+
+    expect(node.states.open).to.be.false
+  })
+  it('onClick function emits clicked event with node and sets it as selected if node enabled', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    nodeWrapper.vm.onClick(node)
+
+    expect(nodeWrapper.emitted().clicked[0]).to.be.not.null
+    expect(nodeWrapper.emitted().clicked[0][0]).to.be.not.null
+    expect(nodeWrapper.emitted().clicked[0][0].item).to.be.eq(nodes[0])
+    expect(wrapper.vm.nodeManager.selectedNode).to.be.eq(node)
+  })
+  it('onClick function does nothing if node disabled', () => {
+    const nodes = [{
+      id: 1,
+      disabled: true,
+      name: 'name'
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    nodeWrapper.vm.onClick(node)
+
+    expect(nodeWrapper.emitted()).to.be.not.have.property('clicked')
+    expect(wrapper.vm.nodeManager.selectedNode).to.be.null
+  })
+  it('onFocused function emits node:focused event', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    nodeWrapper.vm.onFocused(node)
+
+    expect(nodeWrapper.emitted()['node:focused'][0]).to.be.not.null
+    expect(nodeWrapper.emitted()['node:focused'][0][0]).to.be.not.null
+    expect(nodeWrapper.emitted()['node:focused'][0][0]).to.be.eq(node)
   })
 })

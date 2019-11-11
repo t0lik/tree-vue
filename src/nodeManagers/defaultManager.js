@@ -18,7 +18,7 @@ function mapItemToNode (manager, item, parent = null, prevNode = null) {
     states: {
       checked: item.checked || false,
       disabled: item.disabled || false,
-      opened: item.opened || false,
+      open: item.open || false,
       visible: true,
       matched: false
     },
@@ -104,7 +104,7 @@ function getVisibility (node) {
   if (!node.states.visible) {
     return false
   }
-  if (node.parent && !node.parent.states.opened) {
+  if (node.parent && !node.parent.states.open) {
     return false
   }
   return true
@@ -429,7 +429,7 @@ function setOpenState (node, state, withChildren = false) {
     throw new Error('parameter "node" is not set')
   }
 
-  node.states.opened = state
+  node.states.open = state
   this.tree.$emit(state ? 'node:expanded' : 'node:collapsed', node)
   if (withChildren) {
     setNodeChildrenOpenState(this, node, state)
@@ -456,7 +456,7 @@ function setAllNodesOpenState (nodes, state) {
   }
 
   visitAllNodes(nodes, node => {
-    node.states.opened = state
+    node.states.open = state
   })
 }
 

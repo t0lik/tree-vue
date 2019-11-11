@@ -2,7 +2,7 @@
   <div class="treevue-tree-node-container" :class="nodeContainerClasses">
     <div class="treevue-tree-node" @click="onClick" :class="nodeClasses">
       <node-expander
-        :value="node.states.opened"
+        :value="node.states.open"
         @input="onNodeOpenStateChanging"
         :styleManager="styleManager"
         class="treevue-tree-node-element treevue-tree-node-expander"
@@ -36,7 +36,7 @@
         <node-editor :node="node" :manager="manager" @stopEdit="onStopEdit"/>
       </slot>
     </div>
-    <div class="treevue-tree-node-children-container" v-if="node.states.opened">
+    <div class="treevue-tree-node-children-container" v-if="node.states.open">
       <node
         :options="options"
         :state="state"
