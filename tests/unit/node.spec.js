@@ -25,8 +25,9 @@ describe('Node.vue', () => {
 
     return wrapper
   }
-  function getNodeWrapper (treeWrapper, node) {
+  function getNodeWrapper (treeWrapper, node, options = {}) {
     const nodeWrapper = mount(Node, {
+      ...options,
       propsData: {
         node,
         state: treeWrapper.vm.treeState,
@@ -852,5 +853,58 @@ describe('Node.vue', () => {
     expect(nodeWrapper.emitted()['node:focused'][0]).to.be.not.null
     expect(nodeWrapper.emitted()['node:focused'][0][0]).to.be.not.null
     expect(nodeWrapper.emitted()['node:focused'][0][0]).to.be.eq(node)
+  })
+  it('focus function moves focus on NodeText span', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node, { attachToDocument: true })
+    try {
+      nodeWrapper.vm.focus()
+      const nodeText = nodeWrapper.find('.treevue-tree-node .treevue-node-text')
+
+      expect(document.activeElement).to.be.eq(nodeText.vm.$el)
+    } finally {
+      nodeWrapper.destroy()
+    }
+  })
+  it('onStopEdit function moves focus on NodeText span and sets editorMode=false', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node, { attachToDocument: true })
+    nodeWrapper.vm.onStopEdit()
+    const nodeText = nodeWrapper.find('.treevue-tree-node .treevue-node-text')
+    nodeWrapper.vm.$nextTick(() => {
+      try {
+        expect(nodeWrapper.vm.editorMode).to.be.false
+        expect(document.activeElement).to.be.eq(nodeText.vm.$el)
+        done()
+      } finally {
+        nodeWrapper.destroy()
+      }
+    })
+  })
+  it('startEdit function sets editorMode=true', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+
+    nodeWrapper.vm.startEdit()
+
+    expect(nodeWrapper.vm.editorMode).to.be.true
   })
 })
