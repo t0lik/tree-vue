@@ -3,10 +3,7 @@
 import { expect } from 'chai'
 import { mount } from '@vue/test-utils'
 import Tree from '@/components/Tree.vue'
-// import Node from '@/components/Node.vue'
 import NodeCheckbox from '@/components/NodeCheckbox.vue'
-// import fontawesomeManager from '@/styleManagers/fontawesomeManager'
-// import defaultStyleManager from '@/styleManagers/defaultStyleManager'
 
 describe('Node.vue', () => {
   function getTreeWrapper (nodes, options = {}) {
