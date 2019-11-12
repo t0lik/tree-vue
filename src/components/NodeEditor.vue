@@ -13,9 +13,6 @@ export default {
     manager: {
       type: Object,
       required: true
-    },
-    text: {
-      type: String
     }
   },
   data () {
