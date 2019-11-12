@@ -34,7 +34,7 @@ export default {
       return this.styleManager.uncheckedIcon
     },
     partiallyCheckedIcon () {
-      return this.styleManager.partialCheckedIcon
+      return this.styleManager.partiallyCheckedIcon
     },
     checkClass () {
       if (this.node.indeterminate()) {
