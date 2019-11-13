@@ -105,6 +105,49 @@ describe('Node.vue', () => {
     const checkboxWrapper = getNodeCheckboxWrapper(wrapper, node, {})
     expect(checkboxWrapper.vm.checkClass).to.be.eq(checkboxWrapper.vm.partiallyCheckedIcon)
   })
+  it('i classes contain checkedIcon classes on checked node', () => {
+    const nodes = [{
+      id: 1,
+      checked: true,
+      name: 'name'
+    }]
+    const wrapper = getTreeWrapper(nodes)
+    const node = wrapper.vm.nodeManager.getById(1)
+    const checkboxWrapper = getNodeCheckboxWrapper(wrapper, node, {})
+    expect(checkboxWrapper.classes('treevue-default-checkbox')).to.be.true
+    expect(checkboxWrapper.classes('checked')).to.be.true
+  })
+  it('i classes contain uncheckedIcon classes on unchecked node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const wrapper = getTreeWrapper(nodes)
+    const node = wrapper.vm.nodeManager.getById(1)
+    const checkboxWrapper = getNodeCheckboxWrapper(wrapper, node, {})
+    expect(checkboxWrapper.classes('treevue-default-checkbox')).to.be.true
+    expect(checkboxWrapper.classes('checked')).to.be.false
+  })
+  it('i classes contain partiallyCheckedIcon classes on node in indeterminate state', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child1',
+        checked: true
+      }, {
+        id: 3,
+        name: 'child2'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes)
+    const node = wrapper.vm.nodeManager.getById(1)
+    const checkboxWrapper = getNodeCheckboxWrapper(wrapper, node, {})
+    expect(checkboxWrapper.classes('treevue-default-checkbox')).to.be.true
+    expect(checkboxWrapper.classes('indeterminate')).to.be.true
+    expect(checkboxWrapper.classes('checked')).to.be.false
+  })
   it('onClick on unchecked node emits input with true', done => {
     const nodes = [{
       id: 1,

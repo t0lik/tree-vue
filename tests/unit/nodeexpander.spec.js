@@ -66,6 +66,29 @@ describe('Node.vue', () => {
     const expanderWrapper = getNodeExpanderWrapper(wrapper, node, {})
     expect(expanderWrapper.vm.expanderClass).to.be.eq(expanderWrapper.vm.closedIcon)
   })
+  it('i classes contain openIcon classes on open node', () => {
+    const nodes = [{
+      id: 1,
+      open: true,
+      name: 'name'
+    }]
+    const wrapper = getTreeWrapper(nodes)
+    const node = wrapper.vm.nodeManager.getById(1)
+    const expanderWrapper = getNodeExpanderWrapper(wrapper, node, {})
+    expect(expanderWrapper.classes('treevue-default-arrow')).to.be.true
+    expect(expanderWrapper.classes('expanded')).to.be.true
+  })
+  it('i classes contain closedIcon classes on closed node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const wrapper = getTreeWrapper(nodes)
+    const node = wrapper.vm.nodeManager.getById(1)
+    const expanderWrapper = getNodeExpanderWrapper(wrapper, node, {})
+    expect(expanderWrapper.classes('treevue-default-arrow')).to.be.true
+    expect(expanderWrapper.classes('expanded')).to.be.false
+  })
   it('onClick on closed node emits input with true', done => {
     const nodes = [{
       id: 1,
