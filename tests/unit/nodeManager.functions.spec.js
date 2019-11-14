@@ -2653,6 +2653,9 @@ describe('nodeManager functions', () => {
     expect(node.children).to.be.lengthOf(3)
     expect(node.children[2]).to.be.eq(newChild)
     expect(newChild.item).to.be.eq(newChildItem)
+    expect(newChild.prev.id).to.be.eq(4)
+    expect(newChild.next).to.be.null
+    expect(manager.getById(4).next.id).to.be.eq(5)
   })
   it('addChild with treeOptions.autoSort=true adds child node to specified node and sorts all its child nodes', () => {
     const nodes = [{
@@ -2680,6 +2683,9 @@ describe('nodeManager functions', () => {
     expect(node.children).to.be.lengthOf(3)
     expect(node.children[0]).to.be.eq(newChild)
     expect(newChild.item).to.be.eq(newChildItem)
+    expect(newChild.prev).to.be.null
+    expect(newChild.next.id).to.be.eq(3)
+    expect(manager.getById(3).prev.id).to.be.eq(5)
   })
   it('insertChild with parent=null throws Error', () => {
     const nodes = [{
@@ -2738,6 +2744,9 @@ describe('nodeManager functions', () => {
     expect(node.children).to.be.lengthOf(3)
     expect(node.children[0]).to.be.eq(newChild)
     expect(newChild.item).to.be.eq(newChildItem)
+    expect(newChild.prev).to.be.null
+    expect(newChild.next.id).to.be.eq(3)
+    expect(manager.getById(3).prev.id).to.be.eq(5)
   })
   it('insertChild with beforeNode=child2 inserts child node as second to specified node', () => {
     const nodes = [{
@@ -2764,6 +2773,10 @@ describe('nodeManager functions', () => {
     expect(node.children).to.be.lengthOf(3)
     expect(node.children[1]).to.be.eq(newChild)
     expect(newChild.item).to.be.eq(newChildItem)
+    expect(newChild.prev.id).to.be.eq(3)
+    expect(newChild.next.id).to.be.eq(4)
+    expect(manager.getById(3).next.id).to.be.eq(5)
+    expect(manager.getById(4).prev.id).to.be.eq(5)
   })
   it('insertChild with treeOptions.autoSort=true and beforeNode=child2 inserts child node as second to specified node and sorts all its child nodes', () => {
     const nodes = [{
@@ -2792,6 +2805,9 @@ describe('nodeManager functions', () => {
     expect(node.children).to.be.lengthOf(3)
     expect(node.children[0]).to.be.eq(newChild)
     expect(newChild.item).to.be.eq(newChildItem)
+    expect(newChild.prev).to.be.null
+    expect(newChild.next.id).to.be.eq(3)
+    expect(manager.getById(3).prev.id).to.be.eq(5)
   })
   it('remove with item=null throws Error', () => {
     const nodes = [{
@@ -2842,7 +2858,9 @@ describe('nodeManager functions', () => {
     }]
     const manager = getNodeManager(nodes)
     const node = manager.getById(1)
+
     manager.remove(node)
+
     expect(manager.items).to.be.empty
     expect(nodes).to.be.empty
   })
@@ -2860,11 +2878,15 @@ describe('nodeManager functions', () => {
     }]
     const manager = getNodeManager(nodes)
     const node = manager.getById(3)
+    const nextNode = node.next
+
     manager.remove(node)
+
     expect(manager.getById(1).children).to.be.lengthOf(1)
     expect(manager.getById(1).item.children).to.be.lengthOf(1)
     expect(manager.getById(1).children[0].id).to.be.eq(4)
     expect(manager.getById(1).item.children[0].id).to.be.eq(4)
+    expect(nextNode.prev).to.be.null
   })
   it('remove with selected root node removes node and set selectedNode=null', () => {
     const nodes = [{

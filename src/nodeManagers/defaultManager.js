@@ -34,14 +34,8 @@ function mapItemToNode (manager, item, parent = null, prevNode = null) {
   const mappedChildren = children.map(x => mapItemToNode(manager, x, node))
   if (manager.treeOptions.autoSort) {
     sortNodes(manager, mappedChildren, manager.treeOptions.sortComparator)
-  }
-  let prevChild = null
-  for (const child of mappedChildren) {
-    child.prev = prevChild
-    if (prevChild) {
-      prevChild.next = child
-    }
-    prevChild = child
+  } else {
+    linkNodes(mappedChildren)
   }
 
   node.children = mappedChildren
@@ -812,6 +806,8 @@ function addChild (parent, item) {
   parent.children.push(child)
   if (this.treeOptions.autoSort) {
     sortNodes(this, parent.children, this.treeOptions.sortComparator)
+  } else {
+    linkNodes(parent.children)
   }
   this.tree.$emit('node:child:added', item, child)
 
@@ -836,10 +832,21 @@ function insertChild (parent, item, beforeNode) {
   }
   if (this.treeOptions.autoSort) {
     sortNodes(this, parent.children, this.treeOptions.sortComparator)
+  } else {
+    linkNodes(parent.children)
   }
   this.tree.$emit('node:child:added', item, child)
 
   return child
+}
+
+function relinkRemovedNode (node) {
+  if (node.prev) {
+    node.prev.next = node.next
+  }
+  if (node.next) {
+    node.next.prev = node.prev
+  }
 }
 
 function removeRootNode (nodes, originalItems, node) {
@@ -848,6 +855,7 @@ function removeRootNode (nodes, originalItems, node) {
   const item = node.item
   const removingItemIndex = originalItems.indexOf(item)
   originalItems.splice(removingItemIndex, 1)
+  relinkRemovedNode(node)
 }
 
 function removeChildNode (parent, itemChildren, node) {
@@ -855,6 +863,7 @@ function removeChildNode (parent, itemChildren, node) {
   parent.children.splice(removingIndex, 1)
   const removingItemIndex = itemChildren.indexOf(node.item)
   itemChildren.splice(removingItemIndex, 1)
+  relinkRemovedNode(node)
 }
 
 function removeNode (node) {
@@ -897,6 +906,7 @@ function sortNodes (manager, nodes, comparator) {
   } else {
     nodes.sort((node1, node2) => node1.getName().localeCompare(node2.getName()))
   }
+  linkNodes(nodes)
 }
 
 function sortNodesRecursive (manager, nodes, comparator) {
@@ -922,20 +932,7 @@ function initialize (treeOptions) {
   }
 
   this.treeOptions = treeOptions
-}
-
-function DefaultManager (treeComponent) {
-  this.tree = treeComponent
-  this.treeOptions = null
-  this.options = {
-    inSearch: false
-  }
-  this.CheckModes = CheckModes
-  this.selectedNode = null
-  this.originalItems = []
-  this.items = []
-  this.internalLastNodeId = 0
-  this.initialize = initialize.bind(this)
+  this.addChild = addChild.bind(this)
   this.getChecked = getCheckedNodes.bind(this)
   this.checkAll = checkAllNodes.bind(this)
   this.checkVisible = checkVisibleNodes.bind(this)
@@ -969,7 +966,6 @@ function DefaultManager (treeComponent) {
   this.getEditName = getEditName.bind(this)
   this.setName = setName.bind(this)
   this.getChildren = getChildren.bind(this)
-  this.addChild = addChild.bind(this)
   this.insertChild = insertChild.bind(this)
   this.remove = removeNode.bind(this)
   this.disable = disable.bind(this)
@@ -986,6 +982,32 @@ function DefaultManager (treeComponent) {
   this.sort = function (comparator) {
     sortNodesRecursive(this, this.items, comparator)
   }
+}
+
+function linkNodes (nodes) {
+  let prevNode = null
+  for (const node of nodes) {
+    node.prev = prevNode
+    if (prevNode) {
+      prevNode.next = node
+    }
+    prevNode = node
+  }
+}
+
+function DefaultManager (treeComponent) {
+  this.tree = treeComponent
+  this.treeOptions = null
+  this.options = {
+    inSearch: false
+  }
+  this.CheckModes = CheckModes
+  this.selectedNode = null
+  this.originalItems = []
+  this.items = []
+  this.internalLastNodeId = 0
+  this.initialize = initialize.bind(this)
+
   this.setNodes = function (items) {
     if (!items) {
       throw new Error('parameter "items" is not set')
@@ -995,15 +1017,10 @@ function DefaultManager (treeComponent) {
     const nodes = items.map(x => mapItemToNode(this, x))
     if (this.treeOptions.autoSort) {
       sortNodes(this, nodes, this.treeOptions.sortComparator)
+    } else {
+      linkNodes(nodes)
     }
-    let prevItem = null
-    for (const node of nodes) {
-      node.prev = prevItem
-      if (prevItem) {
-        prevItem.next = node
-      }
-      prevItem = node
-    }
+
     this.items = nodes
   }.bind(this)
 }
