@@ -1740,6 +1740,59 @@ describe('nodeManager functions', () => {
 
     expect(() => manager.uncheckChildren(null)).throw('parameter "node" is not set')
   })
+  it('getVisibility with closed node returns false', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1'
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const node = manager.getById(3)
+    expect(manager.getVisibility(node)).to.be.false
+  })
+  it('getVisibility with open node returns true', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      open: true,
+      children: [{
+        id: 3,
+        name: 'child1'
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    const node = manager.getById(3)
+    expect(manager.getVisibility(node)).to.be.true
+  })
   it('setOpenState with state=true opens specified node', () => {
     const nodes = [{
       id: 1,

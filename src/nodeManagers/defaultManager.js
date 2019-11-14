@@ -67,7 +67,7 @@ function mapItemToNode (manager, item, parent = null, prevNode = null) {
   node.checkChildren = () => manager.checkChildren(node)
   node.uncheck = withChildren => manager.uncheck(node, withChildren)
   node.uncheckChildren = () => manager.uncheckChildren(node)
-  node.visible = () => getVisibility(node)
+  node.visible = () => manager.getVisibility(node)
 
   node.setCheckboxStyle = (checkBoxClasses, withChildren) => manager.setCheckboxStyle(node, checkBoxClasses, withChildren)
   node.resetCheckboxStyle = withChildren => manager.setCheckboxStyle(node, null, withChildren)
@@ -230,10 +230,12 @@ function setExpanderStyle (node, classList, withChildren = false) {
 function clearFilter () {
   this.options.inSearch = false
   this.visitAll(this.items, node => {
+    if (node._oldOpen !== null) {
+      node.states.open = node._oldOpen
+    }
     node.states.visible = true
     node.states.matched = false
   })
-  this.collapseAll()
   this.tree.$emit('tree:filter:cleared')
 }
 
@@ -257,6 +259,7 @@ function filter (searchObject, options) {
   this.visitAll(this.items, node => {
     node.states.visible = node.parent && node.parent.states.visible && filterOptions.showChildren
     node.states.matched = false
+    node._oldOpen = node.states.open
     const itemName = node.getName()
     if (searchFunc(itemName, node.item)) {
       node.states.visible = true
@@ -959,6 +962,7 @@ function initialize (treeOptions) {
   this.checkChildren = checkChildren.bind(this)
   this.uncheck = uncheckNode.bind(this)
   this.uncheckChildren = uncheckChildren.bind(this)
+  this.getVisibility = getVisibility.bind(this)
   this.setOpenState = setOpenState.bind(this)
   this.showNode = showNode.bind(this)
   this.visitAllParents = visitAllParents.bind(this)
