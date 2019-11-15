@@ -13,7 +13,7 @@ export default {
       type: Boolean,
       default: false
     },
-    styleManager: {
+    icons: {
       type: Object,
       required: true
     }
@@ -24,10 +24,10 @@ export default {
   },
   computed: {
     closedIcon () {
-      return this.styleManager.closedIcon
+      return this.icons.closedIcon
     },
     openIcon () {
-      return this.styleManager.openIcon
+      return this.icons.openIcon
     },
     expanderClass () {
       return this.value ? this.openIcon : this.closedIcon

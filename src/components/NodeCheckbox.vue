@@ -17,7 +17,7 @@ export default {
       type: Boolean,
       default: false
     },
-    styleManager: {
+    icons: {
       type: Object,
       required: true
     }
@@ -28,13 +28,13 @@ export default {
   },
   computed: {
     checkedIcon () {
-      return this.styleManager.checkedIcon
+      return this.icons.checkedIcon
     },
     uncheckedIcon () {
-      return this.styleManager.uncheckedIcon
+      return this.icons.uncheckedIcon
     },
     partiallyCheckedIcon () {
-      return this.styleManager.partiallyCheckedIcon
+      return this.icons.partiallyCheckedIcon
     },
     checkClass () {
       if (this.node.indeterminate()) {

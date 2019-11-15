@@ -4,7 +4,7 @@
       <node-expander
         :value="node.states.open"
         @input="onNodeOpenStateChanging"
-        :styleManager="styleManager"
+        :icons="icons"
         class="treevue-tree-node-element treevue-tree-node-expander"
         :class="expanderClasses"
         v-if="node.children.length"
@@ -12,7 +12,7 @@
       <node-checkbox
         :value="node.states.checked"
         @input="onNodeCheckStateChanging"
-        :styleManager="styleManager"
+        :icons="icons"
         class="treevue-tree-node-element treevue-tree-node-checkbox"
         :class="checkClasses"
         :disabled="node.states.disabled"
@@ -124,8 +124,8 @@ export default {
 
       return this.combineClasses(classes, this.node.styleClasses.expander)
     },
-    styleManager () {
-      return this.options.styleManager
+    icons () {
+      return this.options.icons
     },
     showCheckbox () {
       return this.options.showCheckbox

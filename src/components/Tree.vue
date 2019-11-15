@@ -18,7 +18,7 @@
 
 <script>
 import Node from './Node'
-import defaultStyleManager from '../styleManagers/defaultStyleManager'
+import defaultIcons from '../icons/defaultIcons'
 import DefaultManager from '../nodeManagers/defaultManager'
 import keyboardMixin from '../mixins/keyboard'
 
@@ -43,7 +43,7 @@ export default {
       },
       focusedNode: null,
       treeOptions: Object.assign({}, {
-        styleManager: defaultStyleManager,
+        icons: defaultIcons,
         multiselect: false,
         showCheckbox: true,
         showIcon: false,
@@ -64,8 +64,8 @@ export default {
     }
   },
   watch: {
-    'options.styleManager' (newValue) {
-      this.treeOptions.styleManager = this.options.styleManager
+    'options.icons' (newValue) {
+      this.treeOptions.icons = this.options.icons
     },
     'options.showCheckbox' (newValue) {
       this.treeOptions.showCheckbox = this.options.showCheckbox

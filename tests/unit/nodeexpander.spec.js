@@ -18,14 +18,14 @@ describe('Node.vue', () => {
       ...options,
       propsData: {
         value: node.states.open,
-        styleManager: treeWrapper.vm.treeOptions.styleManager,
+        icons: treeWrapper.vm.treeOptions.icons,
         disabled: node.states.disabled
       }
     })
 
     return nodeWrapper
   }
-  it('closedIcon = treeOptions.styleManager.closedIcon', () => {
+  it('closedIcon = treeOptions.icons.closedIcon', () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -33,9 +33,9 @@ describe('Node.vue', () => {
     const wrapper = getTreeWrapper(nodes)
     const node = wrapper.vm.nodeManager.getById(1)
     const expanderWrapper = getNodeExpanderWrapper(wrapper, node, {})
-    expect(expanderWrapper.vm.closedIcon).to.be.eq(wrapper.vm.treeOptions.styleManager.closedIcon)
+    expect(expanderWrapper.vm.closedIcon).to.be.eq(wrapper.vm.treeOptions.icons.closedIcon)
   })
-  it('openIcon = treeOptions.styleManager.openIcon', () => {
+  it('openIcon = treeOptions.icons.openIcon', () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -43,7 +43,7 @@ describe('Node.vue', () => {
     const wrapper = getTreeWrapper(nodes)
     const node = wrapper.vm.nodeManager.getById(1)
     const expanderWrapper = getNodeExpanderWrapper(wrapper, node, {})
-    expect(expanderWrapper.vm.openIcon).to.be.eq(wrapper.vm.treeOptions.styleManager.openIcon)
+    expect(expanderWrapper.vm.openIcon).to.be.eq(wrapper.vm.treeOptions.icons.openIcon)
   })
   it('expanderClass = openIcon on open node', () => {
     const nodes = [{

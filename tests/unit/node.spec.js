@@ -9,8 +9,8 @@ import NodeCheckbox from '@/components/NodeCheckbox.vue'
 import NodeIcon from '@/components/NodeIcon.vue'
 import NodeText from '@/components/NodeText.vue'
 import NodeEditor from '@/components/NodeEditor.vue'
-import fontawesomeManager from '@/styleManagers/fontawesomeManager'
-import defaultStyleManager from '@/styleManagers/defaultStyleManager'
+import fontawesomeIcons from '@/icons/fontawesomeIcons'
+import defaultIcons from '@/icons/defaultIcons'
 
 describe('Node.vue', () => {
   function clickFirstFoundNodeText (wrapper) {
@@ -489,7 +489,7 @@ describe('Node.vue', () => {
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.expanderClasses).to.have.property('expander-class', true)
   })
-  it('styleManager prop = defaultStyleManager with default treeOptions', () => {
+  it('icons prop = defaultIcons with default treeOptions', () => {
     const nodes = [{
       id: 1,
       name: 'name',
@@ -501,9 +501,9 @@ describe('Node.vue', () => {
     const wrapper = getTreeWrapper(nodes)
     const node = wrapper.vm.nodeManager.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
-    expect(nodeWrapper.vm.styleManager).to.be.eq(defaultStyleManager)
+    expect(nodeWrapper.vm.icons).to.be.eq(defaultIcons)
   })
-  it('styleManager prop = treeOptions.styleManager', () => {
+  it('icons prop = treeOptions.icons', () => {
     const nodes = [{
       id: 1,
       name: 'name',
@@ -513,11 +513,11 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes, {
-      styleManager: fontawesomeManager
+      icons: fontawesomeIcons
     })
     const node = wrapper.vm.nodeManager.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
-    expect(nodeWrapper.vm.styleManager).to.be.eq(fontawesomeManager)
+    expect(nodeWrapper.vm.icons).to.be.eq(fontawesomeIcons)
   })
   it('showCheckbox prop = true with default treeOptions', () => {
     const nodes = [{

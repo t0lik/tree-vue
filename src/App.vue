@@ -141,8 +141,8 @@
 
 <script>
 import Tree from './components/Tree'
-import fontawesomeManager from './styleManagers/fontawesomeManager'
-import defaultStyleManager from './styleManagers/defaultStyleManager'
+import fontawesomeIcons from './icons/fontawesomeIcons'
+import defaultIcons from './icons/defaultIcons'
 
 export default {
   name: 'app',
@@ -158,7 +158,7 @@ export default {
         openOnSelect: false,
         autoSort: false,
         checkMode: 'linked',
-        styleManager: defaultStyleManager,
+        icons: defaultIcons,
         childrenProp: 'kids',
         idProp: 'id_',
         nameProp: item => `${item.name} (${item.id})`,
@@ -388,10 +388,10 @@ export default {
       this.searchString = ''
     },
     switchToAwesome () {
-      this.treeOptions.styleManager = fontawesomeManager
+      this.treeOptions.icons = fontawesomeIcons
     },
     switchToDefault () {
-      this.treeOptions.styleManager = defaultStyleManager
+      this.treeOptions.icons = defaultIcons
     },
     showCheckboxes () {
       this.treeOptions.showCheckbox = true

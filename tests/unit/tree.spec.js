@@ -112,7 +112,7 @@ describe('Tree.vue', () => {
     const wrapper = mount(Tree, { propsData: { nodes, options } })
 
     expect(wrapper.vm.treeOptions).to.be.not.null
-    expect(wrapper.vm.treeOptions.styleManager).to.be.not.null
+    expect(wrapper.vm.treeOptions.icons).to.be.not.null
     expect(wrapper.vm.treeOptions.multiselect).to.be.false
     expect(wrapper.vm.treeOptions.showCheckbox).to.be.true
     expect(wrapper.vm.treeOptions.showIcon).to.be.false

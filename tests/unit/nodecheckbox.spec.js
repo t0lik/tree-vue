@@ -19,14 +19,14 @@ describe('Node.vue', () => {
       propsData: {
         node,
         value: node.states.checked,
-        styleManager: treeWrapper.vm.treeOptions.styleManager,
+        icons: treeWrapper.vm.treeOptions.icons,
         disabled: node.states.disabled
       }
     })
 
     return nodeWrapper
   }
-  it('checkedIcon = treeOptions.styleManager.checkedIcon', () => {
+  it('checkedIcon = treeOptions.icons.checkedIcon', () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -34,9 +34,9 @@ describe('Node.vue', () => {
     const wrapper = getTreeWrapper(nodes)
     const node = wrapper.vm.nodeManager.getById(1)
     const checkboxWrapper = getNodeCheckboxWrapper(wrapper, node, {})
-    expect(checkboxWrapper.vm.checkedIcon).to.be.eq(wrapper.vm.treeOptions.styleManager.checkedIcon)
+    expect(checkboxWrapper.vm.checkedIcon).to.be.eq(wrapper.vm.treeOptions.icons.checkedIcon)
   })
-  it('uncheckedIcon = treeOptions.styleManager.uncheckedIcon', () => {
+  it('uncheckedIcon = treeOptions.icons.uncheckedIcon', () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -44,9 +44,9 @@ describe('Node.vue', () => {
     const wrapper = getTreeWrapper(nodes)
     const node = wrapper.vm.nodeManager.getById(1)
     const checkboxWrapper = getNodeCheckboxWrapper(wrapper, node, {})
-    expect(checkboxWrapper.vm.uncheckedIcon).to.be.eq(wrapper.vm.treeOptions.styleManager.uncheckedIcon)
+    expect(checkboxWrapper.vm.uncheckedIcon).to.be.eq(wrapper.vm.treeOptions.icons.uncheckedIcon)
   })
-  it('partiallyCheckedIcon = treeOptions.styleManager.partiallyCheckedIcon', () => {
+  it('partiallyCheckedIcon = treeOptions.icons.partiallyCheckedIcon', () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -54,9 +54,9 @@ describe('Node.vue', () => {
     const wrapper = getTreeWrapper(nodes)
     const node = wrapper.vm.nodeManager.getById(1)
     const checkboxWrapper = getNodeCheckboxWrapper(wrapper, node, {})
-    expect(checkboxWrapper.vm.partiallyCheckedIcon).to.be.eq(wrapper.vm.treeOptions.styleManager.partiallyCheckedIcon)
+    expect(checkboxWrapper.vm.partiallyCheckedIcon).to.be.eq(wrapper.vm.treeOptions.icons.partiallyCheckedIcon)
   })
-  it('partiallyCheckedIcon = treeOptions.styleManager.partiallyCheckedIcon', () => {
+  it('partiallyCheckedIcon = treeOptions.icons.partiallyCheckedIcon', () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -64,7 +64,7 @@ describe('Node.vue', () => {
     const wrapper = getTreeWrapper(nodes)
     const node = wrapper.vm.nodeManager.getById(1)
     const checkboxWrapper = getNodeCheckboxWrapper(wrapper, node, {})
-    expect(checkboxWrapper.vm.partiallyCheckedIcon).to.be.eq(wrapper.vm.treeOptions.styleManager.partiallyCheckedIcon)
+    expect(checkboxWrapper.vm.partiallyCheckedIcon).to.be.eq(wrapper.vm.treeOptions.icons.partiallyCheckedIcon)
   })
   it('checkClass = checkedIcon on checked node', () => {
     const nodes = [{
