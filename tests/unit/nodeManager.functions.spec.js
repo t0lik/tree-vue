@@ -834,6 +834,71 @@ describe('nodeManager functions', () => {
     const matchedNodes = manager.filter('node')
     expect(matchedNodes.map(x => x.id)).to.be.members([1, 2, 5])
   })
+  it('filter sets options.inSearch=true', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+
+    manager.filter('node')
+
+    expect(manager.options.inSearch).to.be.true
+  })
+  it('clearFilter sets options.inSearch=false', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const manager = getNodeManager(nodes)
+    manager.filter('node')
+
+    manager.clearFilter()
+
+    expect(manager.options.inSearch).to.be.false
+  })
   it('filter with regexp returns matched nodes', () => {
     const nodes = [{
       id: 1,

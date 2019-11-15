@@ -4,8 +4,7 @@ import { expect } from 'chai'
 import { mount } from '@vue/test-utils'
 import Tree from '@/components/Tree.vue'
 import Node from '@/components/Node.vue'
-// import fontawesomeManager from '@/styleManagers/fontawesomeManager'
-// import defaultStyleManager from '@/styleManagers/defaultStyleManager'
+import sinon from 'sinon'
 
 describe('Tree.vue', () => {
   it('renders tree', () => {
@@ -25,6 +24,49 @@ describe('Tree.vue', () => {
     const wrapper = mount(Tree, { propsData: { nodes, options } })
 
     expect(wrapper.vm.nodeManager).to.be.not.null
+  })
+  it('filter with not found nodes shows not found text', () => {
+    const nodes = [{
+      id: 1,
+      name: 'test'
+    }, {
+      id: 2,
+      name: 'Test2'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+
+    wrapper.vm.nodeManager.filter('node')
+
+    expect(wrapper.find('.treevue-empty-search-text').exists()).to.be.true
+  })
+  it('filter with found nodes does not show not found text', () => {
+    const nodes = [{
+      id: 1,
+      name: 'test'
+    }, {
+      id: 2,
+      name: 'Test2'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+
+    wrapper.vm.nodeManager.filter('test')
+
+    expect(wrapper.find('.treevue-empty-search-text').exists()).to.be.false
+  })
+  it('empty tree does not show not found text', () => {
+    const nodes = []
+    const options = {
+      checkOnSelect: false
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+
+    expect(wrapper.find('.treevue-empty-search-text').exists()).to.be.false
   })
   it('Node.vue count equals to source node count', () => {
     const nodes = [{
@@ -130,6 +172,71 @@ describe('Tree.vue', () => {
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
     expect(wrapper.vm.getNodeManager()).to.be.eq(wrapper.vm.nodeManager)
+  })
+  it('onNodeClicked emits node:clicked', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const options = {
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const node = wrapper.vm.nodeManager.getById(1)
+    wrapper.vm.onNodeClicked(node)
+
+    expect(wrapper.emitted()['node:clicked'][0]).to.be.not.null
+    expect(wrapper.emitted()['node:clicked'][0][0]).to.be.not.null
+    expect(wrapper.emitted()['node:clicked'][0][0].id).to.be.eq(node.id)
+  })
+  it('onKeyDown calls navigate', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const options = {
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const event = {
+      key: 'Enter'
+    }
+    const mock = sinon.mock(wrapper.vm)
+    mock.expects('navigate').once().withArgs(event)
+
+    wrapper.vm.onKeyDown(event)
+
+    mock.verify()
+  })
+  it('keydown event calls onKeyDown', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const options = {
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const mock = sinon.mock(wrapper.vm)
+    mock.expects('navigate').once()
+
+    wrapper.trigger('keydown', {
+      key: 'a'
+    })
+
+    mock.verify()
+  })
+  it('onNodeFocused sets focusedNode', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const options = {
+    }
+    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const node = wrapper.vm.nodeManager.getById(1)
+
+    wrapper.vm.onNodeFocused(node)
+
+    expect(wrapper.vm.focusedNode).to.be.not.null
+    expect(wrapper.vm.focusedNode.id).to.be.eq(node.id)
   })
   it('setFocusedNode sets focusedNode', () => {
     const nodes = [{
