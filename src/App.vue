@@ -107,6 +107,7 @@
         <button @click="setSelectedNodeTextStyleWithChildren">selected with children</button>
         <button @click="resetSelectedNodeTextStyle">reset</button>
         <button @click="resetSelectedNodeTextStyleWithChildren">reset with children</button>
+        <button @click="setDefaultNodeTextStyle">default</button>
       </div>
       <div class="button-group">
         <label>icon style</label>
@@ -114,6 +115,7 @@
         <button @click="setSelectedNodeIconStyleWithChildren">selected with children</button>
         <button @click="resetSelectedNodeIconStyle">reset</button>
         <button @click="resetSelectedNodeIconStyleWithChildren">reset with children</button>
+        <button @click="setDefaultIconStyle">default</button>
       </div>
       <div class="button-group">
         <label>checkbox style</label>
@@ -121,6 +123,7 @@
         <button @click="setSelectedNodeCheckboxStyleWithChildren">selected with children</button>
         <button @click="resetSelectedNodeCheckboxStyle">reset</button>
         <button @click="resetSelectedNodeCheckboxStyleWithChildren">reset with children</button>
+        <button @click="setDefaultCheckboxStyle">default</button>
       </div>
       <div class="button-group">
         <label>expander style</label>
@@ -128,6 +131,7 @@
         <button @click="setSelectedNodeExpanderStyleWithChildren">selected with children</button>
         <button @click="resetSelectedNodeExpanderStyle">reset</button>
         <button @click="resetSelectedNodeExpanderStyleWithChildren">reset with children</button>
+        <button @click="setDefaultExpanderStyle">default</button>
       </div>
       <div class="button-group">
         <label>source</label>
@@ -164,7 +168,13 @@ export default {
         nameProp: item => `${item.name} (${item.id})`,
         editNameProp: 'name',
         canEdit: false,
-        canDelete: false
+        canDelete: false,
+        styleClasses: {
+          icon: null,
+          text: null,
+          checkbox: null,
+          expander: null
+        }
       },
       selectedNode: null,
       searchString: null,
@@ -411,6 +421,9 @@ export default {
     resetSelectedNodeTextStyleWithChildren () {
       this.nodeManager.selectedNode.resetTextStyle(true)
     },
+    setDefaultNodeTextStyle () {
+      this.treeOptions.styleClasses.text = 'all-custom-text'
+    },
     setSelectedNodeIconStyle () {
       this.nodeManager.selectedNode.setIconStyle('custom-icon')
     },
@@ -422,6 +435,9 @@ export default {
     },
     resetSelectedNodeIconStyleWithChildren () {
       this.nodeManager.selectedNode.resetIconStyle(true)
+    },
+    setDefaultIconStyle () {
+      this.treeOptions.styleClasses.icon = 'all-custom-icon'
     },
     setSelectedNodeCheckboxStyle () {
       this.nodeManager.selectedNode.setCheckboxStyle('custom-checkbox')
@@ -435,6 +451,9 @@ export default {
     resetSelectedNodeCheckboxStyleWithChildren () {
       this.nodeManager.selectedNode.resetCheckboxStyle(true)
     },
+    setDefaultCheckboxStyle () {
+      this.treeOptions.styleClasses.checkbox = 'all-custom-checkbox'
+    },
     setSelectedNodeExpanderStyle () {
       this.nodeManager.selectedNode.setExpanderStyle('custom-expander')
     },
@@ -446,6 +465,9 @@ export default {
     },
     resetSelectedNodeExpanderStyleWithChildren () {
       this.nodeManager.selectedNode.resetExpanderStyle(true)
+    },
+    setDefaultExpanderStyle () {
+      this.treeOptions.styleClasses.expander = 'all-custom-expander'
     },
     onCheckedAll () {
       this.outputMessage('checked all event is fired')
@@ -518,6 +540,24 @@ export default {
 }
 .button-group button{
   min-width: 150px;
+}
+.all-custom-text {
+  color: olive;
+}
+.all-custom-icon {
+  color: olive;
+}
+.treevue-node-checkbox.all-custom-checkbox {
+  border-color: olive;
+}
+.treevue-node-checkbox.all-custom-checkbox.checked:after {
+  border-color: olive;
+}
+.treevue-node-checkbox.all-custom-checkbox.indeterminate:after {
+  background: olive;
+}
+.treevue-node-expander.all-custom-expander:after {
+  border-color: olive;
 }
 .custom-text {
   color: red;
