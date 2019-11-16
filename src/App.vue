@@ -108,6 +108,7 @@
         <button @click="resetSelectedNodeTextStyle">reset</button>
         <button @click="resetSelectedNodeTextStyleWithChildren">reset with children</button>
         <button @click="setDefaultNodeTextStyle">default</button>
+        <button @click="resetDefaultNodeTextStyle">reset default</button>
       </div>
       <div class="button-group">
         <label>icon style</label>
@@ -116,6 +117,7 @@
         <button @click="resetSelectedNodeIconStyle">reset</button>
         <button @click="resetSelectedNodeIconStyleWithChildren">reset with children</button>
         <button @click="setDefaultIconStyle">default</button>
+        <button @click="resetDefaultIconStyle">reset default</button>
       </div>
       <div class="button-group">
         <label>checkbox style</label>
@@ -124,6 +126,7 @@
         <button @click="resetSelectedNodeCheckboxStyle">reset</button>
         <button @click="resetSelectedNodeCheckboxStyleWithChildren">reset with children</button>
         <button @click="setDefaultCheckboxStyle">default</button>
+        <button @click="resetDefaultCheckboxStyle">reset default</button>
       </div>
       <div class="button-group">
         <label>expander style</label>
@@ -132,6 +135,7 @@
         <button @click="resetSelectedNodeExpanderStyle">reset</button>
         <button @click="resetSelectedNodeExpanderStyleWithChildren">reset with children</button>
         <button @click="setDefaultExpanderStyle">default</button>
+        <button @click="resetDefaultExpanderStyle">reset default</button>
       </div>
       <div class="button-group">
         <label>source</label>
@@ -424,6 +428,9 @@ export default {
     setDefaultNodeTextStyle () {
       this.treeOptions.styleClasses.text = 'all-custom-text'
     },
+    resetDefaultNodeTextStyle () {
+      this.treeOptions.styleClasses.text = null
+    },
     setSelectedNodeIconStyle () {
       this.nodeManager.selectedNode.setIconStyle('custom-icon')
     },
@@ -438,6 +445,9 @@ export default {
     },
     setDefaultIconStyle () {
       this.treeOptions.styleClasses.icon = 'all-custom-icon'
+    },
+    resetDefaultIconStyle () {
+      this.treeOptions.styleClasses.icon = null
     },
     setSelectedNodeCheckboxStyle () {
       this.nodeManager.selectedNode.setCheckboxStyle('custom-checkbox')
@@ -454,6 +464,9 @@ export default {
     setDefaultCheckboxStyle () {
       this.treeOptions.styleClasses.checkbox = 'all-custom-checkbox'
     },
+    resetDefaultCheckboxStyle () {
+      this.treeOptions.styleClasses.checkbox = null
+    },
     setSelectedNodeExpanderStyle () {
       this.nodeManager.selectedNode.setExpanderStyle('custom-expander')
     },
@@ -468,6 +481,9 @@ export default {
     },
     setDefaultExpanderStyle () {
       this.treeOptions.styleClasses.expander = 'all-custom-expander'
+    },
+    resetDefaultExpanderStyle () {
+      this.treeOptions.styleClasses.expander = null
     },
     onCheckedAll () {
       this.outputMessage('checked all event is fired')
