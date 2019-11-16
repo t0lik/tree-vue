@@ -101,28 +101,28 @@ export default {
         'filter-matched': this.node.states.matched,
         disabled: this.node.states.disabled
       }
-      return this.combineClasses(classes, this.node.styleClasses.text)
+      return this.combineClasses(this.combineClasses(classes, this.node.styleClasses.text), this.options.styleClasses.text)
     },
     iconClasses () {
       const classes = {
         disabled: this.node.states.disabled
       }
 
-      return this.combineClasses(classes, this.node.styleClasses.icon)
+      return this.combineClasses(this.combineClasses(classes, this.node.styleClasses.icon), this.options.styleClasses.icon)
     },
     checkClasses () {
       const classes = {
         disabled: this.node.states.disabled
       }
 
-      return this.combineClasses(classes, this.node.styleClasses.checkbox)
+      return this.combineClasses(this.combineClasses(classes, this.node.styleClasses.checkbox), this.options.styleClasses.checkbox)
     },
     expanderClasses () {
       const classes = {
         disabled: this.node.states.disabled
       }
 
-      return this.combineClasses(classes, this.node.styleClasses.expander)
+      return this.combineClasses(this.combineClasses(classes, this.node.styleClasses.expander), this.options.styleClasses.expander)
     },
     icons () {
       return this.options.icons

@@ -342,7 +342,7 @@ describe('Node.vue', () => {
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.textClasses).to.have.property('filter-matched', true)
   })
-  it('textClasses class contains custom text class that is set in node', () => {
+  it('textClasses class contains custom text class from node', () => {
     const nodes = [{
       id: 1,
       name: 'name',
@@ -356,6 +356,44 @@ describe('Node.vue', () => {
     wrapper.vm.nodeManager.setTextStyle(node, 'text-class')
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.textClasses).to.have.property('text-class', true)
+  })
+  it('textClasses class contains custom text class from treeOptions', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+      styleClasses: {
+        text: 'text-class'
+      }
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.textClasses).to.have.property('text-class', true)
+  })
+  it('textClasses class contains combined custom text classes from node and treeOptions', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+      styleClasses: {
+        text: 'all-text-class'
+      }
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    wrapper.vm.nodeManager.setTextStyle(node, 'text-class')
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.textClasses).to.have.property('text-class', true)
+    expect(nodeWrapper.vm.textClasses).to.have.property('all-text-class', true)
   })
   it('iconClasses = empty class on enabled node', () => {
     const nodes = [{
@@ -386,7 +424,7 @@ describe('Node.vue', () => {
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.iconClasses).to.have.property('disabled', true)
   })
-  it('iconClasses class contains custom icon class that is set in node', () => {
+  it('iconClasses class contains custom icon class from node', () => {
     const nodes = [{
       id: 1,
       name: 'name',
@@ -400,6 +438,44 @@ describe('Node.vue', () => {
     wrapper.vm.nodeManager.setIconStyle(node, 'icon-class')
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.iconClasses).to.have.property('icon-class', true)
+  })
+  it('iconClasses class contains custom icon class from treeOptions', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+      styleClasses: {
+        icon: 'icon-class'
+      }
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.iconClasses).to.have.property('icon-class', true)
+  })
+  it('iconClasses class contains combined custom icon classes from node and treeOptions', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+      styleClasses: {
+        icon: 'all-icon-class'
+      }
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    wrapper.vm.nodeManager.setIconStyle(node, 'icon-class')
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.iconClasses).to.have.property('icon-class', true)
+    expect(nodeWrapper.vm.iconClasses).to.have.property('all-icon-class', true)
   })
   it('checkClasses = empty class on enabled node', () => {
     const nodes = [{
@@ -445,6 +521,44 @@ describe('Node.vue', () => {
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.checkClasses).to.have.property('checkbox-class', true)
   })
+  it('checkClasses class contains custom checkbox class from treeOptions', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+      styleClasses: {
+        checkbox: 'checkbox-class'
+      }
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.checkClasses).to.have.property('checkbox-class', true)
+  })
+  it('checkClasses class contains combined custom checkbox classes from node and treeOptions', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+      styleClasses: {
+        checkbox: 'all-checkbox-class'
+      }
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    wrapper.vm.nodeManager.setCheckboxStyle(node, 'checkbox-class')
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.checkClasses).to.have.property('checkbox-class', true)
+    expect(nodeWrapper.vm.checkClasses).to.have.property('all-checkbox-class', true)
+  })
   it('expanderClasses = empty class on enabled node', () => {
     const nodes = [{
       id: 1,
@@ -474,7 +588,7 @@ describe('Node.vue', () => {
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.expanderClasses).to.have.property('disabled', true)
   })
-  it('expanderClasses class contains custom expander class that is set in node', () => {
+  it('expanderClasses class contains custom expander class from node', () => {
     const nodes = [{
       id: 1,
       name: 'name',
@@ -488,6 +602,44 @@ describe('Node.vue', () => {
     wrapper.vm.nodeManager.setExpanderStyle(node, 'expander-class')
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.expanderClasses).to.have.property('expander-class', true)
+  })
+  it('expanderClasses class contains custom expander class from treeOptions', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+      styleClasses: {
+        expander: 'expander-class'
+      }
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.expanderClasses).to.have.property('expander-class', true)
+  })
+  it('expanderClasses class contains combined custom expander classes from node and treeOptions', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 2,
+        name: 'child'
+      }]
+    }]
+    const wrapper = getTreeWrapper(nodes, {
+      styleClasses: {
+        expander: 'all-expander-class'
+      }
+    })
+    const node = wrapper.vm.nodeManager.getById(1)
+    wrapper.vm.nodeManager.setExpanderStyle(node, 'expander-class')
+    const nodeWrapper = getNodeWrapper(wrapper, node)
+    expect(nodeWrapper.vm.expanderClasses).to.have.property('expander-class', true)
+    expect(nodeWrapper.vm.expanderClasses).to.have.property('all-expander-class', true)
   })
   it('icons prop = defaultIcons with default treeOptions', () => {
     const nodes = [{

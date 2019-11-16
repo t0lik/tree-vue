@@ -128,6 +128,11 @@ describe('Tree.vue', () => {
     expect(wrapper.vm.treeOptions.notFoundText).to.be.eq('no nodes are found')
     expect(wrapper.vm.treeOptions.canEdit).to.be.false
     expect(wrapper.vm.treeOptions.canDelete).to.be.false
+    expect(wrapper.vm.treeOptions.styleClasses).to.be.not.null
+    expect(wrapper.vm.treeOptions.styleClasses.icon).to.be.null
+    expect(wrapper.vm.treeOptions.styleClasses.text).to.be.null
+    expect(wrapper.vm.treeOptions.styleClasses.checkbox).to.be.null
+    expect(wrapper.vm.treeOptions.styleClasses.expander).to.be.null
   })
   it('set treeOptions to non-default values', () => {
     const nodes = []
@@ -146,7 +151,13 @@ describe('Tree.vue', () => {
       childrenProp: 'kids',
       notFoundText: 'no more nodes are found',
       canEdit: true,
-      canDelete: true
+      canDelete: true,
+      styleClasses: {
+        icon: 'icon-test',
+        text: 'text-test',
+        checkbox: 'checkbox-test',
+        expander: 'expander-test'
+      }
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
 
@@ -165,6 +176,10 @@ describe('Tree.vue', () => {
     expect(wrapper.vm.treeOptions.notFoundText).to.be.eq('no more nodes are found')
     expect(wrapper.vm.treeOptions.canEdit).to.be.true
     expect(wrapper.vm.treeOptions.canDelete).to.be.true
+    expect(wrapper.vm.treeOptions.styleClasses.icon).to.be.eq('icon-test')
+    expect(wrapper.vm.treeOptions.styleClasses.text).to.be.eq('text-test')
+    expect(wrapper.vm.treeOptions.styleClasses.checkbox).to.be.eq('checkbox-test')
+    expect(wrapper.vm.treeOptions.styleClasses.expander).to.be.eq('expander-test')
   })
   it('getNodeManager returns nodeManager', () => {
     const nodes = []

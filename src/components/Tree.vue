@@ -58,7 +58,13 @@ export default {
         childrenProp: 'children',
         notFoundText: 'no nodes are found',
         canEdit: false,
-        canDelete: false
+        canDelete: false,
+        styleClasses: {
+          icon: null,
+          text: null,
+          checkbox: null,
+          expander: null
+        }
       }, this.options),
       nodeManager: new DefaultManager(this)
     }
