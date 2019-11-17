@@ -7,16 +7,32 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target lib --name TreeVue src/components/Tree.vue",
+    "build:umd": "rollup --config build/rollup.config.js --format umd --file dist/tree-vue.umd.js",
+    "build:es": "rollup --config build/rollup.config.js --format es --file dist/tree-vue.esm.js",
+    "build:unpkg": "rollup --config build/rollup.config.js --format iife --file dist/tree-vue.min.js",
+    "build": "npm run build:umd & npm run build:es & npm run build:unpkg",
+    "build-simple": "vue-cli-service build --target lib --name tree-vue src/components/TreeVue.vue",
     "build-app": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit --reporter min",
     "lint": "vue-cli-service lint"
   },
   "main": "dist/tree-vue.umd.js",
-  "keywords": ["vue", "tree", "treeview", "component"],
-  "dependencies": {
+  "module": "dist/tree-vue.esm.js",
+  "unpkg": "dist/tree-vue.min.js",
+  "browser": {
+    "./sfc": "src/components/TreeVue.vue"
   },
-  "files": ["src", "dist/*.js"],
+  "keywords": [
+    "vue",
+    "tree",
+    "treeview",
+    "component"
+  ],
+  "dependencies": {},
+  "files": [
+    "src",
+    "dist/*.js"
+  ],
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.11.2",
     "@vue/cli-plugin-babel": "^4.0.5",
@@ -34,6 +50,11 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^6.0.0",
+    "rollup": "^1.27.0",
+    "rollup-plugin-alias": "^2.2.0",
+    "rollup-plugin-buble": "^0.19.8",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-vue": "^5.1.2",
     "sinon": "^7.5.0",
     "vue": "^2.6.10",
     "vue-template-compiler": "^2.6.10"

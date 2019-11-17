@@ -148,7 +148,7 @@
 </template>
 
 <script>
-import Tree from './components/Tree'
+import Tree from './components/TreeVue'
 import fontawesomeIcons from './icons/fontawesomeIcons'
 import defaultIcons from './icons/defaultIcons'
 

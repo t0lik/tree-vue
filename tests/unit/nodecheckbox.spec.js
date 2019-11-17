@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai'
 import { mount } from '@vue/test-utils'
-import Tree from '@/components/Tree.vue'
+import Tree from '@/components/TreeView.vue'
 import NodeCheckbox from '@/components/NodeCheckbox.vue'
 
 describe('Node.vue', () => {

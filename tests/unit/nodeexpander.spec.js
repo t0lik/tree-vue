@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai'
 import { mount } from '@vue/test-utils'
-import Tree from '@/components/Tree.vue'
+import Tree from '@/components/TreeView.vue'
 import NodeExpander from '@/components/NodeExpander.vue'
 
 describe('Node.vue', () => {

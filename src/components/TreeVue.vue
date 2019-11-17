@@ -17,13 +17,13 @@
 </template>
 
 <script>
-import Node from './Node'
+import Node from '@/components/Node'
 import defaultIcons from '../icons/defaultIcons'
 import DefaultManager from '../nodeManagers/defaultManager'
 import keyboardMixin from '../mixins/keyboard'
 
 export default {
-  name: 'Tree',
+  name: 'TreeVue',
   props: {
     nodes: {
       type: Array
