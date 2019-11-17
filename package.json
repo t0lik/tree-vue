@@ -1,9 +1,9 @@
 {
   "name": "tree-vue",
-  "description": "Treeview component for VueJs",
+  "description": "Treeview component for Vue.js",
   "version": "0.1.0",
   "author": "Anatoliy Ivanov <t0lik@t0lik.com>",
-  "library": "TreeVue",
+  "library": "Treevue",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -25,7 +25,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/t0lik/tree-vue.git"
-  },  
+  },
+  "homepage": "https://github.com/t0lik/tree-vue#readme",
+  "license": "MIT",
   "keywords": [
     "vue",
     "tree",
