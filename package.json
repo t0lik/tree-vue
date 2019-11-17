@@ -1,19 +1,24 @@
 {
-  "name": "treevue",
+  "name": "tree-vue",
+  "description": "Treeview component for VueJs",
   "version": "0.1.0",
+  "author": "Anatoliy Ivanov <t0lik@t0lik.com>",
+  "library": "TreeVue",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --target lib --name TreeVue src/components/Tree.vue",
+    "build-app": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit --reporter min",
     "lint": "vue-cli-service lint"
   },
+  "main": "dist/tree-vue.umd.js",
+  "keywords": ["vue", "tree", "treeview", "component"],
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.11.2",
-    "core-js": "^3.4.0",
-    "vue": "^2.6.10"
   },
+  "files": ["src", "dist/*.js"],
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.11.2",
     "@vue/cli-plugin-babel": "^4.0.5",
     "@vue/cli-plugin-eslint": "^4.0.5",
     "@vue/cli-plugin-unit-mocha": "^4.0.5",
@@ -21,6 +26,7 @@
     "@vue/test-utils": "1.0.0-beta.29",
     "babel-eslint": "^10.0.1",
     "chai": "^4.1.2",
+    "core-js": "^3.4.0",
     "eslint": "^6.6.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-plugin-import": "^2.18.2",
@@ -29,6 +35,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^6.0.0",
     "sinon": "^7.5.0",
+    "vue": "^2.6.10",
     "vue-template-compiler": "^2.6.10"
   },
   "eslintConfig": {
