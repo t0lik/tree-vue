@@ -22,6 +22,10 @@
   "browser": {
     "./sfc": "src/components/TreeVue.vue"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/t0lik/tree-vue.git"
+  },  
   "keywords": [
     "vue",
     "tree",
