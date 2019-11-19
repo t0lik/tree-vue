@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai'
 import { mount } from '@vue/test-utils'
-import Tree from '@/components/TreeView.vue'
+import Tree from '@/components/TreeVue.vue'
 
 describe('Tree.vue events', () => {
   it('click on node emits node:clicked', done => {
