@@ -19,7 +19,7 @@
 <script>
 import Node from '@/components/Node'
 import defaultIcons from '../icons/defaultIcons'
-import DefaultManager from '../nodeManagers/defaultManager'
+import DefaultStorage from '../storages/defaultManager'
 import keyboardMixin from '../mixins/keyboard'
 
 export default {
@@ -66,7 +66,7 @@ export default {
           expander: null
         }
       }, this.options),
-      nodeManager: new DefaultManager(this)
+      nodeManager: new DefaultStorage(this)
     }
   },
   watch: {

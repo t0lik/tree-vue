@@ -995,7 +995,7 @@ function linkNodes (nodes) {
   }
 }
 
-function DefaultManager (treeComponent) {
+function DefaultStorage (treeComponent) {
   this.tree = treeComponent
   this.treeOptions = null
   this.options = {
@@ -1025,4 +1025,4 @@ function DefaultManager (treeComponent) {
   }.bind(this)
 }
 
-export default DefaultManager
+export default DefaultStorage
