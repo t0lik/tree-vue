@@ -102,7 +102,7 @@ function getVisibility (node) {
 
 function getVisibleNodes () {
   const visibleNodes = []
-  this.visitAll(this.items, node => {
+  this.visitAll(this.nodes, node => {
     if (node.visible()) {
       visibleNodes.push(node)
     }
@@ -225,7 +225,7 @@ function setExpanderStyle (node, classList, withChildren = false) {
 
 function clearFilter () {
   this.options.inSearch = false
-  this.visitAll(this.items, node => {
+  this.visitAll(this.nodes, node => {
     if (node._oldOpen !== null) {
       node.states.open = node._oldOpen
     }
@@ -252,7 +252,7 @@ function filter (searchObject, options) {
     searchFunc = (name, item) => searchObject(item)
   }
   const matchedNodes = []
-  this.visitAll(this.items, node => {
+  this.visitAll(this.nodes, node => {
     node.states.visible = node.parent && node.parent.states.visible && filterOptions.showChildren
     node.states.matched = false
     node._oldOpen = node.states.open
@@ -275,7 +275,7 @@ function filter (searchObject, options) {
 
 function getCheckedNodes () {
   const checkedNodes = []
-  this.visitAll(this.items, node => {
+  this.visitAll(this.nodes, node => {
     if (node.states.checked) {
       checkedNodes.push(node)
     }
@@ -295,22 +295,22 @@ function setAllNodesCheckState (nodes, state, onlyVisible = false) {
 }
 
 function checkAllNodes () {
-  setAllNodesCheckState(this.items, true, false)
+  setAllNodesCheckState(this.nodes, true, false)
   this.tree.$emit('tree:checked:all')
 }
 
 function checkVisibleNodes () {
-  setAllNodesCheckState(this.items, true, true)
+  setAllNodesCheckState(this.nodes, true, true)
   this.tree.$emit('tree:checked:visible')
 }
 
 function uncheckAllNodes () {
-  setAllNodesCheckState(this.items, false, false)
+  setAllNodesCheckState(this.nodes, false, false)
   this.tree.$emit('tree:unchecked:all')
 }
 
 function uncheckVisibleNodes () {
-  setAllNodesCheckState(this.items, false, true)
+  setAllNodesCheckState(this.nodes, false, true)
   this.tree.$emit('tree:unchecked:visible')
 }
 
@@ -470,7 +470,7 @@ function expandChildren (node) {
 }
 
 function expandAll () {
-  setAllNodesOpenState(this.items, true)
+  setAllNodesOpenState(this.nodes, true)
   this.tree.$emit('tree:expanded:all')
 }
 
@@ -491,7 +491,7 @@ function collapseChildren (node) {
 }
 
 function collapseAll () {
-  setAllNodesOpenState(this.items, false)
+  setAllNodesOpenState(this.nodes, false)
   if (this.selectedNode && !this.selectedNode.visible()) {
     this.setSelected(null)
   }
@@ -583,7 +583,7 @@ function disableChildren (node) {
 }
 
 function disableAll () {
-  setAllNodesDisableState(this, this.items, true)
+  setAllNodesDisableState(this, this.nodes, true)
   this.tree.$emit('tree:disabled:all')
 }
 
@@ -604,13 +604,13 @@ function enableChildren (node) {
 }
 
 function enableAll () {
-  setAllNodesDisableState(this, this.items, false)
+  setAllNodesDisableState(this, this.nodes, false)
   this.tree.$emit('tree:enabled:all')
 }
 
 function getNodeById (id) {
   let foundNode = null
-  this.visitAll(this.items, node => {
+  this.visitAll(this.nodes, node => {
     if (node.id === id) {
       foundNode = node
     }
@@ -629,7 +629,7 @@ function findOne (selector) {
   }
 
   let foundNode = null
-  this.visitAll(this.items, node => {
+  this.visitAll(this.nodes, node => {
     if (selector(node)) {
       foundNode = node
       return true
@@ -696,7 +696,7 @@ function findAll (selector) {
   }
 
   const foundNodes = []
-  this.visitAll(this.items, node => {
+  this.visitAll(this.nodes, node => {
     if (selector(node)) {
       foundNodes.push(node)
     }
@@ -872,7 +872,7 @@ function removeNode (node) {
 
   const parent = node.parent
   if (!parent) {
-    removeRootNode(this.items, this.originalItems, node)
+    removeRootNode(this.nodes, this.originalItems, node)
     this.tree.$emit('node:removed', node)
     if (this.selectedNode === node) {
       this.setSelected(null)
@@ -980,7 +980,7 @@ function initialize (treeOptions) {
   this.setExpanderStyle = setExpanderStyle.bind(this)
 
   this.sort = function (comparator) {
-    sortNodesRecursive(this, this.items, comparator)
+    sortNodesRecursive(this, this.nodes, comparator)
   }
 }
 
@@ -1004,7 +1004,7 @@ function DefaultManager (treeComponent) {
   this.CheckModes = CheckModes
   this.selectedNode = null
   this.originalItems = []
-  this.items = []
+  this.nodes = []
   this.internalLastNodeId = 0
   this.initialize = initialize.bind(this)
 
@@ -1021,7 +1021,7 @@ function DefaultManager (treeComponent) {
       linkNodes(nodes)
     }
 
-    this.items = nodes
+    this.nodes = nodes
   }.bind(this)
 }
 

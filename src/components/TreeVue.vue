@@ -1,11 +1,11 @@
 <template>
   <div class="treevue-tree" @keydown="onKeyDown">
-    <div class="treevue-empty-search-text" v-if="!visibleItems.length && nodeManager.options.inSearch"> {{ treeOptions.notFoundText }} </div>
+    <div class="treevue-empty-search-text" v-if="!visibleNodes.length && nodeManager.options.inSearch"> {{ treeOptions.notFoundText }} </div>
     <node
       :options="treeOptions"
       :manager="nodeManager"
       :state="treeState"
-      v-for="item in visibleItems" :key="item.id"
+      v-for="item in visibleNodes" :key="item.id"
       :node="item"
       @clicked="onNodeClicked"
       @node:focused="onNodeFocused"
@@ -87,8 +87,8 @@ export default {
     }
   },
   computed: {
-    visibleItems () {
-      return this.nodeManager.items.filter(x => x.visible())
+    visibleNodes () {
+      return this.nodeManager.nodes.filter(x => x.visible())
     }
   },
   mounted () {

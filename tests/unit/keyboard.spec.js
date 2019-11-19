@@ -728,7 +728,7 @@ describe('keyboard mixin', () => {
       wrapper.trigger('keydown', {
         key: 'Delete'
       })
-      expect(wrapper.vm.nodeManager.items.length).to.be.eq(1)
+      expect(wrapper.vm.nodeManager.nodes.length).to.be.eq(1)
       expect(wrapper.vm.nodeManager.getById(1)).to.be.null
 
       done()
@@ -753,7 +753,7 @@ describe('keyboard mixin', () => {
       wrapper.trigger('keydown', {
         key: 'Delete'
       })
-      expect(wrapper.vm.nodeManager.items.length).to.be.eq(2)
+      expect(wrapper.vm.nodeManager.nodes.length).to.be.eq(2)
       expect(wrapper.vm.nodeManager.getById(1)).to.be.not.null
 
       done()
@@ -778,7 +778,7 @@ describe('keyboard mixin', () => {
       wrapper.trigger('keydown', {
         key: 'F2'
       })
-      expect(wrapper.vm.nodeManager.items.length).to.be.eq(2)
+      expect(wrapper.vm.nodeManager.nodes.length).to.be.eq(2)
       expect(wrapper.vm.nodeManager.getById(1)).to.be.not.null
 
       done()

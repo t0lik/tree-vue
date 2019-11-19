@@ -1114,7 +1114,7 @@ describe('nodeManager functions', () => {
     }]
     const manager = getNodeManager(nodes)
     const visitedNodes = []
-    manager.visitAll(manager.items, x => { visitedNodes.push(x.id) })
+    manager.visitAll(manager.nodes, x => { visitedNodes.push(x.id) })
     expect(visitedNodes).to.be.lengthOf(7)
     expect(visitedNodes).to.have.members([1, 2, 3, 4, 5, 8, 9])
   })
@@ -1146,7 +1146,7 @@ describe('nodeManager functions', () => {
     }]
     const manager = getNodeManager(nodes)
     const visitedNodes = []
-    manager.visitAll(manager.items, x => { visitedNodes.push(x.id) }, true)
+    manager.visitAll(manager.nodes, x => { visitedNodes.push(x.id) }, true)
     expect(visitedNodes).to.be.lengthOf(3)
     expect(visitedNodes).to.have.members([1, 2, 5])
   })
@@ -1207,7 +1207,7 @@ describe('nodeManager functions', () => {
       name: 'node3'
     }]
     const manager = getNodeManager(nodes)
-    expect(() => manager.visitAll(manager.items, null)).throw('parameter "nodeCallback" is not set')
+    expect(() => manager.visitAll(manager.nodes, null)).throw('parameter "nodeCallback" is not set')
   })
   it('visitAll and callback returning true on first child iterates through node and its first child only', () => {
     const nodes = [{
@@ -2979,7 +2979,7 @@ describe('nodeManager functions', () => {
 
     manager.remove(node)
 
-    expect(manager.items).to.be.empty
+    expect(manager.nodes).to.be.empty
     expect(nodes).to.be.empty
   })
   it('remove with child node removes node and item from original collection', () => {
@@ -3207,7 +3207,7 @@ describe('nodeManager functions', () => {
     const manager = getNodeManager(nodes)
     manager.disableAll()
     let enabledCount = 0
-    manager.visitAll(manager.items, x => {
+    manager.visitAll(manager.nodes, x => {
       if (!x.states.disabled) {
         enabledCount += 1
       }
@@ -3351,7 +3351,7 @@ describe('nodeManager functions', () => {
     const manager = getNodeManager(nodes)
     manager.enableAll()
     let disabledCount = 0
-    manager.visitAll(manager.items, x => {
+    manager.visitAll(manager.nodes, x => {
       if (x.states.disabled) {
         disabledCount += 1
       }
@@ -3595,10 +3595,10 @@ describe('nodeManager functions', () => {
     }]
     const manager = getNodeManager(nodes)
     manager.sort()
-    expect(manager.items[0].id).to.be.eq(2)
-    expect(manager.items[1].id).to.be.eq(1)
-    expect(manager.items[1].children[0].id).to.be.eq(4)
-    expect(manager.items[1].children[1].id).to.be.eq(3)
+    expect(manager.nodes[0].id).to.be.eq(2)
+    expect(manager.nodes[1].id).to.be.eq(1)
+    expect(manager.nodes[1].children[0].id).to.be.eq(4)
+    expect(manager.nodes[1].children[1].id).to.be.eq(3)
   })
   it('sort with comparator by id prop sorts all nodes by id', () => {
     const nodes = [{
@@ -3617,10 +3617,10 @@ describe('nodeManager functions', () => {
     }]
     const manager = getNodeManager(nodes)
     manager.sort((item1, item2) => item1.id - item2.id)
-    expect(manager.items[0].id).to.be.eq(1)
-    expect(manager.items[1].id).to.be.eq(2)
-    expect(manager.items[1].children[0].id).to.be.eq(3)
-    expect(manager.items[1].children[1].id).to.be.eq(4)
+    expect(manager.nodes[0].id).to.be.eq(1)
+    expect(manager.nodes[1].id).to.be.eq(2)
+    expect(manager.nodes[1].children[0].id).to.be.eq(3)
+    expect(manager.nodes[1].children[1].id).to.be.eq(4)
   })
   it('setNodes with items=null throws Error', () => {
     const nodes = [{
@@ -3666,7 +3666,7 @@ describe('nodeManager functions', () => {
     const manager = getNodeManager(items)
     manager.setNodes(anotherItems)
     const anotherNodeIdList = []
-    manager.visitAll(manager.items, x => {
+    manager.visitAll(manager.nodes, x => {
       anotherNodeIdList.push(x.id)
     })
     expect(anotherNodeIdList).to.be.members([10, 11, 14, 15])
@@ -3701,9 +3701,9 @@ describe('nodeManager functions', () => {
       autoSort: true
     })
     manager.setNodes(anotherItems)
-    expect(manager.items[0].id).to.be.eq(15)
-    expect(manager.items[1].id).to.be.eq(10)
-    expect(manager.items[1].children[0].id).to.be.eq(14)
-    expect(manager.items[1].children[1].id).to.be.eq(11)
+    expect(manager.nodes[0].id).to.be.eq(15)
+    expect(manager.nodes[1].id).to.be.eq(10)
+    expect(manager.nodes[1].children[0].id).to.be.eq(14)
+    expect(manager.nodes[1].children[1].id).to.be.eq(11)
   })
 })

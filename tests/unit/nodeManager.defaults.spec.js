@@ -23,7 +23,7 @@ describe('nodeManager default item states', () => {
       checkOnSelect: false
     }
     const manager = getNodeManager(nodes, options)
-    expect(manager.items.length).to.be.eq(nodes.length)
+    expect(manager.nodes.length).to.be.eq(nodes.length)
   })
   it('node has source item prop that equals to source item', () => {
     const nodes = [{
@@ -37,7 +37,7 @@ describe('nodeManager default item states', () => {
       checkOnSelect: false
     }
     const manager = getNodeManager(nodes, options)
-    expect(manager.items[0].item).to.be.eq(nodes[0])
+    expect(manager.nodes[0].item).to.be.eq(nodes[0])
   })
   it('node has id equals to source item id', () => {
     const nodes = [{
@@ -51,7 +51,7 @@ describe('nodeManager default item states', () => {
       checkOnSelect: false
     }
     const manager = getNodeManager(nodes, options)
-    expect(manager.items[0].id).to.be.eq(nodes[0].id)
+    expect(manager.nodes[0].id).to.be.eq(nodes[0].id)
   })
   it('node has id not equals to source item id when idProp not equals to id prop in source item', () => {
     const nodes = [{
@@ -66,7 +66,7 @@ describe('nodeManager default item states', () => {
       idProp: 'id2'
     }
     const manager = getNodeManager(nodes, options)
-    expect(manager.items[0].id).to.be.not.eq(nodes[0].id)
+    expect(manager.nodes[0].id).to.be.not.eq(nodes[0].id)
   })
   it('first node has next prop equals to second one', () => {
     const nodes = [{
@@ -80,7 +80,7 @@ describe('nodeManager default item states', () => {
       checkOnSelect: false
     }
     const manager = getNodeManager(nodes, options)
-    expect(manager.items[0].next).to.be.eq(manager.items[1])
+    expect(manager.nodes[0].next).to.be.eq(manager.nodes[1])
   })
   it('last node has next prop equals to null', () => {
     const nodes = [{
@@ -94,7 +94,7 @@ describe('nodeManager default item states', () => {
       checkOnSelect: false
     }
     const manager = getNodeManager(nodes, options)
-    expect(manager.items[1].next).to.be.null
+    expect(manager.nodes[1].next).to.be.null
   })
   it('second node has prev prop equals to first one', () => {
     const nodes = [{
@@ -108,7 +108,7 @@ describe('nodeManager default item states', () => {
       checkOnSelect: false
     }
     const manager = getNodeManager(nodes, options)
-    expect(manager.items[1].prev).to.be.eq(manager.items[0])
+    expect(manager.nodes[1].prev).to.be.eq(manager.nodes[0])
   })
   it('first node has prev prop equals to null', () => {
     const nodes = [{
@@ -122,7 +122,7 @@ describe('nodeManager default item states', () => {
       checkOnSelect: false
     }
     const manager = getNodeManager(nodes, options)
-    expect(manager.items[0].prev).to.be.null
+    expect(manager.nodes[0].prev).to.be.null
   })
   it('child item has parent prop equals to its parent', () => {
     const nodes = [{
@@ -438,9 +438,9 @@ describe('nodeManager default item states', () => {
       autoSort: false
     }
     const manager = getNodeManager(nodes, options)
-    expect(manager.items[0].id).to.be.eq(1)
-    expect(manager.items[1].id).to.be.eq(4)
-    const children = manager.items[0].children
+    expect(manager.nodes[0].id).to.be.eq(1)
+    expect(manager.nodes[1].id).to.be.eq(4)
+    const children = manager.nodes[0].children
     expect(children[0].id).to.be.eq(2)
     expect(children[1].id).to.be.eq(3)
   })
@@ -463,9 +463,9 @@ describe('nodeManager default item states', () => {
       autoSort: true
     }
     const manager = getNodeManager(nodes, options)
-    expect(manager.items[0].id).to.be.eq(4)
-    expect(manager.items[1].id).to.be.eq(1)
-    const children = manager.items[1].children
+    expect(manager.nodes[0].id).to.be.eq(4)
+    expect(manager.nodes[1].id).to.be.eq(1)
+    const children = manager.nodes[1].children
     expect(children[0].id).to.be.eq(3)
     expect(children[1].id).to.be.eq(2)
   })

@@ -83,7 +83,7 @@ describe('Tree.vue', () => {
 
     expect(wrapper.findAll(Node).length).to.be.eq(nodes.length)
   })
-  it('visibleItems count equals to source node count', () => {
+  it('visibleNodes count equals to source node count', () => {
     const nodes = [{
       id: 1,
       name: 'test'
@@ -96,7 +96,7 @@ describe('Tree.vue', () => {
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
 
-    expect(wrapper.vm.visibleItems.length).to.be.eq(nodes.length)
+    expect(wrapper.vm.visibleNodes.length).to.be.eq(nodes.length)
   })
   it('default treeState', () => {
     const nodes = []
