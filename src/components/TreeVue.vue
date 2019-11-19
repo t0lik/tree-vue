@@ -1,9 +1,9 @@
 <template>
   <div class="treevue-tree" @keydown="onKeyDown">
-    <div class="treevue-empty-search-text" v-if="!visibleNodes.length && nodeManager.options.inSearch"> {{ treeOptions.notFoundText }} </div>
+    <div class="treevue-empty-search-text" v-if="!visibleNodes.length && storage.options.inSearch"> {{ treeOptions.notFoundText }} </div>
     <node
       :options="treeOptions"
-      :manager="nodeManager"
+      :storage="storage"
       :state="treeState"
       v-for="item in visibleNodes" :key="item.id"
       :node="item"
@@ -66,7 +66,7 @@ export default {
           expander: null
         }
       }, this.options),
-      nodeManager: new DefaultStorage(this)
+      storage: new DefaultStorage(this)
     }
   },
   watch: {
@@ -88,16 +88,16 @@ export default {
   },
   computed: {
     visibleNodes () {
-      return this.nodeManager.nodes.filter(x => x.visible())
+      return this.storage.nodes.filter(x => x.visible())
     }
   },
   mounted () {
-    this.nodeManager.initialize(this.treeOptions)
-    this.nodeManager.setNodes(this.nodes)
+    this.storage.initialize(this.treeOptions)
+    this.storage.setNodes(this.nodes)
   },
   methods: {
-    getNodeManager () {
-      return this.nodeManager
+    getStorage () {
+      return this.storage
     },
     onNodeClicked (item) {
       this.$emit('node:clicked', item)

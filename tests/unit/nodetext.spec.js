@@ -32,7 +32,7 @@ describe('NodeText.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const textWrapper = getNodeTextWrapper(wrapper, node, {})
     const spanWrapper = textWrapper.find('span')
     expect(spanWrapper.text()).to.be.eq('name')
@@ -43,7 +43,7 @@ describe('NodeText.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const textWrapper = getNodeTextWrapper(wrapper, node, {})
 
     textWrapper.vm.focus()
@@ -60,7 +60,7 @@ describe('NodeText.vue', () => {
     const wrapper = getTreeWrapper(nodes, {
       canEdit: true
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const textWrapper = getNodeTextWrapper(wrapper, node, {})
 
     textWrapper.trigger('dblclick')
@@ -77,7 +77,7 @@ describe('NodeText.vue', () => {
     const wrapper = getTreeWrapper(nodes, {
       canEdit: false
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const textWrapper = getNodeTextWrapper(wrapper, node, {})
 
     textWrapper.trigger('dblclick')
@@ -91,7 +91,7 @@ describe('NodeText.vue', () => {
       title: 'title'
     }]
     const wrapper = getTreeWrapper(nodes, { editNameProp: 'title' })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const textWrapper = getNodeTextWrapper(wrapper, node, { attachToDocument: true })
     const nodeSpan = textWrapper.find('.treevue-node-text')
 

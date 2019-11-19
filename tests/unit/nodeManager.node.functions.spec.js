@@ -4,15 +4,15 @@ import { mount } from '@vue/test-utils'
 import Tree from '@/components/TreeVue.vue'
 import sinon from 'sinon'
 
-describe('nodeManager node functions', () => {
-  function getNodeManager (nodes, options = {}) {
+describe('storage node functions', () => {
+  function getStorage (nodes, options = {}) {
     const wrapper = mount(Tree, {
       propsData: { nodes, options }
     })
 
-    return wrapper.vm.nodeManager
+    return wrapper.vm.storage
   }
-  it('addChild calls nodeManager.addChild', () => {
+  it('addChild calls storage.addChild', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -24,9 +24,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const newItem = { id: 10, name: 'node10' }
     mock.expects('addChild').once().withArgs(node, newItem)
 
@@ -34,7 +34,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('insertChild calls nodeManager.insertChild', () => {
+  it('insertChild calls storage.insertChild', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -46,10 +46,10 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const childNode = manager.getById(3)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const childNode = storage.getById(3)
+    const mock = sinon.mock(storage)
     const newItem = { id: 10, name: 'node10' }
     mock.expects('insertChild').once().withArgs(node, newItem, childNode)
 
@@ -57,7 +57,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('expand with withChildren=false calls nodeManager.expand with withChildren=false', () => {
+  it('expand with withChildren=false calls storage.expand with withChildren=false', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -69,9 +69,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = false
     mock.expects('expand').once().withArgs(node, withChildren)
 
@@ -79,7 +79,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('expand with withChildren=true calls nodeManager.expand with withChildren=true', () => {
+  it('expand with withChildren=true calls storage.expand with withChildren=true', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -91,9 +91,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = true
     mock.expects('expand').once().withArgs(node, withChildren)
 
@@ -101,7 +101,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('expandChildren calls nodeManager.expandChildren', () => {
+  it('expandChildren calls storage.expandChildren', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -113,16 +113,16 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     mock.expects('expandChildren').once().withArgs(node)
 
     node.expandChildren()
 
     mock.verify()
   })
-  it('collapse with withChildren=false calls nodeManager.collapse with withChildren=false', () => {
+  it('collapse with withChildren=false calls storage.collapse with withChildren=false', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -135,9 +135,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = false
     mock.expects('collapse').once().withArgs(node, withChildren)
 
@@ -145,7 +145,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('collapse with withChildren=true calls nodeManager.collapse with withChildren=true', () => {
+  it('collapse with withChildren=true calls storage.collapse with withChildren=true', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -158,9 +158,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = true
     mock.expects('collapse').once().withArgs(node, withChildren)
 
@@ -168,7 +168,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('collapseChildren calls nodeManager.collapseChildren', () => {
+  it('collapseChildren calls storage.collapseChildren', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -181,16 +181,16 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     mock.expects('collapseChildren').once().withArgs(node)
 
     node.collapseChildren()
 
     mock.verify()
   })
-  it('select calls nodeManager.setSelected with specified node', () => {
+  it('select calls storage.setSelected with specified node', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -203,16 +203,16 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     mock.expects('setSelected').once().withArgs(node)
 
     node.select()
 
     mock.verify()
   })
-  it('deselect calls nodeManager.setSelected with null', () => {
+  it('deselect calls storage.setSelected with null', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -224,17 +224,17 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
     node.select()
-    const mock = sinon.mock(manager)
+    const mock = sinon.mock(storage)
     mock.expects('setSelected').once().withArgs(null)
 
     node.deselect()
 
     mock.verify()
   })
-  it('show calls nodeManager.showNode with specified node', () => {
+  it('show calls storage.showNode with specified node', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -247,16 +247,16 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(3)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(3)
+    const mock = sinon.mock(storage)
     mock.expects('showNode').once().withArgs(node)
 
     node.show()
 
     mock.verify()
   })
-  it('disable with withChildren=false calls nodeManager.disable with withChildren=false', () => {
+  it('disable with withChildren=false calls storage.disable with withChildren=false', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -269,9 +269,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = false
     mock.expects('disable').once().withArgs(node, withChildren)
 
@@ -279,7 +279,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('disable with withChildren=true calls nodeManager.disable with withChildren=true', () => {
+  it('disable with withChildren=true calls storage.disable with withChildren=true', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -292,9 +292,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = true
     mock.expects('disable').once().withArgs(node, withChildren)
 
@@ -302,7 +302,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('disableChildren calls nodeManager.disableChildren', () => {
+  it('disableChildren calls storage.disableChildren', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -315,16 +315,16 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     mock.expects('disableChildren').once().withArgs(node)
 
     node.disableChildren()
 
     mock.verify()
   })
-  it('enable with withChildren=false calls nodeManager.enable with withChildren=false', () => {
+  it('enable with withChildren=false calls storage.enable with withChildren=false', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -337,9 +337,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = false
     mock.expects('enable').once().withArgs(node, withChildren)
 
@@ -347,7 +347,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('enable with withChildren=true calls nodeManager.enable with withChildren=true', () => {
+  it('enable with withChildren=true calls storage.enable with withChildren=true', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -361,9 +361,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = true
     mock.expects('enable').once().withArgs(node, withChildren)
 
@@ -371,7 +371,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('enableChildren calls nodeManager.enableChildren', () => {
+  it('enableChildren calls storage.enableChildren', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -385,16 +385,16 @@ describe('nodeManager node functions', () => {
         disabled: true
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     mock.expects('enableChildren').once().withArgs(node)
 
     node.enableChildren()
 
     mock.verify()
   })
-  it('check with withChildren=false calls nodeManager.check with withChildren=false', () => {
+  it('check with withChildren=false calls storage.check with withChildren=false', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -406,9 +406,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = false
     mock.expects('check').once().withArgs(node, withChildren)
 
@@ -416,7 +416,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('check with withChildren=true calls nodeManager.check with withChildren=true', () => {
+  it('check with withChildren=true calls storage.check with withChildren=true', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -428,9 +428,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = true
     mock.expects('check').once().withArgs(node, withChildren)
 
@@ -438,7 +438,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('checkChildren calls nodeManager.checkChildren', () => {
+  it('checkChildren calls storage.checkChildren', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -452,16 +452,16 @@ describe('nodeManager node functions', () => {
         disabled: true
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     mock.expects('checkChildren').once().withArgs(node)
 
     node.checkChildren()
 
     mock.verify()
   })
-  it('uncheck with withChildren=false calls nodeManager.uncheck with withChildren=false', () => {
+  it('uncheck with withChildren=false calls storage.uncheck with withChildren=false', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -474,9 +474,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = false
     mock.expects('uncheck').once().withArgs(node, withChildren)
 
@@ -484,7 +484,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('uncheck with withChildren=true calls nodeManager.uncheck with withChildren=true', () => {
+  it('uncheck with withChildren=true calls storage.uncheck with withChildren=true', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -498,9 +498,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = true
     mock.expects('uncheck').once().withArgs(node, withChildren)
 
@@ -508,7 +508,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('uncheckChildren calls nodeManager.uncheckChildren', () => {
+  it('uncheckChildren calls storage.uncheckChildren', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -522,16 +522,16 @@ describe('nodeManager node functions', () => {
         checked: true
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     mock.expects('uncheckChildren').once().withArgs(node)
 
     node.uncheckChildren()
 
     mock.verify()
   })
-  it('visible() calls nodeManager.getVisibility', () => {
+  it('visible() calls storage.getVisibility', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -553,16 +553,16 @@ describe('nodeManager node functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(3)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(3)
+    const mock = sinon.mock(storage)
     mock.expects('getVisibility').once().withArgs(node)
 
     node.visible()
 
     mock.verify()
   })
-  it('setCheckboxStyle with withChildren=false calls nodeManager.setCheckboxStyle with withChildren=false', () => {
+  it('setCheckboxStyle with withChildren=false calls storage.setCheckboxStyle with withChildren=false', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -576,9 +576,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = false
     const checkboxClasses = 'test-class'
     mock.expects('setCheckboxStyle').once().withArgs(node, checkboxClasses, withChildren)
@@ -587,7 +587,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('setCheckboxStyle with withChildren=true calls nodeManager.setCheckboxStyle with withChildren=true', () => {
+  it('setCheckboxStyle with withChildren=true calls storage.setCheckboxStyle with withChildren=true', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -601,9 +601,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = true
     const checkboxClasses = 'test-class'
     mock.expects('setCheckboxStyle').once().withArgs(node, checkboxClasses, withChildren)
@@ -612,7 +612,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('resetCheckboxStyle with withChildren=false calls nodeManager.setCheckboxStyle with classList=null and with withChildren=false ', () => {
+  it('resetCheckboxStyle with withChildren=false calls storage.setCheckboxStyle with classList=null and with withChildren=false ', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -626,9 +626,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = false
     mock.expects('setCheckboxStyle').once().withArgs(node, null, withChildren)
 
@@ -636,7 +636,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('resetCheckboxStyle with withChildren=true calls nodeManager.setCheckboxStyle with classList=null and with withChildren=true ', () => {
+  it('resetCheckboxStyle with withChildren=true calls storage.setCheckboxStyle with classList=null and with withChildren=true ', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -650,9 +650,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = true
     mock.expects('setCheckboxStyle').once().withArgs(node, null, withChildren)
 
@@ -660,7 +660,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('setTextStyle with withChildren=false calls nodeManager.setTextStyle with withChildren=false', () => {
+  it('setTextStyle with withChildren=false calls storage.setTextStyle with withChildren=false', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -674,9 +674,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = false
     const textClasses = 'test-class'
     mock.expects('setTextStyle').once().withArgs(node, textClasses, withChildren)
@@ -685,7 +685,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('setTextStyle with withChildren=true calls nodeManager.setTextStyle with withChildren=true', () => {
+  it('setTextStyle with withChildren=true calls storage.setTextStyle with withChildren=true', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -699,9 +699,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = true
     const textClasses = 'test-class'
     mock.expects('setTextStyle').once().withArgs(node, textClasses, withChildren)
@@ -710,7 +710,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('resetTextStyle with withChildren=false calls nodeManager.setTextStyle with classList=null and with withChildren=false ', () => {
+  it('resetTextStyle with withChildren=false calls storage.setTextStyle with classList=null and with withChildren=false ', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -724,9 +724,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = false
     mock.expects('setTextStyle').once().withArgs(node, null, withChildren)
 
@@ -734,7 +734,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('resetTextStyle with withChildren=true calls nodeManager.setTextStyle with classList=null and with withChildren=true ', () => {
+  it('resetTextStyle with withChildren=true calls storage.setTextStyle with classList=null and with withChildren=true ', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -748,9 +748,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = true
     mock.expects('setTextStyle').once().withArgs(node, null, withChildren)
 
@@ -758,7 +758,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('setIconStyle with withChildren=false calls nodeManager.setIconStyle with withChildren=false', () => {
+  it('setIconStyle with withChildren=false calls storage.setIconStyle with withChildren=false', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -772,9 +772,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = false
     const iconClasses = 'test-class'
     mock.expects('setIconStyle').once().withArgs(node, iconClasses, withChildren)
@@ -783,7 +783,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('setIconStyle with withChildren=true calls nodeManager.setIconStyle with withChildren=true', () => {
+  it('setIconStyle with withChildren=true calls storage.setIconStyle with withChildren=true', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -797,9 +797,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = true
     const iconClasses = 'test-class'
     mock.expects('setIconStyle').once().withArgs(node, iconClasses, withChildren)
@@ -808,7 +808,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('resetIconStyle with withChildren=false calls nodeManager.setIconStyle with classList=null and with withChildren=false ', () => {
+  it('resetIconStyle with withChildren=false calls storage.setIconStyle with classList=null and with withChildren=false ', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -822,9 +822,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = false
     mock.expects('setIconStyle').once().withArgs(node, null, withChildren)
 
@@ -832,7 +832,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('resetIconStyle with withChildren=true calls nodeManager.setIconStyle with classList=null and with withChildren=true ', () => {
+  it('resetIconStyle with withChildren=true calls storage.setIconStyle with classList=null and with withChildren=true ', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -846,9 +846,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = true
     mock.expects('setIconStyle').once().withArgs(node, null, withChildren)
 
@@ -856,7 +856,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('setExpanderStyle with withChildren=false calls nodeManager.setExpanderStyle with withChildren=false', () => {
+  it('setExpanderStyle with withChildren=false calls storage.setExpanderStyle with withChildren=false', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -870,9 +870,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = false
     const expanderClasses = 'test-class'
     mock.expects('setExpanderStyle').once().withArgs(node, expanderClasses, withChildren)
@@ -881,7 +881,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('setExpanderStyle with withChildren=true calls nodeManager.setExpanderStyle with withChildren=true', () => {
+  it('setExpanderStyle with withChildren=true calls storage.setExpanderStyle with withChildren=true', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -895,9 +895,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = true
     const expanderClasses = 'test-class'
     mock.expects('setExpanderStyle').once().withArgs(node, expanderClasses, withChildren)
@@ -906,7 +906,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('resetExpanderStyle with withChildren=false calls nodeManager.setExpanderStyle with classList=null and with withChildren=false ', () => {
+  it('resetExpanderStyle with withChildren=false calls storage.setExpanderStyle with classList=null and with withChildren=false ', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -920,9 +920,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = false
     mock.expects('setExpanderStyle').once().withArgs(node, null, withChildren)
 
@@ -930,7 +930,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('resetExpanderStyle with withChildren=true calls nodeManager.setExpanderStyle with classList=null and with withChildren=true ', () => {
+  it('resetExpanderStyle with withChildren=true calls storage.setExpanderStyle with classList=null and with withChildren=true ', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -944,9 +944,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
     const withChildren = true
     mock.expects('setExpanderStyle').once().withArgs(node, null, withChildren)
 
@@ -954,7 +954,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('findParent calls nodeManager.findParent', () => {
+  it('findParent calls storage.findParent', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -968,9 +968,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(3)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(3)
+    const mock = sinon.mock(storage)
     const selector = parent => parent.name.indexOf('node') !== -1
     mock.expects('findParent').once().withArgs(node, selector)
 
@@ -978,7 +978,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('findParents calls nodeManager.findParents', () => {
+  it('findParents calls storage.findParents', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -992,9 +992,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(3)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(3)
+    const mock = sinon.mock(storage)
     const selector = parent => parent.name.indexOf('node') !== -1
     mock.expects('findParents').once().withArgs(node, selector)
 
@@ -1002,7 +1002,7 @@ describe('nodeManager node functions', () => {
 
     mock.verify()
   })
-  it('getName calls nodeManager.getName', () => {
+  it('getName calls storage.getName', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -1016,9 +1016,9 @@ describe('nodeManager node functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(3)
-    const mock = sinon.mock(manager)
+    const storage = getStorage(nodes)
+    const node = storage.getById(3)
+    const mock = sinon.mock(storage)
     mock.expects('getName').once().withArgs(node)
 
     node.getName()

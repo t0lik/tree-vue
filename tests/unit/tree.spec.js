@@ -16,14 +16,14 @@ describe('Tree.vue', () => {
 
     expect(wrapper.find('.treevue-tree').exists()).to.be.true
   })
-  it('initializes node manager', () => {
+  it('initializes storage', () => {
     const nodes = []
     const options = {
       checkOnSelect: false
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
 
-    expect(wrapper.vm.nodeManager).to.be.not.null
+    expect(wrapper.vm.storage).to.be.not.null
   })
   it('filter with not found nodes shows not found text', () => {
     const nodes = [{
@@ -38,7 +38,7 @@ describe('Tree.vue', () => {
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
 
-    wrapper.vm.nodeManager.filter('node')
+    wrapper.vm.storage.filter('node')
 
     expect(wrapper.find('.treevue-empty-search-text').exists()).to.be.true
   })
@@ -55,7 +55,7 @@ describe('Tree.vue', () => {
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
 
-    wrapper.vm.nodeManager.filter('test')
+    wrapper.vm.storage.filter('test')
 
     expect(wrapper.find('.treevue-empty-search-text').exists()).to.be.false
   })
@@ -181,12 +181,12 @@ describe('Tree.vue', () => {
     expect(wrapper.vm.treeOptions.styleClasses.checkbox).to.be.eq('checkbox-test')
     expect(wrapper.vm.treeOptions.styleClasses.expander).to.be.eq('expander-test')
   })
-  it('getNodeManager returns nodeManager', () => {
+  it('getStorage returns storage', () => {
     const nodes = []
     const options = {
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
-    expect(wrapper.vm.getNodeManager()).to.be.eq(wrapper.vm.nodeManager)
+    expect(wrapper.vm.getStorage()).to.be.eq(wrapper.vm.storage)
   })
   it('onNodeClicked emits node:clicked', () => {
     const nodes = [{
@@ -196,7 +196,7 @@ describe('Tree.vue', () => {
     const options = {
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     wrapper.vm.onNodeClicked(node)
 
     expect(wrapper.emitted()['node:clicked'][0]).to.be.not.null
@@ -246,7 +246,7 @@ describe('Tree.vue', () => {
     const options = {
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
 
     wrapper.vm.onNodeFocused(node)
 
@@ -264,7 +264,7 @@ describe('Tree.vue', () => {
     const options = {
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
-    const secondNode = wrapper.vm.nodeManager.getById(2)
+    const secondNode = wrapper.vm.storage.getById(2)
     wrapper.vm.setFocusedNode(secondNode)
     expect(wrapper.vm.focusedNode).to.be.not.null
     expect(wrapper.vm.focusedNode.id).to.be.eq(secondNode.id)
@@ -280,10 +280,10 @@ describe('Tree.vue', () => {
     const options = {
     }
     const wrapper = mount(Tree, { propsData: { nodes, options } })
-    const secondNode = wrapper.vm.nodeManager.getById(2)
+    const secondNode = wrapper.vm.storage.getById(2)
     wrapper.vm.setFocusedNode(secondNode)
-    expect(wrapper.vm.nodeManager.selectedNode).to.be.not.null
-    expect(wrapper.vm.nodeManager.selectedNode.id).to.be.eq(secondNode.id)
+    expect(wrapper.vm.storage.selectedNode).to.be.not.null
+    expect(wrapper.vm.storage.selectedNode.id).to.be.eq(secondNode.id)
   })
   it('treeState.nodes has all the nodes', () => {
     const nodes = [{

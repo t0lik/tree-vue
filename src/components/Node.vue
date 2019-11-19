@@ -33,14 +33,14 @@
           ref="nodeText"/>
       </slot>
       <slot name="editor" v-bind:node="node" v-if="editorMode">
-        <node-editor :node="node" :manager="manager" @stopEdit="onStopEdit"/>
+        <node-editor :node="node" :storage="storage" @stopEdit="onStopEdit"/>
       </slot>
     </div>
     <div class="treevue-tree-node-children-container" v-if="node.states.open">
       <node
         :options="options"
         :state="state"
-        :manager="manager"
+        :storage="storage"
         v-for="child in visibleItems" :key="child.id"
         :node="child"
         class="treevue-tree-node-child"
@@ -69,7 +69,7 @@ export default {
       type: Object,
       required: true
     },
-    manager: {
+    storage: {
       type: Object,
       required: true
     },
@@ -93,7 +93,7 @@ export default {
   computed: {
     nodeClasses () {
       return {
-        selected: this.manager.selectedNode === this.node
+        selected: this.storage.selectedNode === this.node
       }
     },
     textClasses () {
@@ -175,16 +175,16 @@ export default {
       this.$emit('clicked', item)
     },
     onNodeCheckStateChanging (state) {
-      this.manager.setCheckState(this.node, state)
+      this.storage.setCheckState(this.node, state)
     },
     onNodeOpenStateChanging (state) {
-      this.manager.setOpenState(this.node, state)
+      this.storage.setOpenState(this.node, state)
     },
     onClick () {
       if (this.node.states.disabled) {
         return
       }
-      this.manager.setSelected(this.node)
+      this.storage.setSelected(this.node)
       this.$emit('clicked', this.node)
     },
     onFocused () {

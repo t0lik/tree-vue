@@ -18,7 +18,7 @@ describe('Node.vue', () => {
       ...options,
       propsData: {
         node,
-        manager: treeWrapper.vm.nodeManager
+        storage: treeWrapper.vm.storage
       }
     })
 
@@ -30,7 +30,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const editorWrapper = getNodeEditorWrapper(wrapper, node, {})
     expect(editorWrapper.vm.editText).to.be.eq('name')
   })
@@ -41,7 +41,7 @@ describe('Node.vue', () => {
       title: 'title'
     }]
     const wrapper = getTreeWrapper(nodes, { editNameProp: 'title' })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const editorWrapper = getNodeEditorWrapper(wrapper, node, {})
     expect(editorWrapper.vm.editText).to.be.eq('title')
   })
@@ -52,7 +52,7 @@ describe('Node.vue', () => {
       title: 'title'
     }]
     const wrapper = getTreeWrapper(nodes, { editNameProp: 'title' })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const editorWrapper = getNodeEditorWrapper(wrapper, node, { attachToDocument: true })
     const nodeInput = editorWrapper.find('.treevue-node-editor')
     editorWrapper.vm.$nextTick(() => {
@@ -70,7 +70,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const editorWrapper = getNodeEditorWrapper(wrapper, node, {})
 
     editorWrapper.vm.onInput({ target: { value: 'newname' } })
@@ -83,7 +83,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const editorWrapper = getNodeEditorWrapper(wrapper, node, {})
 
     editorWrapper.vm.cancelEdit()
@@ -97,7 +97,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const editorWrapper = getNodeEditorWrapper(wrapper, node, {})
 
     editorWrapper.vm.editText = 'newname'
@@ -112,7 +112,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const editorWrapper = getNodeEditorWrapper(wrapper, node, {})
 
     editorWrapper.vm.editText = 'newname'
@@ -127,7 +127,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const editorWrapper = getNodeEditorWrapper(wrapper, node, {})
 
     editorWrapper.vm.editText = 'newname'
@@ -142,7 +142,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const editorWrapper = getNodeEditorWrapper(wrapper, node, {})
 
     editorWrapper.vm.editText = 'newname'
@@ -157,7 +157,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const editorWrapper = getNodeEditorWrapper(wrapper, node, {})
 
     editorWrapper.vm.editText = 'newname'

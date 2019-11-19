@@ -31,7 +31,7 @@ describe('Node.vue', () => {
       propsData: {
         node,
         state: treeWrapper.vm.treeState,
-        manager: treeWrapper.vm.nodeManager,
+        storage: treeWrapper.vm.storage,
         options: treeWrapper.vm.treeOptions
       }
     })
@@ -58,7 +58,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     const clickableNode = nodeWrapper.find('.treevue-tree-node')
     clickableNode.trigger('click')
@@ -75,7 +75,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.classes('no-children')).to.be.true
     expect(nodeWrapper.vm.nodeContainerClasses).to.have.property('no-children', true)
@@ -90,7 +90,7 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.classes('no-children')).to.be.false
     expect(nodeWrapper.vm.nodeContainerClasses).to.have.property('no-children', false)
@@ -105,7 +105,7 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     const innerNodeTag = nodeWrapper.find('.treevue-tree-node-container > .treevue-tree-node')
     expect(innerNodeTag.classes('selected')).to.be.false
@@ -121,8 +121,8 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
-    wrapper.vm.nodeManager.setSelected(node)
+    const node = wrapper.vm.storage.getById(1)
+    wrapper.vm.storage.setSelected(node)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     const innerNodeTag = nodeWrapper.find('.treevue-tree-node-container > .treevue-tree-node')
     expect(innerNodeTag.classes('selected')).to.be.true
@@ -134,7 +134,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.contains(NodeExpander)).to.be.false
   })
@@ -148,7 +148,7 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.contains(NodeExpander)).to.be.true
   })
@@ -160,7 +160,7 @@ describe('Node.vue', () => {
     const wrapper = getTreeWrapper(nodes, {
       showCheckbox: true
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.contains(NodeCheckbox)).to.be.true
   })
@@ -172,7 +172,7 @@ describe('Node.vue', () => {
     const wrapper = getTreeWrapper(nodes, {
       showCheckbox: false
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.contains(NodeCheckbox)).to.be.false
   })
@@ -185,7 +185,7 @@ describe('Node.vue', () => {
     const wrapper = getTreeWrapper(nodes, {
       showIcon: true
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.contains(NodeIcon)).to.be.true
   })
@@ -197,7 +197,7 @@ describe('Node.vue', () => {
     const wrapper = getTreeWrapper(nodes, {
       showIcon: true
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.contains(NodeIcon)).to.be.false
   })
@@ -210,7 +210,7 @@ describe('Node.vue', () => {
       showIcon: true,
       hideEmptyIcon: false
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.contains(NodeIcon)).to.be.true
   })
@@ -221,7 +221,7 @@ describe('Node.vue', () => {
     }]
     const wrapper = getTreeWrapper(nodes, {
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.contains(NodeText)).to.be.true
   })
@@ -307,7 +307,7 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.textClasses).to.have.property('filter-matched', false)
     expect(nodeWrapper.vm.textClasses).to.have.property('disabled', false)
@@ -323,7 +323,7 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.textClasses).to.have.property('disabled', true)
   })
@@ -337,8 +337,8 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes)
-    wrapper.vm.nodeManager.filter('name')
-    const node = wrapper.vm.nodeManager.getById(1)
+    wrapper.vm.storage.filter('name')
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.textClasses).to.have.property('filter-matched', true)
   })
@@ -352,8 +352,8 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
-    wrapper.vm.nodeManager.setTextStyle(node, 'text-class')
+    const node = wrapper.vm.storage.getById(1)
+    wrapper.vm.storage.setTextStyle(node, 'text-class')
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.textClasses).to.have.property('text-class', true)
   })
@@ -371,7 +371,7 @@ describe('Node.vue', () => {
         text: 'text-class'
       }
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.textClasses).to.have.property('text-class', true)
   })
@@ -389,8 +389,8 @@ describe('Node.vue', () => {
         text: 'all-text-class'
       }
     })
-    const node = wrapper.vm.nodeManager.getById(1)
-    wrapper.vm.nodeManager.setTextStyle(node, 'text-class')
+    const node = wrapper.vm.storage.getById(1)
+    wrapper.vm.storage.setTextStyle(node, 'text-class')
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.textClasses).to.have.property('text-class', true)
     expect(nodeWrapper.vm.textClasses).to.have.property('all-text-class', true)
@@ -405,7 +405,7 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.iconClasses).to.have.property('disabled', false)
   })
@@ -420,7 +420,7 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.iconClasses).to.have.property('disabled', true)
   })
@@ -434,8 +434,8 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
-    wrapper.vm.nodeManager.setIconStyle(node, 'icon-class')
+    const node = wrapper.vm.storage.getById(1)
+    wrapper.vm.storage.setIconStyle(node, 'icon-class')
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.iconClasses).to.have.property('icon-class', true)
   })
@@ -453,7 +453,7 @@ describe('Node.vue', () => {
         icon: 'icon-class'
       }
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.iconClasses).to.have.property('icon-class', true)
   })
@@ -471,8 +471,8 @@ describe('Node.vue', () => {
         icon: 'all-icon-class'
       }
     })
-    const node = wrapper.vm.nodeManager.getById(1)
-    wrapper.vm.nodeManager.setIconStyle(node, 'icon-class')
+    const node = wrapper.vm.storage.getById(1)
+    wrapper.vm.storage.setIconStyle(node, 'icon-class')
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.iconClasses).to.have.property('icon-class', true)
     expect(nodeWrapper.vm.iconClasses).to.have.property('all-icon-class', true)
@@ -487,7 +487,7 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.checkClasses).to.have.property('disabled', false)
   })
@@ -502,7 +502,7 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.checkClasses).to.have.property('disabled', true)
   })
@@ -516,8 +516,8 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
-    wrapper.vm.nodeManager.setCheckboxStyle(node, 'checkbox-class')
+    const node = wrapper.vm.storage.getById(1)
+    wrapper.vm.storage.setCheckboxStyle(node, 'checkbox-class')
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.checkClasses).to.have.property('checkbox-class', true)
   })
@@ -535,7 +535,7 @@ describe('Node.vue', () => {
         checkbox: 'checkbox-class'
       }
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.checkClasses).to.have.property('checkbox-class', true)
   })
@@ -553,8 +553,8 @@ describe('Node.vue', () => {
         checkbox: 'all-checkbox-class'
       }
     })
-    const node = wrapper.vm.nodeManager.getById(1)
-    wrapper.vm.nodeManager.setCheckboxStyle(node, 'checkbox-class')
+    const node = wrapper.vm.storage.getById(1)
+    wrapper.vm.storage.setCheckboxStyle(node, 'checkbox-class')
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.checkClasses).to.have.property('checkbox-class', true)
     expect(nodeWrapper.vm.checkClasses).to.have.property('all-checkbox-class', true)
@@ -569,7 +569,7 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.expanderClasses).to.have.property('disabled', false)
   })
@@ -584,7 +584,7 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.expanderClasses).to.have.property('disabled', true)
   })
@@ -598,8 +598,8 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
-    wrapper.vm.nodeManager.setExpanderStyle(node, 'expander-class')
+    const node = wrapper.vm.storage.getById(1)
+    wrapper.vm.storage.setExpanderStyle(node, 'expander-class')
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.expanderClasses).to.have.property('expander-class', true)
   })
@@ -617,7 +617,7 @@ describe('Node.vue', () => {
         expander: 'expander-class'
       }
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.expanderClasses).to.have.property('expander-class', true)
   })
@@ -635,8 +635,8 @@ describe('Node.vue', () => {
         expander: 'all-expander-class'
       }
     })
-    const node = wrapper.vm.nodeManager.getById(1)
-    wrapper.vm.nodeManager.setExpanderStyle(node, 'expander-class')
+    const node = wrapper.vm.storage.getById(1)
+    wrapper.vm.storage.setExpanderStyle(node, 'expander-class')
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.expanderClasses).to.have.property('expander-class', true)
     expect(nodeWrapper.vm.expanderClasses).to.have.property('all-expander-class', true)
@@ -651,7 +651,7 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.icons).to.be.eq(defaultIcons)
   })
@@ -667,7 +667,7 @@ describe('Node.vue', () => {
     const wrapper = getTreeWrapper(nodes, {
       icons: fontawesomeIcons
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.icons).to.be.eq(fontawesomeIcons)
   })
@@ -681,7 +681,7 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.showCheckbox).to.be.true
   })
@@ -697,7 +697,7 @@ describe('Node.vue', () => {
     const wrapper = getTreeWrapper(nodes, {
       showCheckbox: false
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.showCheckbox).to.be.false
   })
@@ -711,7 +711,7 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.showIcon).to.be.false
   })
@@ -727,7 +727,7 @@ describe('Node.vue', () => {
     const wrapper = getTreeWrapper(nodes, {
       showIcon: true
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.showIcon).to.be.true
   })
@@ -741,7 +741,7 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.hideEmptyIcon).to.be.true
   })
@@ -757,7 +757,7 @@ describe('Node.vue', () => {
     const wrapper = getTreeWrapper(nodes, {
       hideEmptyIcon: false
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.hideEmptyIcon).to.be.false
   })
@@ -772,7 +772,7 @@ describe('Node.vue', () => {
     }]
     const wrapper = getTreeWrapper(nodes, {
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.visibleItems).to.be.empty
   })
@@ -788,7 +788,7 @@ describe('Node.vue', () => {
     }]
     const wrapper = getTreeWrapper(nodes, {
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.visibleItems).to.be.not.empty
     expect(nodeWrapper.vm.visibleItems[0].id).to.be.eq(2)
@@ -804,7 +804,7 @@ describe('Node.vue', () => {
     }]
     const wrapper = getTreeWrapper(nodes, {
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.nodeText).to.be.eq('name')
   })
@@ -821,7 +821,7 @@ describe('Node.vue', () => {
     const wrapper = getTreeWrapper(nodes, {
       nameProp: 'title'
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.nodeText).to.be.eq('title')
   })
@@ -832,7 +832,7 @@ describe('Node.vue', () => {
     }]
     const wrapper = getTreeWrapper(nodes, {
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = wrapper.find(Node)
     expect(nodeWrapper.vm.state.nodes).to.have.property(node.id, nodeWrapper.vm)
   })
@@ -843,8 +843,8 @@ describe('Node.vue', () => {
     }]
     const wrapper = getTreeWrapper(nodes, {
     })
-    const node = wrapper.vm.nodeManager.getById(1)
-    wrapper.vm.nodeManager.remove(node)
+    const node = wrapper.vm.storage.getById(1)
+    wrapper.vm.storage.remove(node)
     expect(wrapper.vm.treeState.nodes).to.not.have.property(node.id)
   })
   it('combineClasses function returns combined object with first and secord arguments as objects', () => {
@@ -854,7 +854,7 @@ describe('Node.vue', () => {
     }]
     const wrapper = getTreeWrapper(nodes, {
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     const defaultClass = { 'default-class': true }
     const otherClass = { 'test-class': true }
@@ -869,7 +869,7 @@ describe('Node.vue', () => {
     }]
     const wrapper = getTreeWrapper(nodes, {
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     const defaultClass = { 'default-class': true }
     const otherClass = 'test-class test-class-2'
@@ -886,7 +886,7 @@ describe('Node.vue', () => {
     }]
     const wrapper = getTreeWrapper(nodes, {
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     const defaultClass = { 'default-class': true }
     const combinesClass = nodeWrapper.vm.combineClasses(defaultClass, null)
@@ -900,7 +900,7 @@ describe('Node.vue', () => {
     }]
     const wrapper = getTreeWrapper(nodes, {
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     nodeWrapper.vm.onChildClicked(node)
 
@@ -915,7 +915,7 @@ describe('Node.vue', () => {
     }]
     const wrapper = getTreeWrapper(nodes, {
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     nodeWrapper.vm.onNodeCheckStateChanging(true)
 
@@ -928,7 +928,7 @@ describe('Node.vue', () => {
     }]
     const wrapper = getTreeWrapper(nodes, {
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     nodeWrapper.vm.onNodeCheckStateChanging(false)
 
@@ -941,7 +941,7 @@ describe('Node.vue', () => {
     }]
     const wrapper = getTreeWrapper(nodes, {
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     nodeWrapper.vm.onNodeOpenStateChanging(true)
 
@@ -954,7 +954,7 @@ describe('Node.vue', () => {
     }]
     const wrapper = getTreeWrapper(nodes, {
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     nodeWrapper.vm.onNodeOpenStateChanging(false)
 
@@ -967,14 +967,14 @@ describe('Node.vue', () => {
     }]
     const wrapper = getTreeWrapper(nodes, {
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     nodeWrapper.vm.onClick(node)
 
     expect(nodeWrapper.emitted().clicked[0]).to.be.not.null
     expect(nodeWrapper.emitted().clicked[0][0]).to.be.not.null
     expect(nodeWrapper.emitted().clicked[0][0].item).to.be.eq(nodes[0])
-    expect(wrapper.vm.nodeManager.selectedNode).to.be.eq(node)
+    expect(wrapper.vm.storage.selectedNode).to.be.eq(node)
   })
   it('onClick function does nothing if node disabled', () => {
     const nodes = [{
@@ -984,12 +984,12 @@ describe('Node.vue', () => {
     }]
     const wrapper = getTreeWrapper(nodes, {
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     nodeWrapper.vm.onClick(node)
 
     expect(nodeWrapper.emitted()).to.be.not.have.property('clicked')
-    expect(wrapper.vm.nodeManager.selectedNode).to.be.null
+    expect(wrapper.vm.storage.selectedNode).to.be.null
   })
   it('onFocused function emits node:focused event', () => {
     const nodes = [{
@@ -998,7 +998,7 @@ describe('Node.vue', () => {
     }]
     const wrapper = getTreeWrapper(nodes, {
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
     nodeWrapper.vm.onFocused(node)
 
@@ -1013,7 +1013,7 @@ describe('Node.vue', () => {
     }]
     const wrapper = getTreeWrapper(nodes, {
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node, { attachToDocument: true })
     try {
       nodeWrapper.vm.focus()
@@ -1031,7 +1031,7 @@ describe('Node.vue', () => {
     }]
     const wrapper = getTreeWrapper(nodes, {
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node, { attachToDocument: true })
     nodeWrapper.vm.onStopEdit()
     const nodeText = nodeWrapper.find('.treevue-tree-node .treevue-node-text')
@@ -1052,7 +1052,7 @@ describe('Node.vue', () => {
     }]
     const wrapper = getTreeWrapper(nodes, {
     })
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
 
     nodeWrapper.vm.startEdit()

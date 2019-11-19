@@ -5,10 +5,10 @@ const CheckModes = {
   Independent: 'independent'
 }
 
-function Node (manager, item, parent = null, prevNode = null) {
-  const idProp = manager.treeOptions.idProp
-  const id = item[idProp] != null ? item[idProp] : manager.internalLastNodeId
-  manager.internalLastNodeId += 1
+function Node (storage, item, parent = null, prevNode = null) {
+  const idProp = storage.treeOptions.idProp
+  const id = item[idProp] != null ? item[idProp] : storage.internalLastNodeId
+  storage.internalLastNodeId += 1
   this.item = item
   this.id = id
   this.parent = parent
@@ -28,10 +28,10 @@ function Node (manager, item, parent = null, prevNode = null) {
     expander: null
   }
   this.icon = item.icon || null
-  const children = manager.getChildren(item) || []
-  const mappedChildren = children.map(x => new Node(manager, x, this))
-  if (manager.treeOptions.autoSort) {
-    sortNodes(manager, mappedChildren, manager.treeOptions.sortComparator)
+  const children = storage.getChildren(item) || []
+  const mappedChildren = children.map(x => new Node(storage, x, this))
+  if (storage.treeOptions.autoSort) {
+    sortNodes(storage, mappedChildren, storage.treeOptions.sortComparator)
   } else {
     linkNodes(mappedChildren)
   }
@@ -43,43 +43,43 @@ function Node (manager, item, parent = null, prevNode = null) {
     return isSomeChildrenChecked && !isAllChildrenChecked
   }
 
-  this.addChild = child => manager.addChild(this, child)
-  this.insertChild = (child, beforeChild) => manager.insertChild(this, child, beforeChild)
+  this.addChild = child => storage.addChild(this, child)
+  this.insertChild = (child, beforeChild) => storage.insertChild(this, child, beforeChild)
 
-  this.expand = withChildren => manager.expand(this, withChildren)
-  this.expandChildren = () => manager.expandChildren(this)
-  this.collapse = withChildren => manager.collapse(this, withChildren)
-  this.collapseChildren = () => manager.collapseChildren(this)
+  this.expand = withChildren => storage.expand(this, withChildren)
+  this.expandChildren = () => storage.expandChildren(this)
+  this.collapse = withChildren => storage.collapse(this, withChildren)
+  this.collapseChildren = () => storage.collapseChildren(this)
 
-  this.select = () => manager.setSelected(this)
-  this.deselect = () => manager.setSelected(null)
+  this.select = () => storage.setSelected(this)
+  this.deselect = () => storage.setSelected(null)
 
-  this.show = () => manager.showNode(this)
+  this.show = () => storage.showNode(this)
 
-  this.disable = withChildren => manager.disable(this, withChildren)
-  this.disableChildren = () => manager.disableChildren(this)
-  this.enable = withChildren => manager.enable(this, withChildren)
-  this.enableChildren = () => manager.enableChildren(this)
+  this.disable = withChildren => storage.disable(this, withChildren)
+  this.disableChildren = () => storage.disableChildren(this)
+  this.enable = withChildren => storage.enable(this, withChildren)
+  this.enableChildren = () => storage.enableChildren(this)
 
-  this.check = withChildren => manager.check(this, withChildren)
-  this.checkChildren = () => manager.checkChildren(this)
-  this.uncheck = withChildren => manager.uncheck(this, withChildren)
-  this.uncheckChildren = () => manager.uncheckChildren(this)
-  this.visible = () => manager.getVisibility(this)
+  this.check = withChildren => storage.check(this, withChildren)
+  this.checkChildren = () => storage.checkChildren(this)
+  this.uncheck = withChildren => storage.uncheck(this, withChildren)
+  this.uncheckChildren = () => storage.uncheckChildren(this)
+  this.visible = () => storage.getVisibility(this)
 
-  this.setCheckboxStyle = (checkBoxClasses, withChildren) => manager.setCheckboxStyle(this, checkBoxClasses, withChildren)
-  this.resetCheckboxStyle = withChildren => manager.setCheckboxStyle(this, null, withChildren)
-  this.setTextStyle = (textClasses, withChildren) => manager.setTextStyle(this, textClasses, withChildren)
-  this.resetTextStyle = withChildren => manager.setTextStyle(this, null, withChildren)
-  this.setIconStyle = (iconClasses, withChildren) => manager.setIconStyle(this, iconClasses, withChildren)
-  this.resetIconStyle = withChildren => manager.setIconStyle(this, null, withChildren)
-  this.setExpanderStyle = (expanderClasses, withChildren) => manager.setExpanderStyle(this, expanderClasses, withChildren)
-  this.resetExpanderStyle = withChildren => manager.setExpanderStyle(this, null, withChildren)
+  this.setCheckboxStyle = (checkBoxClasses, withChildren) => storage.setCheckboxStyle(this, checkBoxClasses, withChildren)
+  this.resetCheckboxStyle = withChildren => storage.setCheckboxStyle(this, null, withChildren)
+  this.setTextStyle = (textClasses, withChildren) => storage.setTextStyle(this, textClasses, withChildren)
+  this.resetTextStyle = withChildren => storage.setTextStyle(this, null, withChildren)
+  this.setIconStyle = (iconClasses, withChildren) => storage.setIconStyle(this, iconClasses, withChildren)
+  this.resetIconStyle = withChildren => storage.setIconStyle(this, null, withChildren)
+  this.setExpanderStyle = (expanderClasses, withChildren) => storage.setExpanderStyle(this, expanderClasses, withChildren)
+  this.resetExpanderStyle = withChildren => storage.setExpanderStyle(this, null, withChildren)
 
-  this.findParent = selector => manager.findParent(this, selector)
-  this.findParents = selector => manager.findParents(this, selector)
+  this.findParent = selector => storage.findParent(this, selector)
+  this.findParents = selector => storage.findParents(this, selector)
 
-  this.getName = () => manager.getName(this)
+  this.getName = () => storage.getName(this)
 }
 
 function isFunction (obj) {
@@ -314,9 +314,9 @@ function uncheckVisibleNodes () {
   this.tree.$emit('tree:unchecked:visible')
 }
 
-function setSingleNodeCheckState (manager, node, state) {
-  if (!manager) {
-    throw new Error('parameter "manager" is not set')
+function setSingleNodeCheckState (storage, node, state) {
+  if (!storage) {
+    throw new Error('parameter "storage" is not set')
   }
 
   if (!node) {
@@ -324,7 +324,7 @@ function setSingleNodeCheckState (manager, node, state) {
   }
 
   node.states.checked = !!state
-  manager.tree.$emit(state ? 'node:checked' : 'node:unchecked', node)
+  storage.tree.$emit(state ? 'node:checked' : 'node:unchecked', node)
 }
 
 function setCheckState (node, state, withChildren = false) {
@@ -363,9 +363,9 @@ function setCheckState (node, state, withChildren = false) {
   }
 }
 
-function setNodeChildrenCheckState (manager, node, state) {
-  if (!manager) {
-    throw new Error('parameter "manager" is not set')
+function setNodeChildrenCheckState (storage, node, state) {
+  if (!storage) {
+    throw new Error('parameter "storage" is not set')
   }
 
   if (!node) {
@@ -373,7 +373,7 @@ function setNodeChildrenCheckState (manager, node, state) {
   }
 
   visitAllNodes(node.children, child => {
-    setSingleNodeCheckState(manager, child, state)
+    setSingleNodeCheckState(storage, child, state)
   })
 }
 
@@ -429,9 +429,9 @@ function setOpenState (node, state, withChildren = false) {
   }
 }
 
-function setNodeChildrenOpenState (manager, node, state) {
-  if (!manager) {
-    throw new Error('parameter "manager" is not set')
+function setNodeChildrenOpenState (storage, node, state) {
+  if (!storage) {
+    throw new Error('parameter "storage" is not set')
   }
 
   if (!node) {
@@ -439,7 +439,7 @@ function setNodeChildrenOpenState (manager, node, state) {
   }
 
   visitAllNodes(node.children, child => {
-    manager.setOpenState(child, state, true)
+    storage.setOpenState(child, state, true)
   })
 }
 
@@ -498,9 +498,9 @@ function collapseAll () {
   this.tree.$emit('tree:collapsed:all')
 }
 
-function setSingleNodeDisableState (manager, node, state) {
-  if (!manager) {
-    throw new Error('parameter "manager" is not set')
+function setSingleNodeDisableState (storage, node, state) {
+  if (!storage) {
+    throw new Error('parameter "storage" is not set')
   }
 
   if (!node) {
@@ -508,36 +508,36 @@ function setSingleNodeDisableState (manager, node, state) {
   }
 
   node.states.disabled = state
-  if (manager.selectedNode === node && state) {
-    manager.setSelected(null)
+  if (storage.selectedNode === node && state) {
+    storage.setSelected(null)
   }
   if (state) {
-    manager.tree.$emit('node:disabled', node)
+    storage.tree.$emit('node:disabled', node)
   } else {
-    manager.tree.$emit('node:enabled', node)
+    storage.tree.$emit('node:enabled', node)
   }
 }
 
-function setNodeDisableState (manager, node, state, withChildren = false) {
-  if (!manager) {
-    throw new Error('parameter "manager" is not set')
+function setNodeDisableState (storage, node, state, withChildren = false) {
+  if (!storage) {
+    throw new Error('parameter "storage" is not set')
   }
 
   if (!node) {
     throw new Error('parameter "node" is not set')
   }
 
-  setSingleNodeDisableState(manager, node, state)
+  setSingleNodeDisableState(storage, node, state)
   if (withChildren) {
     visitAllNodes(node.children, child => {
-      setSingleNodeDisableState(manager, child, state)
+      setSingleNodeDisableState(storage, child, state)
     })
   }
 }
 
-function setNodeChildrenDisableState (manager, node, state) {
-  if (!manager) {
-    throw new Error('parameter "manager" is not set')
+function setNodeChildrenDisableState (storage, node, state) {
+  if (!storage) {
+    throw new Error('parameter "storage" is not set')
   }
 
   if (!node) {
@@ -545,13 +545,13 @@ function setNodeChildrenDisableState (manager, node, state) {
   }
 
   visitAllNodes(node.children, child => {
-    setSingleNodeDisableState(manager, child, state)
+    setSingleNodeDisableState(storage, child, state)
   })
 }
 
-function setAllNodesDisableState (manager, nodes, state) {
-  if (!manager) {
-    throw new Error('parameter "manager" is not set')
+function setAllNodesDisableState (storage, nodes, state) {
+  if (!storage) {
+    throw new Error('parameter "storage" is not set')
   }
 
   if (!nodes) {
@@ -562,7 +562,7 @@ function setAllNodesDisableState (manager, nodes, state) {
     node.states.disabled = state
   })
   if (state) {
-    manager.setSelected(null)
+    storage.setSelected(null)
   }
 }
 
@@ -891,9 +891,9 @@ function removeNode (node) {
   }
 }
 
-function sortNodes (manager, nodes, comparator) {
-  if (!manager) {
-    throw new Error('parameter "manager" is not set')
+function sortNodes (storage, nodes, comparator) {
+  if (!storage) {
+    throw new Error('parameter "storage" is not set')
   }
 
   if (!nodes) {
@@ -908,20 +908,20 @@ function sortNodes (manager, nodes, comparator) {
   linkNodes(nodes)
 }
 
-function sortNodesRecursive (manager, nodes, comparator) {
-  if (!manager) {
-    throw new Error('parameter "manager" is not set')
+function sortNodesRecursive (storage, nodes, comparator) {
+  if (!storage) {
+    throw new Error('parameter "storage" is not set')
   }
 
   if (!nodes) {
     throw new Error('parameter "nodes" is not set')
   }
 
-  const compareFunc = comparator || manager.treeOptions.sortComparator
-  sortNodes(manager, nodes, compareFunc)
+  const compareFunc = comparator || storage.treeOptions.sortComparator
+  sortNodes(storage, nodes, compareFunc)
 
   for (const node of nodes) {
-    sortNodesRecursive(manager, node.children, comparator)
+    sortNodesRecursive(storage, node.children, comparator)
   }
 }
 

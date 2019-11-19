@@ -3,13 +3,13 @@ import { expect } from 'chai'
 import { mount } from '@vue/test-utils'
 import Tree from '@/components/TreeVue.vue'
 
-describe('nodeManager default item states', () => {
-  function getNodeManager (nodes, options) {
+describe('storage default item states', () => {
+  function getStorage (nodes, options) {
     const wrapper = mount(Tree, {
       propsData: { nodes, options }
     })
 
-    return wrapper.vm.nodeManager
+    return wrapper.vm.storage
   }
   it('item count equals source item count', () => {
     const nodes = [{
@@ -22,8 +22,8 @@ describe('nodeManager default item states', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    expect(manager.nodes.length).to.be.eq(nodes.length)
+    const storage = getStorage(nodes, options)
+    expect(storage.nodes.length).to.be.eq(nodes.length)
   })
   it('node has source item prop that equals to source item', () => {
     const nodes = [{
@@ -36,8 +36,8 @@ describe('nodeManager default item states', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    expect(manager.nodes[0].item).to.be.eq(nodes[0])
+    const storage = getStorage(nodes, options)
+    expect(storage.nodes[0].item).to.be.eq(nodes[0])
   })
   it('node has id equals to source item id', () => {
     const nodes = [{
@@ -50,8 +50,8 @@ describe('nodeManager default item states', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    expect(manager.nodes[0].id).to.be.eq(nodes[0].id)
+    const storage = getStorage(nodes, options)
+    expect(storage.nodes[0].id).to.be.eq(nodes[0].id)
   })
   it('node has id not equals to source item id when idProp not equals to id prop in source item', () => {
     const nodes = [{
@@ -65,8 +65,8 @@ describe('nodeManager default item states', () => {
       checkOnSelect: false,
       idProp: 'id2'
     }
-    const manager = getNodeManager(nodes, options)
-    expect(manager.nodes[0].id).to.be.not.eq(nodes[0].id)
+    const storage = getStorage(nodes, options)
+    expect(storage.nodes[0].id).to.be.not.eq(nodes[0].id)
   })
   it('first node has next prop equals to second one', () => {
     const nodes = [{
@@ -79,8 +79,8 @@ describe('nodeManager default item states', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    expect(manager.nodes[0].next).to.be.eq(manager.nodes[1])
+    const storage = getStorage(nodes, options)
+    expect(storage.nodes[0].next).to.be.eq(storage.nodes[1])
   })
   it('last node has next prop equals to null', () => {
     const nodes = [{
@@ -93,8 +93,8 @@ describe('nodeManager default item states', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    expect(manager.nodes[1].next).to.be.null
+    const storage = getStorage(nodes, options)
+    expect(storage.nodes[1].next).to.be.null
   })
   it('second node has prev prop equals to first one', () => {
     const nodes = [{
@@ -107,8 +107,8 @@ describe('nodeManager default item states', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    expect(manager.nodes[1].prev).to.be.eq(manager.nodes[0])
+    const storage = getStorage(nodes, options)
+    expect(storage.nodes[1].prev).to.be.eq(storage.nodes[0])
   })
   it('first node has prev prop equals to null', () => {
     const nodes = [{
@@ -121,8 +121,8 @@ describe('nodeManager default item states', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    expect(manager.nodes[0].prev).to.be.null
+    const storage = getStorage(nodes, options)
+    expect(storage.nodes[0].prev).to.be.null
   })
   it('child item has parent prop equals to its parent', () => {
     const nodes = [{
@@ -139,9 +139,9 @@ describe('nodeManager default item states', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    expect(manager.getById(4).parent).to.be.not.null
-    expect(manager.getById(4).parent).to.be.eq(manager.getById(1))
+    const storage = getStorage(nodes, options)
+    expect(storage.getById(4).parent).to.be.not.null
+    expect(storage.getById(4).parent).to.be.eq(storage.getById(1))
   })
   it('parent item has two children', () => {
     const nodes = [{
@@ -161,11 +161,11 @@ describe('nodeManager default item states', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    expect(manager.getById(1).children).to.be.not.null
-    expect(manager.getById(1).children.length).to.be.eq(2)
-    expect(manager.getById(1).children[0].id).to.be.eq(4)
-    expect(manager.getById(1).children[1].id).to.be.eq(5)
+    const storage = getStorage(nodes, options)
+    expect(storage.getById(1).children).to.be.not.null
+    expect(storage.getById(1).children.length).to.be.eq(2)
+    expect(storage.getById(1).children[0].id).to.be.eq(4)
+    expect(storage.getById(1).children[1].id).to.be.eq(5)
   })
   it('item has default states', () => {
     const nodes = [{
@@ -175,8 +175,8 @@ describe('nodeManager default item states', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const node = manager.getById(1)
+    const storage = getStorage(nodes, options)
+    const node = storage.getById(1)
     expect(node).to.be.not.null
     expect(node.states).to.be.not.null
     expect(node.states.checked).to.be.false
@@ -201,8 +201,8 @@ describe('nodeManager default item states', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const node = manager.getById(1)
+    const storage = getStorage(nodes, options)
+    const node = storage.getById(1)
     expect(node).to.be.not.null
     for (const child of node.children) {
       expect(child).to.deep.include({
@@ -224,8 +224,8 @@ describe('nodeManager default item states', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const node = manager.getById(1)
+    const storage = getStorage(nodes, options)
+    const node = storage.getById(1)
     expect(node).to.be.not.null
     expect(node.styleClasses).to.be.not.null
     expect(node.styleClasses.icon).to.be.null
@@ -241,8 +241,8 @@ describe('nodeManager default item states', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const node = manager.getById(1)
+    const storage = getStorage(nodes, options)
+    const node = storage.getById(1)
     expect(node).to.be.not.null
     expect(node.children).to.be.not.null
     for (const child of node.children) {
@@ -265,8 +265,8 @@ describe('nodeManager default item states', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const node = manager.getById(1)
+    const storage = getStorage(nodes, options)
+    const node = storage.getById(1)
     expect(node).to.be.not.null
     expect(node.icon).to.be.null
   })
@@ -278,8 +278,8 @@ describe('nodeManager default item states', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const node = manager.getById(1)
+    const storage = getStorage(nodes, options)
+    const node = storage.getById(1)
     for (const child of node.children) {
       expect(child.icon).to.be.null
     }
@@ -293,8 +293,8 @@ describe('nodeManager default item states', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const node = manager.getById(1)
+    const storage = getStorage(nodes, options)
+    const node = storage.getById(1)
     expect(node).to.be.not.null
     expect(node.states).to.be.not.null
     expect(node.states.checked).to.be.true
@@ -312,8 +312,8 @@ describe('nodeManager default item states', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const node = manager.getById(1)
+    const storage = getStorage(nodes, options)
+    const node = storage.getById(1)
     expect(node).to.be.not.null
     expect(node.states).to.be.not.null
     expect(node.states.checked).to.be.false
@@ -331,8 +331,8 @@ describe('nodeManager default item states', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const node = manager.getById(1)
+    const storage = getStorage(nodes, options)
+    const node = storage.getById(1)
     expect(node).to.be.not.null
     expect(node.states).to.be.not.null
     expect(node.states.checked).to.be.false
@@ -350,8 +350,8 @@ describe('nodeManager default item states', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const node = manager.getById(1)
+    const storage = getStorage(nodes, options)
+    const node = storage.getById(1)
     expect(node).to.be.not.null
     expect(node.icon).to.be.eq('fa fa-plus')
   })
@@ -372,8 +372,8 @@ describe('nodeManager default item states', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const node = manager.getById(1)
+    const storage = getStorage(nodes, options)
+    const node = storage.getById(1)
     expect(node).to.be.not.null
     expect(node.indeterminate()).to.be.eq(true)
   })
@@ -394,8 +394,8 @@ describe('nodeManager default item states', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const node = manager.getById(1)
+    const storage = getStorage(nodes, options)
+    const node = storage.getById(1)
     expect(node).to.be.not.null
     expect(node.indeterminate()).to.be.eq(false)
   })
@@ -414,8 +414,8 @@ describe('nodeManager default item states', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const node = manager.getById(1)
+    const storage = getStorage(nodes, options)
+    const node = storage.getById(1)
     expect(node).to.be.not.null
     expect(node.indeterminate()).to.be.eq(false)
   })
@@ -437,10 +437,10 @@ describe('nodeManager default item states', () => {
     const options = {
       autoSort: false
     }
-    const manager = getNodeManager(nodes, options)
-    expect(manager.nodes[0].id).to.be.eq(1)
-    expect(manager.nodes[1].id).to.be.eq(4)
-    const children = manager.nodes[0].children
+    const storage = getStorage(nodes, options)
+    expect(storage.nodes[0].id).to.be.eq(1)
+    expect(storage.nodes[1].id).to.be.eq(4)
+    const children = storage.nodes[0].children
     expect(children[0].id).to.be.eq(2)
     expect(children[1].id).to.be.eq(3)
   })
@@ -462,10 +462,10 @@ describe('nodeManager default item states', () => {
     const options = {
       autoSort: true
     }
-    const manager = getNodeManager(nodes, options)
-    expect(manager.nodes[0].id).to.be.eq(4)
-    expect(manager.nodes[1].id).to.be.eq(1)
-    const children = manager.nodes[1].children
+    const storage = getStorage(nodes, options)
+    expect(storage.nodes[0].id).to.be.eq(4)
+    expect(storage.nodes[1].id).to.be.eq(1)
+    const children = storage.nodes[1].children
     expect(children[0].id).to.be.eq(3)
     expect(children[1].id).to.be.eq(2)
   })

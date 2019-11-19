@@ -19,8 +19,8 @@ describe('keyboard mixin', () => {
   }
 
   function expectSelectedNodeId (wrapper, nodeId) {
-    expect(wrapper.vm.nodeManager.selectedNode).to.be.not.null
-    expect(wrapper.vm.nodeManager.selectedNode.item.id).to.be.eq(nodeId)
+    expect(wrapper.vm.storage.selectedNode).to.be.not.null
+    expect(wrapper.vm.storage.selectedNode.item.id).to.be.eq(nodeId)
   }
 
   function expectSecondSelectedEventWithNodeId (wrapper, nodeId) {
@@ -472,7 +472,7 @@ describe('keyboard mixin', () => {
 
     wrapper.vm.$nextTick(() => {
       expectSelectedNodeId(wrapper, 1)
-      expect(wrapper.vm.nodeManager.selectedNode.states.open).to.be.false
+      expect(wrapper.vm.storage.selectedNode.states.open).to.be.false
 
       done()
     })
@@ -564,7 +564,7 @@ describe('keyboard mixin', () => {
 
     wrapper.vm.$nextTick(() => {
       expectSelectedNodeId(wrapper, 1)
-      expect(wrapper.vm.nodeManager.selectedNode.states.open).to.be.true
+      expect(wrapper.vm.storage.selectedNode.states.open).to.be.true
 
       done()
     })
@@ -656,7 +656,7 @@ describe('keyboard mixin', () => {
     })
 
     wrapper.vm.$nextTick(() => {
-      expect(wrapper.vm.nodeManager.getById(1).states.checked).to.be.false
+      expect(wrapper.vm.storage.getById(1).states.checked).to.be.false
 
       done()
     })
@@ -680,7 +680,7 @@ describe('keyboard mixin', () => {
     })
 
     wrapper.vm.$nextTick(() => {
-      expect(wrapper.vm.nodeManager.getById(1).states.checked).to.be.true
+      expect(wrapper.vm.storage.getById(1).states.checked).to.be.true
 
       done()
     })
@@ -704,7 +704,7 @@ describe('keyboard mixin', () => {
     })
 
     wrapper.vm.$nextTick(() => {
-      expect(wrapper.vm.nodeManager.getById(1).states.checked).to.be.false
+      expect(wrapper.vm.storage.getById(1).states.checked).to.be.false
 
       done()
     })
@@ -728,8 +728,8 @@ describe('keyboard mixin', () => {
       wrapper.trigger('keydown', {
         key: 'Delete'
       })
-      expect(wrapper.vm.nodeManager.nodes.length).to.be.eq(1)
-      expect(wrapper.vm.nodeManager.getById(1)).to.be.null
+      expect(wrapper.vm.storage.nodes.length).to.be.eq(1)
+      expect(wrapper.vm.storage.getById(1)).to.be.null
 
       done()
     })
@@ -753,8 +753,8 @@ describe('keyboard mixin', () => {
       wrapper.trigger('keydown', {
         key: 'Delete'
       })
-      expect(wrapper.vm.nodeManager.nodes.length).to.be.eq(2)
-      expect(wrapper.vm.nodeManager.getById(1)).to.be.not.null
+      expect(wrapper.vm.storage.nodes.length).to.be.eq(2)
+      expect(wrapper.vm.storage.getById(1)).to.be.not.null
 
       done()
     })
@@ -778,8 +778,8 @@ describe('keyboard mixin', () => {
       wrapper.trigger('keydown', {
         key: 'F2'
       })
-      expect(wrapper.vm.nodeManager.nodes.length).to.be.eq(2)
-      expect(wrapper.vm.nodeManager.getById(1)).to.be.not.null
+      expect(wrapper.vm.storage.nodes.length).to.be.eq(2)
+      expect(wrapper.vm.storage.getById(1)).to.be.not.null
 
       done()
     })

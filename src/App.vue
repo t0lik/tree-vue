@@ -253,12 +253,12 @@ export default {
     }
   },
   computed: {
-    nodeManager () {
+    storage () {
       if (!this.$refs.tree) {
         return null
       }
 
-      return this.$refs.tree.getNodeManager()
+      return this.$refs.tree.getStorage()
     }
   },
   methods: {
@@ -266,104 +266,104 @@ export default {
       this.outputString += '\n' + message
     },
     getCheckNodes () {
-      const checkedNodes = this.nodeManager.getChecked()
+      const checkedNodes = this.storage.getChecked()
       this.outputMessage(JSON.stringify(checkedNodes.map(x => ({
         item: x.item,
         states: x.states
       })), null, 2))
     },
     checkAllNodes () {
-      this.nodeManager.checkAll()
+      this.storage.checkAll()
     },
     uncheckAllNodes () {
-      this.nodeManager.uncheckAll()
+      this.storage.uncheckAll()
     },
     checkVisibleNodes () {
-      this.nodeManager.checkVisible()
+      this.storage.checkVisible()
     },
     uncheckVisibleNodes () {
-      this.nodeManager.uncheckVisible()
+      this.storage.uncheckVisible()
     },
     checkSelectedNode () {
-      this.nodeManager.selectedNode.check(false)
+      this.storage.selectedNode.check(false)
     },
     checkSelectedNodeWithChildren () {
-      this.nodeManager.selectedNode.check(true)
+      this.storage.selectedNode.check(true)
     },
     checkSelectedNodeChildren () {
-      this.nodeManager.selectedNode.checkChildren()
+      this.storage.selectedNode.checkChildren()
     },
     uncheckSelectedNode () {
-      this.nodeManager.selectedNode.uncheck(false)
+      this.storage.selectedNode.uncheck(false)
     },
     uncheckSelectedNodeWithChildren () {
-      this.nodeManager.selectedNode.uncheck(true)
+      this.storage.selectedNode.uncheck(true)
     },
     uncheckSelectedNodeChildren () {
-      this.nodeManager.selectedNode.uncheckChildren()
+      this.storage.selectedNode.uncheckChildren()
     },
     expandSelectedNode () {
-      this.nodeManager.selectedNode.expand(false)
+      this.storage.selectedNode.expand(false)
     },
     expandSelectedNodeWithChildren () {
-      this.nodeManager.selectedNode.expand(true)
+      this.storage.selectedNode.expand(true)
     },
     expandSelectedNodeChildren () {
-      this.nodeManager.selectedNode.expandChildren()
+      this.storage.selectedNode.expandChildren()
     },
     collapseSelectedNode () {
-      this.nodeManager.selectedNode.collapse(false)
+      this.storage.selectedNode.collapse(false)
     },
     collapseSelectedNodeWithChildren () {
-      this.nodeManager.selectedNode.collapse(true)
+      this.storage.selectedNode.collapse(true)
     },
     collapseSelectedNodeChildren () {
-      this.nodeManager.selectedNode.collapseChildren()
+      this.storage.selectedNode.collapseChildren()
     },
     expandAll () {
-      this.nodeManager.expandAll()
+      this.storage.expandAll()
     },
     collapseAll () {
-      this.nodeManager.collapseAll()
+      this.storage.collapseAll()
     },
     disableSelectedNode () {
-      this.nodeManager.selectedNode.disable()
+      this.storage.selectedNode.disable()
     },
     disableSelectedNodeWithChildren () {
-      this.nodeManager.selectedNode.disable(true)
+      this.storage.selectedNode.disable(true)
     },
     disableSelectedNodeChildren () {
-      this.nodeManager.selectedNode.disableChildren()
+      this.storage.selectedNode.disableChildren()
     },
     enableSelectedNode () {
-      this.nodeManager.selectedNode.enable()
+      this.storage.selectedNode.enable()
     },
     enableSelectedNodeWithChildren () {
-      this.nodeManager.selectedNode.enable(true)
+      this.storage.selectedNode.enable(true)
     },
     enableSelectedNodeChildren () {
-      this.nodeManager.selectedNode.enableChildren()
+      this.storage.selectedNode.enableChildren()
     },
     disableAll () {
-      this.nodeManager.disableAll()
+      this.storage.disableAll()
     },
     enableAll () {
-      this.nodeManager.enableAll()
+      this.storage.enableAll()
     },
     findById () {
-      const foundNode = this.nodeManager.findOne(item => item.item.id === 8)
+      const foundNode = this.storage.findOne(item => item.item.id === 8)
       foundNode.select()
       foundNode.show()
     },
     addChild () {
-      const foundNode = this.nodeManager.findOne(item => item.item.id === 8)
+      const foundNode = this.storage.findOne(item => item.item.id === 8)
       foundNode.addChild({
         id: 10,
         name: 'десять'
       })
     },
     insertChildAt () {
-      const foundNode = this.nodeManager.findOne(item => item.item.id === 8)
+      const foundNode = this.storage.findOne(item => item.item.id === 8)
       const firstChild = foundNode.children[0]
       foundNode.insertChild({
         id: 10,
@@ -371,34 +371,34 @@ export default {
       }, firstChild)
     },
     insertChild () {
-      const foundNode = this.nodeManager.findOne(item => item.item.id === 8)
+      const foundNode = this.storage.findOne(item => item.item.id === 8)
       foundNode.insertChild({
         id: 11,
         name: 'одинадцать'
       })
     },
     removeChildNode () {
-      const foundNode = this.nodeManager.findOne(item => item.item.id === 8)
-      this.nodeManager.remove(foundNode)
+      const foundNode = this.storage.findOne(item => item.item.id === 8)
+      this.storage.remove(foundNode)
     },
     removeRootNode () {
-      const foundNode = this.nodeManager.findOne(item => item.item.id === 2)
-      this.nodeManager.remove(foundNode)
+      const foundNode = this.storage.findOne(item => item.item.id === 2)
+      this.storage.remove(foundNode)
     },
     startSearch () {
-      this.nodeManager.filter(this.searchString)
+      this.storage.filter(this.searchString)
     },
     startSearchWithChildren () {
-      this.nodeManager.filter(this.searchString, { showChildren: true })
+      this.storage.filter(this.searchString, { showChildren: true })
     },
     startRegexpSearch () {
-      this.nodeManager.filter(new RegExp(this.searchString, 'i'))
+      this.storage.filter(new RegExp(this.searchString, 'i'))
     },
     startFuncSearch () {
-      this.nodeManager.filter(item => item.name.toLowerCase().indexOf(this.searchString.toLowerCase()) !== -1)
+      this.storage.filter(item => item.name.toLowerCase().indexOf(this.searchString.toLowerCase()) !== -1)
     },
     clearSearch () {
-      this.nodeManager.clearFilter()
+      this.storage.clearFilter()
       this.searchString = ''
     },
     switchToAwesome () {
@@ -414,16 +414,16 @@ export default {
       this.treeOptions.showCheckbox = false
     },
     setSelectedNodeTextStyle () {
-      this.nodeManager.selectedNode.setTextStyle('custom-text')
+      this.storage.selectedNode.setTextStyle('custom-text')
     },
     setSelectedNodeTextStyleWithChildren () {
-      this.nodeManager.selectedNode.setTextStyle('custom-text', true)
+      this.storage.selectedNode.setTextStyle('custom-text', true)
     },
     resetSelectedNodeTextStyle () {
-      this.nodeManager.selectedNode.resetTextStyle()
+      this.storage.selectedNode.resetTextStyle()
     },
     resetSelectedNodeTextStyleWithChildren () {
-      this.nodeManager.selectedNode.resetTextStyle(true)
+      this.storage.selectedNode.resetTextStyle(true)
     },
     setDefaultNodeTextStyle () {
       this.treeOptions.styleClasses.text = 'all-custom-text'
@@ -432,16 +432,16 @@ export default {
       this.treeOptions.styleClasses.text = null
     },
     setSelectedNodeIconStyle () {
-      this.nodeManager.selectedNode.setIconStyle('custom-icon')
+      this.storage.selectedNode.setIconStyle('custom-icon')
     },
     setSelectedNodeIconStyleWithChildren () {
-      this.nodeManager.selectedNode.setIconStyle('custom-icon', true)
+      this.storage.selectedNode.setIconStyle('custom-icon', true)
     },
     resetSelectedNodeIconStyle () {
-      this.nodeManager.selectedNode.resetIconStyle()
+      this.storage.selectedNode.resetIconStyle()
     },
     resetSelectedNodeIconStyleWithChildren () {
-      this.nodeManager.selectedNode.resetIconStyle(true)
+      this.storage.selectedNode.resetIconStyle(true)
     },
     setDefaultIconStyle () {
       this.treeOptions.styleClasses.icon = 'all-custom-icon'
@@ -450,16 +450,16 @@ export default {
       this.treeOptions.styleClasses.icon = null
     },
     setSelectedNodeCheckboxStyle () {
-      this.nodeManager.selectedNode.setCheckboxStyle('custom-checkbox')
+      this.storage.selectedNode.setCheckboxStyle('custom-checkbox')
     },
     setSelectedNodeCheckboxStyleWithChildren () {
-      this.nodeManager.selectedNode.setCheckboxStyle('custom-checkbox', true)
+      this.storage.selectedNode.setCheckboxStyle('custom-checkbox', true)
     },
     resetSelectedNodeCheckboxStyle () {
-      this.nodeManager.selectedNode.resetCheckboxStyle()
+      this.storage.selectedNode.resetCheckboxStyle()
     },
     resetSelectedNodeCheckboxStyleWithChildren () {
-      this.nodeManager.selectedNode.resetCheckboxStyle(true)
+      this.storage.selectedNode.resetCheckboxStyle(true)
     },
     setDefaultCheckboxStyle () {
       this.treeOptions.styleClasses.checkbox = 'all-custom-checkbox'
@@ -468,16 +468,16 @@ export default {
       this.treeOptions.styleClasses.checkbox = null
     },
     setSelectedNodeExpanderStyle () {
-      this.nodeManager.selectedNode.setExpanderStyle('custom-expander')
+      this.storage.selectedNode.setExpanderStyle('custom-expander')
     },
     setSelectedNodeExpanderStyleWithChildren () {
-      this.nodeManager.selectedNode.setExpanderStyle('custom-expander', true)
+      this.storage.selectedNode.setExpanderStyle('custom-expander', true)
     },
     resetSelectedNodeExpanderStyle () {
-      this.nodeManager.selectedNode.resetExpanderStyle()
+      this.storage.selectedNode.resetExpanderStyle()
     },
     resetSelectedNodeExpanderStyleWithChildren () {
-      this.nodeManager.selectedNode.resetExpanderStyle(true)
+      this.storage.selectedNode.resetExpanderStyle(true)
     },
     setDefaultExpanderStyle () {
       this.treeOptions.styleClasses.expander = 'all-custom-expander'
@@ -499,16 +499,16 @@ export default {
       this.outputMessage(this.outputString = `enabled node: ${JSON.stringify(node.item, null, 2)}`)
     },
     sortAsc () {
-      this.nodeManager.sort(this.ascComparator)
+      this.storage.sort(this.ascComparator)
     },
     sortDesc () {
-      this.nodeManager.sort(this.descComparator)
+      this.storage.sort(this.descComparator)
     },
     setNodes () {
-      this.nodeManager.setNodes(this.nodes)
+      this.storage.setNodes(this.nodes)
     },
     setAnotherNodes () {
-      this.nodeManager.setNodes(this.anotherNodes)
+      this.storage.setNodes(this.anotherNodes)
     },
     enableEdit () {
       this.treeOptions.canEdit = true

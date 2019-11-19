@@ -10,14 +10,14 @@ export default {
       type: Object,
       required: true
     },
-    manager: {
+    storage: {
       type: Object,
       required: true
     }
   },
   data () {
     return {
-      editText: this.manager.getEditName(this.node)
+      editText: this.storage.getEditName(this.node)
     }
   },
   mounted () {
@@ -33,7 +33,7 @@ export default {
       this.$emit('stopEdit')
     },
     confirmEdit () {
-      this.manager.setName(this.node, this.editText)
+      this.storage.setName(this.node, this.editText)
       this.$emit('stopEdit')
     },
     onBlur () {

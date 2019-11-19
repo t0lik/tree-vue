@@ -14,7 +14,7 @@ const navigationKeys = [Keys.Left, Keys.Right, Keys.Up, Keys.Down, Keys.Space]
 
 function getAvailableNodes (tree) {
   const availableNodes = []
-  tree.nodeManager.visitAll(tree.nodeManager.nodes, item => {
+  tree.storage.visitAll(tree.storage.nodes, item => {
     if (item.visible() && !item.states.disabled) {
       availableNodes.push(item)
     }
@@ -145,7 +145,7 @@ function removeNode (tree, node) {
     return
   }
 
-  tree.nodeManager.remove(node)
+  tree.storage.remove(node)
 }
 
 function editNode (tree, node) {

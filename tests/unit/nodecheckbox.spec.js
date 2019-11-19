@@ -32,7 +32,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const checkboxWrapper = getNodeCheckboxWrapper(wrapper, node, {})
     expect(checkboxWrapper.vm.checkedIcon).to.be.eq(wrapper.vm.treeOptions.icons.checkedIcon)
   })
@@ -42,7 +42,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const checkboxWrapper = getNodeCheckboxWrapper(wrapper, node, {})
     expect(checkboxWrapper.vm.uncheckedIcon).to.be.eq(wrapper.vm.treeOptions.icons.uncheckedIcon)
   })
@@ -52,7 +52,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const checkboxWrapper = getNodeCheckboxWrapper(wrapper, node, {})
     expect(checkboxWrapper.vm.partiallyCheckedIcon).to.be.eq(wrapper.vm.treeOptions.icons.partiallyCheckedIcon)
   })
@@ -62,7 +62,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const checkboxWrapper = getNodeCheckboxWrapper(wrapper, node, {})
     expect(checkboxWrapper.vm.partiallyCheckedIcon).to.be.eq(wrapper.vm.treeOptions.icons.partiallyCheckedIcon)
   })
@@ -73,7 +73,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const checkboxWrapper = getNodeCheckboxWrapper(wrapper, node, {})
     expect(checkboxWrapper.vm.checkClass).to.be.eq(checkboxWrapper.vm.checkedIcon)
   })
@@ -83,7 +83,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const checkboxWrapper = getNodeCheckboxWrapper(wrapper, node, {})
     expect(checkboxWrapper.vm.checkClass).to.be.eq(checkboxWrapper.vm.uncheckedIcon)
   })
@@ -101,7 +101,7 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const checkboxWrapper = getNodeCheckboxWrapper(wrapper, node, {})
     expect(checkboxWrapper.vm.checkClass).to.be.eq(checkboxWrapper.vm.partiallyCheckedIcon)
   })
@@ -112,7 +112,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const checkboxWrapper = getNodeCheckboxWrapper(wrapper, node, {})
     expect(checkboxWrapper.classes('treevue-default-checkbox')).to.be.true
     expect(checkboxWrapper.classes('checked')).to.be.true
@@ -123,7 +123,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const checkboxWrapper = getNodeCheckboxWrapper(wrapper, node, {})
     expect(checkboxWrapper.classes('treevue-default-checkbox')).to.be.true
     expect(checkboxWrapper.classes('checked')).to.be.false
@@ -142,7 +142,7 @@ describe('Node.vue', () => {
       }]
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const checkboxWrapper = getNodeCheckboxWrapper(wrapper, node, {})
     expect(checkboxWrapper.classes('treevue-default-checkbox')).to.be.true
     expect(checkboxWrapper.classes('indeterminate')).to.be.true
@@ -154,7 +154,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const checkboxWrapper = getNodeCheckboxWrapper(wrapper, node, {})
     checkboxWrapper.vm.onClick()
     wrapper.vm.$nextTick(() => {
@@ -171,7 +171,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const checkboxWrapper = getNodeCheckboxWrapper(wrapper, node, {})
 
     checkboxWrapper.vm.onClick()
@@ -190,7 +190,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const checkboxWrapper = getNodeCheckboxWrapper(wrapper, node, {})
 
     checkboxWrapper.vm.onClick()

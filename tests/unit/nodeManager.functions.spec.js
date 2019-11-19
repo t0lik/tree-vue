@@ -3,13 +3,13 @@ import { expect } from 'chai'
 import { mount } from '@vue/test-utils'
 import Tree from '@/components/TreeVue.vue'
 
-describe('nodeManager functions', () => {
-  function getNodeManager (nodes, options = {}) {
+describe('storage functions', () => {
+  function getStorage (nodes, options = {}) {
     const wrapper = mount(Tree, {
       propsData: { nodes, options }
     })
 
-    return wrapper.vm.nodeManager
+    return wrapper.vm.storage
   }
   it('getChecked returns all checked nodes', () => {
     const nodes = [{
@@ -35,8 +35,8 @@ describe('nodeManager functions', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const checkedNodes = manager.getChecked()
+    const storage = getStorage(nodes, options)
+    const checkedNodes = storage.getChecked()
     expect(checkedNodes.length).to.be.eq(3)
     expect(checkedNodes.map(x => x.id)).to.have.members([1, 4, 5])
   })
@@ -61,9 +61,9 @@ describe('nodeManager functions', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    manager.checkAll()
-    const checkedNodes = manager.getChecked()
+    const storage = getStorage(nodes, options)
+    storage.checkAll()
+    const checkedNodes = storage.getChecked()
     expect(checkedNodes.length).to.be.eq(5)
     expect(checkedNodes.map(x => x.id)).to.have.members([1, 3, 4, 2, 5])
   })
@@ -88,9 +88,9 @@ describe('nodeManager functions', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    manager.checkVisible()
-    const checkedNodes = manager.getChecked()
+    const storage = getStorage(nodes, options)
+    storage.checkVisible()
+    const checkedNodes = storage.getChecked()
     expect(checkedNodes.length).to.be.eq(3)
     expect(checkedNodes.map(x => x.id)).to.have.members([1, 2, 5])
   })
@@ -116,9 +116,9 @@ describe('nodeManager functions', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    manager.checkVisible()
-    const checkedNodes = manager.getChecked()
+    const storage = getStorage(nodes, options)
+    storage.checkVisible()
+    const checkedNodes = storage.getChecked()
     expect(checkedNodes.length).to.be.eq(5)
     expect(checkedNodes.map(x => x.id)).to.have.members([1, 2, 3, 4, 5])
   })
@@ -146,9 +146,9 @@ describe('nodeManager functions', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    manager.uncheckAll()
-    const checkedNodes = manager.getChecked()
+    const storage = getStorage(nodes, options)
+    storage.uncheckAll()
+    const checkedNodes = storage.getChecked()
     expect(checkedNodes).to.be.empty
   })
   it('uncheckVisible does not uncheck invisible child nodes', () => {
@@ -174,9 +174,9 @@ describe('nodeManager functions', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    manager.uncheckVisible()
-    const checkedNodes = manager.getChecked()
+    const storage = getStorage(nodes, options)
+    storage.uncheckVisible()
+    const checkedNodes = storage.getChecked()
     expect(checkedNodes.length).to.be.eq(1)
     expect(checkedNodes.map(x => x.id)).to.have.members([3])
   })
@@ -204,9 +204,9 @@ describe('nodeManager functions', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    manager.uncheckVisible()
-    const checkedNodes = manager.getChecked()
+    const storage = getStorage(nodes, options)
+    storage.uncheckVisible()
+    const checkedNodes = storage.getChecked()
     expect(checkedNodes).to.be.empty
   })
   it('expand expands node itself only', () => {
@@ -234,9 +234,9 @@ describe('nodeManager functions', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const node = manager.getById(1)
-    manager.expand(node)
+    const storage = getStorage(nodes, options)
+    const node = storage.getById(1)
+    storage.expand(node)
     expect(node.states.open).to.be.true
     expect(node.children[0].states.open).to.be.false
   })
@@ -265,9 +265,9 @@ describe('nodeManager functions', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const node = manager.getById(1)
-    manager.expand(node, true)
+    const storage = getStorage(nodes, options)
+    const node = storage.getById(1)
+    storage.expand(node, true)
     expect(node.states.open).to.be.true
     expect(node.children[0].states.open).to.be.true
   })
@@ -296,9 +296,9 @@ describe('nodeManager functions', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const node = manager.getById(1)
-    manager.expandChildren(node)
+    const storage = getStorage(nodes, options)
+    const node = storage.getById(1)
+    storage.expandChildren(node)
     expect(node.states.open).to.be.false
     expect(node.children[0].states.open).to.be.true
   })
@@ -329,9 +329,9 @@ describe('nodeManager functions', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const node = manager.getById(1)
-    manager.collapse(node)
+    const storage = getStorage(nodes, options)
+    const node = storage.getById(1)
+    storage.collapse(node)
     expect(node.states.open).to.be.false
     expect(node.children[0].states.open).to.be.true
   })
@@ -362,9 +362,9 @@ describe('nodeManager functions', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const node = manager.getById(1)
-    manager.collapse(node, true)
+    const storage = getStorage(nodes, options)
+    const node = storage.getById(1)
+    storage.collapse(node, true)
     expect(node.states.open).to.be.false
     expect(node.children[0].states.open).to.be.false
   })
@@ -395,9 +395,9 @@ describe('nodeManager functions', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const node = manager.getById(1)
-    manager.collapseChildren(node)
+    const storage = getStorage(nodes, options)
+    const node = storage.getById(1)
+    storage.collapseChildren(node)
     expect(node.states.open).to.be.true
     expect(node.children[0].states.open).to.be.false
   })
@@ -433,11 +433,11 @@ describe('nodeManager functions', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    manager.expandAll()
-    expect(manager.getById(1).states.open).to.be.true
-    expect(manager.getById(3).states.open).to.be.true
-    expect(manager.getById(2).states.open).to.be.true
+    const storage = getStorage(nodes, options)
+    storage.expandAll()
+    expect(storage.getById(1).states.open).to.be.true
+    expect(storage.getById(3).states.open).to.be.true
+    expect(storage.getById(2).states.open).to.be.true
   })
   it('collapseAll collapses all nodes', () => {
     const nodes = [{
@@ -471,11 +471,11 @@ describe('nodeManager functions', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    manager.collapseAll()
-    expect(manager.getById(1).states.open).to.be.false
-    expect(manager.getById(3).states.open).to.be.false
-    expect(manager.getById(2).states.open).to.be.false
+    const storage = getStorage(nodes, options)
+    storage.collapseAll()
+    expect(storage.getById(1).states.open).to.be.false
+    expect(storage.getById(3).states.open).to.be.false
+    expect(storage.getById(2).states.open).to.be.false
   })
   it('getById gets node by its id', () => {
     const nodes = [{
@@ -506,14 +506,14 @@ describe('nodeManager functions', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    manager.collapseAll()
-    expect(manager.getById(1).id).to.be.eq(1)
-    expect(manager.getById(3).id).to.be.eq(3)
-    expect(manager.getById(6).id).to.be.eq(6)
-    expect(manager.getById(4).id).to.be.eq(4)
-    expect(manager.getById(2).id).to.be.eq(2)
-    expect(manager.getById(8).id).to.be.eq(8)
+    const storage = getStorage(nodes, options)
+    storage.collapseAll()
+    expect(storage.getById(1).id).to.be.eq(1)
+    expect(storage.getById(3).id).to.be.eq(3)
+    expect(storage.getById(6).id).to.be.eq(6)
+    expect(storage.getById(4).id).to.be.eq(4)
+    expect(storage.getById(2).id).to.be.eq(2)
+    expect(storage.getById(8).id).to.be.eq(8)
   })
   it('findOne finds first node matching by criteria func', () => {
     const nodes = [{
@@ -547,10 +547,10 @@ describe('nodeManager functions', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const foundNode = manager.findOne(x => x.item.name.indexOf('test') !== -1)
+    const storage = getStorage(nodes, options)
+    const foundNode = storage.findOne(x => x.item.name.indexOf('test') !== -1)
     expect(foundNode.id).to.be.eq(1)
-    const foundChild = manager.findOne(x => x.item.name.indexOf('grand') !== -1)
+    const foundChild = storage.findOne(x => x.item.name.indexOf('grand') !== -1)
     expect(foundChild.id).to.be.eq(6)
   })
   it('findAll finds all nodes matching by criteria func', () => {
@@ -585,11 +585,11 @@ describe('nodeManager functions', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const foundNodes = manager.findAll(x => x.item.name.indexOf('test') !== -1)
+    const storage = getStorage(nodes, options)
+    const foundNodes = storage.findAll(x => x.item.name.indexOf('test') !== -1)
     expect(foundNodes).to.be.lengthOf(3)
     expect(foundNodes.map(x => x.id)).to.be.members([1, 2, 5])
-    const foundChildren = manager.findAll(x => x.item.name.indexOf('grand') !== -1)
+    const foundChildren = storage.findAll(x => x.item.name.indexOf('grand') !== -1)
     expect(foundChildren).to.be.lengthOf(3)
     expect(foundChildren.map(x => x.id)).to.be.members([6, 9, 8])
   })
@@ -625,11 +625,11 @@ describe('nodeManager functions', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const grandChild = manager.getById(6)
-    const foundGrandParent = manager.findParent(grandChild, x => x.item.name.indexOf('grandparent') !== -1)
+    const storage = getStorage(nodes, options)
+    const grandChild = storage.getById(6)
+    const foundGrandParent = storage.findParent(grandChild, x => x.item.name.indexOf('grandparent') !== -1)
     expect(foundGrandParent.id).to.be.eq(1)
-    const foundParent = manager.findParent(grandChild, x => x.item.name.indexOf('parent') !== -1)
+    const foundParent = storage.findParent(grandChild, x => x.item.name.indexOf('parent') !== -1)
     expect(foundParent.id).to.be.eq(3)
   })
   it('findParents finds all parent nodes matching by criteria func', () => {
@@ -664,12 +664,12 @@ describe('nodeManager functions', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const grandChild = manager.getById(6)
-    const foundGrandParents = manager.findParents(grandChild, x => x.item.name.indexOf('grandparent') !== -1)
+    const storage = getStorage(nodes, options)
+    const grandChild = storage.getById(6)
+    const foundGrandParents = storage.findParents(grandChild, x => x.item.name.indexOf('grandparent') !== -1)
     expect(foundGrandParents).to.be.lengthOf(1)
     expect(foundGrandParents[0].id).to.be.eq(1)
-    const foundParents = manager.findParents(grandChild, x => x.item.name.indexOf('parent') !== -1)
+    const foundParents = storage.findParents(grandChild, x => x.item.name.indexOf('parent') !== -1)
     expect(foundParents).to.be.lengthOf(2)
     expect(foundParents[0].id).to.be.eq(3)
     expect(foundParents[1].id).to.be.eq(1)
@@ -699,10 +699,10 @@ describe('nodeManager functions', () => {
     const options = {
       checkOnSelect: false
     }
-    const manager = getNodeManager(nodes, options)
-    const node = manager.getById(2)
-    manager.setSelected(node)
-    expect(manager.selectedNode).to.be.eq(node)
+    const storage = getStorage(nodes, options)
+    const node = storage.getById(2)
+    storage.setSelected(node)
+    expect(storage.selectedNode).to.be.eq(node)
   })
   it('setSelected with treeOptions.checkOnSelect=true set node both selected and checked', () => {
     const nodes = [{
@@ -729,10 +729,10 @@ describe('nodeManager functions', () => {
     const options = {
       checkOnSelect: true
     }
-    const manager = getNodeManager(nodes, options)
-    const node = manager.getById(4)
-    manager.setSelected(node)
-    expect(manager.selectedNode).to.be.eq(node)
+    const storage = getStorage(nodes, options)
+    const node = storage.getById(4)
+    storage.setSelected(node)
+    expect(storage.selectedNode).to.be.eq(node)
     expect(node.states.checked).to.be.true
   })
   it('setSelected with treeOptions.openOnSelect=true set node both selected and open', () => {
@@ -760,10 +760,10 @@ describe('nodeManager functions', () => {
     const options = {
       openOnSelect: true
     }
-    const manager = getNodeManager(nodes, options)
-    const node = manager.getById(1)
-    manager.setSelected(node)
-    expect(manager.selectedNode).to.be.eq(node)
+    const storage = getStorage(nodes, options)
+    const node = storage.getById(1)
+    storage.setSelected(node)
+    expect(storage.selectedNode).to.be.eq(node)
     expect(node.states.open).to.be.true
   })
   it('getVisible returns all visible nodes', () => {
@@ -784,9 +784,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'test3'
     }]
-    const manager = getNodeManager(nodes)
-    manager.filter('test')
-    const visibleNodes = manager.getVisible()
+    const storage = getStorage(nodes)
+    storage.filter('test')
+    const visibleNodes = storage.getVisible()
     expect(visibleNodes.length).to.be.eq(3)
     expect(visibleNodes.map(x => x.id)).to.have.members([1, 2, 5])
   })
@@ -801,8 +801,8 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    expect(() => manager.filter(null)).throw('parameter "searchObject" is not set')
+    const storage = getStorage(nodes)
+    expect(() => storage.filter(null)).throw('parameter "searchObject" is not set')
   })
   it('filter with simple text returns matched nodes', () => {
     const nodes = [{
@@ -830,8 +830,8 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const matchedNodes = manager.filter('node')
+    const storage = getStorage(nodes)
+    const matchedNodes = storage.filter('node')
     expect(matchedNodes.map(x => x.id)).to.be.members([1, 2, 5])
   })
   it('filter sets options.inSearch=true', () => {
@@ -860,11 +860,11 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
+    const storage = getStorage(nodes)
 
-    manager.filter('node')
+    storage.filter('node')
 
-    expect(manager.options.inSearch).to.be.true
+    expect(storage.options.inSearch).to.be.true
   })
   it('clearFilter sets options.inSearch=false', () => {
     const nodes = [{
@@ -892,12 +892,12 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    manager.filter('node')
+    const storage = getStorage(nodes)
+    storage.filter('node')
 
-    manager.clearFilter()
+    storage.clearFilter()
 
-    expect(manager.options.inSearch).to.be.false
+    expect(storage.options.inSearch).to.be.false
   })
   it('filter with regexp returns matched nodes', () => {
     const nodes = [{
@@ -925,8 +925,8 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const matchedNodes = manager.filter(/node[12]/)
+    const storage = getStorage(nodes)
+    const matchedNodes = storage.filter(/node[12]/)
     expect(matchedNodes.map(x => x.id)).to.be.members([1, 2])
   })
   it('filter with function returns matched nodes', () => {
@@ -955,8 +955,8 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const matchedNodes = manager.filter(x => x.name.indexOf('node') !== -1 && x.id > 1)
+    const storage = getStorage(nodes)
+    const matchedNodes = storage.filter(x => x.name.indexOf('node') !== -1 && x.id > 1)
     expect(matchedNodes.map(x => x.id)).to.be.members([2, 5])
   })
   it('filter with simple text in UPPERCASE returns case insensitive matched nodes ', () => {
@@ -985,8 +985,8 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'noDe3'
     }]
-    const manager = getNodeManager(nodes)
-    const matchedNodes = manager.filter('NODE')
+    const storage = getStorage(nodes)
+    const matchedNodes = storage.filter('NODE')
     expect(matchedNodes.map(x => x.id)).to.be.members([1, 2, 5])
   })
   it('filter with simple text sets matched nodes and their parents as visible', () => {
@@ -1015,9 +1015,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    manager.filter('child')
-    const visibleNodes = manager.getVisible()
+    const storage = getStorage(nodes)
+    storage.filter('child')
+    const visibleNodes = storage.getVisible()
     expect(visibleNodes).to.be.lengthOf(6)
     expect(visibleNodes.map(x => x.id)).to.have.members([1, 2, 3, 4, 8, 9])
   })
@@ -1047,9 +1047,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    manager.filter('node', { showChildren: true })
-    const visibleNodes = manager.getVisible()
+    const storage = getStorage(nodes)
+    storage.filter('node', { showChildren: true })
+    const visibleNodes = storage.getVisible()
     expect(visibleNodes).to.be.lengthOf(7)
     expect(visibleNodes.map(x => x.id)).to.have.members([1, 2, 3, 4, 5, 8, 9])
   })
@@ -1079,10 +1079,10 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    manager.filter('child1')
-    manager.clearFilter()
-    const visibleNodes = manager.getVisible()
+    const storage = getStorage(nodes)
+    storage.filter('child1')
+    storage.clearFilter()
+    const visibleNodes = storage.getVisible()
     expect(visibleNodes).to.be.lengthOf(3)
     expect(visibleNodes.map(x => x.id)).to.have.members([1, 2, 5])
   })
@@ -1112,9 +1112,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
+    const storage = getStorage(nodes)
     const visitedNodes = []
-    manager.visitAll(manager.nodes, x => { visitedNodes.push(x.id) })
+    storage.visitAll(storage.nodes, x => { visitedNodes.push(x.id) })
     expect(visitedNodes).to.be.lengthOf(7)
     expect(visitedNodes).to.have.members([1, 2, 3, 4, 5, 8, 9])
   })
@@ -1144,9 +1144,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
+    const storage = getStorage(nodes)
     const visitedNodes = []
-    manager.visitAll(manager.nodes, x => { visitedNodes.push(x.id) }, true)
+    storage.visitAll(storage.nodes, x => { visitedNodes.push(x.id) }, true)
     expect(visitedNodes).to.be.lengthOf(3)
     expect(visitedNodes).to.have.members([1, 2, 5])
   })
@@ -1176,9 +1176,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
+    const storage = getStorage(nodes)
     const visitedNodes = []
-    expect(() => manager.visitAll(null, x => { visitedNodes.push(x.id) })).throw('parameter "nodes" is not set')
+    expect(() => storage.visitAll(null, x => { visitedNodes.push(x.id) })).throw('parameter "nodes" is not set')
   })
   it('visitAll with null as passed callback throws Error', () => {
     const nodes = [{
@@ -1206,8 +1206,8 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    expect(() => manager.visitAll(manager.nodes, null)).throw('parameter "nodeCallback" is not set')
+    const storage = getStorage(nodes)
+    expect(() => storage.visitAll(storage.nodes, null)).throw('parameter "nodeCallback" is not set')
   })
   it('visitAll and callback returning true on first child iterates through node and its first child only', () => {
     const nodes = [{
@@ -1235,10 +1235,10 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
     const visitedNodes = []
-    manager.visitAll([node], item => {
+    storage.visitAll([node], item => {
       visitedNodes.push(item)
       if (item.id === 3) {
         return true
@@ -1274,9 +1274,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
+    const storage = getStorage(nodes)
 
-    expect(() => manager.setCheckState(null, true)).throw('parameter "node" is not set')
+    expect(() => storage.setCheckState(null, true)).throw('parameter "node" is not set')
   })
   it('setCheckState with state=true checks specified node', () => {
     const nodes = [{
@@ -1304,9 +1304,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.setCheckState(node, true)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.setCheckState(node, true)
     expect(node.states.checked).to.be.true
   })
   it('setCheckState with state=false unchecks specified node', () => {
@@ -1336,9 +1336,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.setCheckState(node, false)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.setCheckState(node, false)
     expect(node.states.checked).to.be.false
   })
   it('setCheckState with state=true and withChildren=true checks specified node and its children', () => {
@@ -1367,10 +1367,10 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.setCheckState(node, true, true)
-    const checkedNodes = manager.getChecked()
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.setCheckState(node, true, true)
+    const checkedNodes = storage.getChecked()
     expect(checkedNodes).to.be.lengthOf(4)
     expect(checkedNodes.map(x => x.id)).to.be.members([1, 3, 9, 4])
   })
@@ -1400,10 +1400,10 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes, { checkMode: 'linked' })
-    const node = manager.getById(1)
-    manager.setCheckState(node, true)
-    const checkedNodes = manager.getChecked()
+    const storage = getStorage(nodes, { checkMode: 'linked' })
+    const node = storage.getById(1)
+    storage.setCheckState(node, true)
+    const checkedNodes = storage.getChecked()
     expect(checkedNodes).to.be.lengthOf(4)
     expect(checkedNodes.map(x => x.id)).to.be.members([1, 3, 9, 4])
   })
@@ -1434,10 +1434,10 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes, { checkMode: 'linked' })
-    const node = manager.getById(8)
-    manager.setCheckState(node, true)
-    const checkedNodes = manager.getChecked()
+    const storage = getStorage(nodes, { checkMode: 'linked' })
+    const node = storage.getById(8)
+    storage.setCheckState(node, true)
+    const checkedNodes = storage.getChecked()
     expect(checkedNodes).to.be.lengthOf(2)
     expect(checkedNodes.map(x => x.id)).to.be.members([2, 8])
   })
@@ -1470,10 +1470,10 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes, { checkMode: 'linked' })
-    const node = manager.getById(8)
-    manager.setCheckState(node, false)
-    const checkedNodes = manager.getChecked()
+    const storage = getStorage(nodes, { checkMode: 'linked' })
+    const node = storage.getById(8)
+    storage.setCheckState(node, false)
+    const checkedNodes = storage.getChecked()
     expect(checkedNodes).to.be.lengthOf(0)
   })
   it('check checks specified node', () => {
@@ -1502,9 +1502,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.check(node)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.check(node)
     expect(node.states.checked).to.be.true
   })
   it('check with node=null throws Error', () => {
@@ -1535,9 +1535,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
+    const storage = getStorage(nodes)
 
-    expect(() => manager.check(null)).throw('parameter "node" is not set')
+    expect(() => storage.check(null)).throw('parameter "node" is not set')
   })
   it('check with withChildren=true checks specified node and its children', () => {
     const nodes = [{
@@ -1565,10 +1565,10 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.check(node, true)
-    const checkedNodes = manager.getChecked()
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.check(node, true)
+    const checkedNodes = storage.getChecked()
     expect(checkedNodes).to.be.lengthOf(4)
     expect(checkedNodes.map(x => x.id)).to.be.members([1, 3, 9, 4])
   })
@@ -1598,10 +1598,10 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.checkChildren(node)
-    const checkedNodes = manager.getChecked()
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.checkChildren(node)
+    const checkedNodes = storage.getChecked()
     expect(checkedNodes).to.be.lengthOf(3)
     expect(checkedNodes.map(x => x.id)).to.be.members([3, 9, 4])
   })
@@ -1633,9 +1633,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
+    const storage = getStorage(nodes)
 
-    expect(() => manager.checkChildren(null)).throw('parameter "node" is not set')
+    expect(() => storage.checkChildren(null)).throw('parameter "node" is not set')
   })
   it('uncheck unchecks specified node', () => {
     const nodes = [{
@@ -1664,9 +1664,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.uncheck(node)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.uncheck(node)
     expect(node.states.checked).to.be.false
   })
   it('uncheck with node=null throws Error', () => {
@@ -1697,9 +1697,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
+    const storage = getStorage(nodes)
 
-    expect(() => manager.uncheck(null)).throw('parameter "node" is not set')
+    expect(() => storage.uncheck(null)).throw('parameter "node" is not set')
   })
   it('uncheck with withChildren=true unchecks specified node and its children', () => {
     const nodes = [{
@@ -1731,10 +1731,10 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.uncheck(node, true)
-    const checkedNodes = manager.getChecked()
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.uncheck(node, true)
+    const checkedNodes = storage.getChecked()
     expect(checkedNodes).to.be.lengthOf(0)
   })
   it('uncheckChildren unchecks specified node children', () => {
@@ -1767,10 +1767,10 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.uncheckChildren(node)
-    const checkedNodes = manager.getChecked()
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.uncheckChildren(node)
+    const checkedNodes = storage.getChecked()
     expect(checkedNodes.map(x => x.id)).to.be.members([1])
   })
   it('uncheckChildren with node=null throws Error', () => {
@@ -1801,9 +1801,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
+    const storage = getStorage(nodes)
 
-    expect(() => manager.uncheckChildren(null)).throw('parameter "node" is not set')
+    expect(() => storage.uncheckChildren(null)).throw('parameter "node" is not set')
   })
   it('getVisibility with closed node returns false', () => {
     const nodes = [{
@@ -1827,9 +1827,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(3)
-    expect(manager.getVisibility(node)).to.be.false
+    const storage = getStorage(nodes)
+    const node = storage.getById(3)
+    expect(storage.getVisibility(node)).to.be.false
   })
   it('getVisibility with open node returns true', () => {
     const nodes = [{
@@ -1854,9 +1854,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(3)
-    expect(manager.getVisibility(node)).to.be.true
+    const storage = getStorage(nodes)
+    const node = storage.getById(3)
+    expect(storage.getVisibility(node)).to.be.true
   })
   it('setOpenState with state=true opens specified node', () => {
     const nodes = [{
@@ -1884,9 +1884,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.setOpenState(node, true)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.setOpenState(node, true)
     expect(node.states.open).to.be.true
   })
   it('setOpenState with state=false closes specified node', () => {
@@ -1916,9 +1916,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.setOpenState(node, false)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.setOpenState(node, false)
     expect(node.states.open).to.be.false
   })
   it('setOpenState with state=true and withChildren=true opens specified node and all its children', () => {
@@ -1947,11 +1947,11 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.setOpenState(node, true, true)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.setOpenState(node, true, true)
     expect(node.states.open).to.be.true
-    expect(manager.getById(3).states.open).to.be.true
+    expect(storage.getById(3).states.open).to.be.true
   })
   it('setOpenState with state=false and withChildren=true closes specified node and all its children', () => {
     const nodes = [{
@@ -1981,11 +1981,11 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.setOpenState(node, false, true)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.setOpenState(node, false, true)
     expect(node.states.open).to.be.false
-    expect(manager.getById(3).states.open).to.be.false
+    expect(storage.getById(3).states.open).to.be.false
   })
   it('setOpenState with node=null throws Error', () => {
     const nodes = [{
@@ -2015,9 +2015,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
+    const storage = getStorage(nodes)
 
-    expect(() => manager.setOpenState(null, true)).throw('parameter "node" is not set')
+    expect(() => storage.setOpenState(null, true)).throw('parameter "node" is not set')
   })
   it('showNode expands all parents of specified node', () => {
     const nodes = [{
@@ -2045,12 +2045,12 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(9)
-    manager.showNode(node)
+    const storage = getStorage(nodes)
+    const node = storage.getById(9)
+    storage.showNode(node)
     expect(node.visible()).to.be.true
-    expect(manager.getById(1).states.open).to.be.true
-    expect(manager.getById(3).states.open).to.be.true
+    expect(storage.getById(1).states.open).to.be.true
+    expect(storage.getById(3).states.open).to.be.true
   })
   it('showNode with node=null throws Error', () => {
     const nodes = [{
@@ -2078,9 +2078,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
+    const storage = getStorage(nodes)
 
-    expect(() => manager.showNode(null)).throw('parameter "node" is not set')
+    expect(() => storage.showNode(null)).throw('parameter "node" is not set')
   })
   it('visitAllParents iterates through all node parents', () => {
     const nodes = [{
@@ -2108,10 +2108,10 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(9)
+    const storage = getStorage(nodes)
+    const node = storage.getById(9)
     const visitedNodes = []
-    manager.visitAllParents(node, x => { visitedNodes.push(x.id) })
+    storage.visitAllParents(node, x => { visitedNodes.push(x.id) })
     expect(visitedNodes).to.be.lengthOf(2)
     expect(visitedNodes).to.have.members([1, 3])
   })
@@ -2141,9 +2141,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
+    const storage = getStorage(nodes)
 
-    expect(() => manager.visitAllParents(null, x => true)).throw('parameter "node" is not set')
+    expect(() => storage.visitAllParents(null, x => true)).throw('parameter "node" is not set')
   })
   it('visitAllParents with nodeCallback=null throws Error', () => {
     const nodes = [{
@@ -2171,10 +2171,10 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(9)
+    const storage = getStorage(nodes)
+    const node = storage.getById(9)
 
-    expect(() => manager.visitAllParents(node, null)).throw('parameter "nodeCallback" is not set')
+    expect(() => storage.visitAllParents(node, null)).throw('parameter "nodeCallback" is not set')
   })
   it('visitAllParents and callback returning true on first parent iterates through this parent only', () => {
     const nodes = [{
@@ -2202,10 +2202,10 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(9)
+    const storage = getStorage(nodes)
+    const node = storage.getById(9)
     const visitedNodes = []
-    manager.visitAllParents(node, item => {
+    storage.visitAllParents(node, item => {
       visitedNodes.push(item)
       if (item.id === 3) {
         return true
@@ -2239,10 +2239,10 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
     const visitedNodes = []
-    manager.visitAllParents(node, item => {
+    storage.visitAllParents(node, item => {
       visitedNodes.push(item)
     })
     expect(visitedNodes).to.be.empty
@@ -2273,9 +2273,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    expect(manager.getName(node)).to.be.eq('node1')
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    expect(storage.getName(node)).to.be.eq('node1')
   })
   it('getName with treeOptions.nameProp=title returns item title value ', () => {
     const nodes = [{
@@ -2291,11 +2291,11 @@ describe('nodeManager functions', () => {
       name: 'node3',
       title: 'title3'
     }]
-    const manager = getNodeManager(nodes, {
+    const storage = getStorage(nodes, {
       nameProp: 'title'
     })
-    const node = manager.getById(1)
-    expect(manager.getName(node)).to.be.eq(node.item.title)
+    const node = storage.getById(1)
+    expect(storage.getName(node)).to.be.eq(node.item.title)
   })
   it('getName with treeOptions.nameProp=function returns item name function value ', () => {
     const nodes = [{
@@ -2323,11 +2323,11 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes, {
+    const storage = getStorage(nodes, {
       nameProp: item => item.name + ':' + item.id
     })
-    const node = manager.getById(1)
-    expect(manager.getName(node)).to.be.eq('node1:1')
+    const node = storage.getById(1)
+    expect(storage.getName(node)).to.be.eq('node1:1')
   })
   it('getName with node=null throws Error', () => {
     const nodes = [{
@@ -2355,9 +2355,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
+    const storage = getStorage(nodes)
 
-    expect(() => manager.getName(null)).throw('parameter "node" is not set')
+    expect(() => storage.getName(null)).throw('parameter "node" is not set')
   })
   it('getEditName returns item name prop value ', () => {
     const nodes = [{
@@ -2385,9 +2385,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    expect(manager.getEditName(node)).to.be.eq('node1')
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    expect(storage.getEditName(node)).to.be.eq('node1')
   })
   it('getEditName with treeOptions.editNameProp=id returns item id value ', () => {
     const nodes = [{
@@ -2415,11 +2415,11 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes, {
+    const storage = getStorage(nodes, {
       editNameProp: 'id'
     })
-    const node = manager.getById(1)
-    expect(manager.getEditName(node)).to.be.eq(node.id)
+    const node = storage.getById(1)
+    expect(storage.getEditName(node)).to.be.eq(node.id)
   })
   it('getEditName with treeOptions.editNameProp=function throws Error', () => {
     const nodes = [{
@@ -2447,11 +2447,11 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes, {
+    const storage = getStorage(nodes, {
       editNameProp: item => item.name
     })
-    const node = manager.getById(1)
-    expect(() => manager.getEditName(node)).throw('"editNameProp" cannot be function')
+    const node = storage.getById(1)
+    expect(() => storage.getEditName(node)).throw('"editNameProp" cannot be function')
   })
   it('getEditName with node=null throws Error', () => {
     const nodes = [{
@@ -2479,9 +2479,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
+    const storage = getStorage(nodes)
 
-    expect(() => manager.getEditName(null)).throw('parameter "node" is not set')
+    expect(() => storage.getEditName(null)).throw('parameter "node" is not set')
   })
   it('setName with node=null throws Error', () => {
     const nodes = [{
@@ -2494,9 +2494,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
+    const storage = getStorage(nodes)
 
-    expect(() => manager.setName(null)).throw('parameter "node" is not set')
+    expect(() => storage.setName(null)).throw('parameter "node" is not set')
   })
   it('setName with treeOptions.editNameProp=function throws Error', () => {
     const nodes = [{
@@ -2509,11 +2509,11 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes, {
+    const storage = getStorage(nodes, {
       editNameProp: item => item.name
     })
-    const node = manager.getById(1)
-    expect(() => manager.setName(node, '111')).throw('"editNameProp" cannot be function')
+    const node = storage.getById(1)
+    expect(() => storage.setName(node, '111')).throw('"editNameProp" cannot be function')
   })
   it('setName with newName=null throws Error', () => {
     const nodes = [{
@@ -2526,10 +2526,10 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
 
-    expect(() => manager.setName(node, null)).throw('parameter "newName" is not set')
+    expect(() => storage.setName(node, null)).throw('parameter "newName" is not set')
   })
   it('setName with newName=test1 sets name prop = test1', () => {
     const nodes = [{
@@ -2542,9 +2542,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.setName(node, 'test1')
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.setName(node, 'test1')
     expect(node.item.name).to.be.eq('test1')
   })
   it('setName with treeOptions.editPropName=title and newName=test1 sets title prop = test1', () => {
@@ -2561,11 +2561,11 @@ describe('nodeManager functions', () => {
       name: 'node3',
       title: 'title3'
     }]
-    const manager = getNodeManager(nodes, {
+    const storage = getStorage(nodes, {
       editNameProp: 'title'
     })
-    const node = manager.getById(1)
-    manager.setName(node, 'test1')
+    const node = storage.getById(1)
+    storage.setName(node, 'test1')
     expect(node.item.name).to.be.eq('node1')
     expect(node.item.title).to.be.eq('test1')
   })
@@ -2583,13 +2583,13 @@ describe('nodeManager functions', () => {
       name: 'node3',
       title: 'title3'
     }]
-    const manager = getNodeManager(nodes, {
+    const storage = getStorage(nodes, {
       setNameFunc: (item, newName) => {
         item.title = newName
       }
     })
-    const node = manager.getById(1)
-    manager.setName(node, 'test1')
+    const node = storage.getById(1)
+    storage.setName(node, 'test1')
     expect(node.item.name).to.be.eq('node1')
     expect(node.item.title).to.be.eq('test1')
   })
@@ -2607,12 +2607,12 @@ describe('nodeManager functions', () => {
       name: 'node3',
       title: 'title3'
     }]
-    const manager = getNodeManager(nodes, {
+    const storage = getStorage(nodes, {
       setNameFunc: 'title'
     })
-    const node = manager.getById(1)
+    const node = storage.getById(1)
 
-    expect(() => manager.setName(node, 'test1')).throw('"setNameFunc" must be function')
+    expect(() => storage.setName(node, 'test1')).throw('"setNameFunc" must be function')
   })
   it('getChildren with item=null throws Error', () => {
     const nodes = [{
@@ -2628,9 +2628,9 @@ describe('nodeManager functions', () => {
       name: 'node3',
       title: 'title3'
     }]
-    const manager = getNodeManager(nodes)
+    const storage = getStorage(nodes)
 
-    expect(() => manager.getChildren(null)).throw('parameter "item" is not set')
+    expect(() => storage.getChildren(null)).throw('parameter "item" is not set')
   })
   it('getChildren returns children prop value', () => {
     const nodes = [{
@@ -2654,9 +2654,9 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes)
+    const storage = getStorage(nodes)
 
-    expect(manager.getChildren(nodes[0])).to.be.eq(nodes[0].children)
+    expect(storage.getChildren(nodes[0])).to.be.eq(nodes[0].children)
   })
   it('getChildren with treeOptions.childrenProp=kids returns kids prop value', () => {
     const nodes = [{
@@ -2680,11 +2680,11 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes, {
+    const storage = getStorage(nodes, {
       childrenProp: 'kids'
     })
 
-    expect(manager.getChildren(nodes[0])).to.be.eq(nodes[0].kids)
+    expect(storage.getChildren(nodes[0])).to.be.eq(nodes[0].kids)
   })
   it('getChildren with treeOptions.childrenProp=function returns kids prop value', () => {
     const nodes = [{
@@ -2708,11 +2708,11 @@ describe('nodeManager functions', () => {
       id: 5,
       name: 'node3'
     }]
-    const manager = getNodeManager(nodes, {
+    const storage = getStorage(nodes, {
       childrenProp: item => item.kids
     })
 
-    expect(manager.getChildren(nodes[0])).to.be.eq(nodes[0].kids)
+    expect(storage.getChildren(nodes[0])).to.be.eq(nodes[0].kids)
   })
   it('addChild with parent=null throws Error', () => {
     const nodes = [{
@@ -2726,9 +2726,9 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
+    const storage = getStorage(nodes)
 
-    expect(() => manager.addChild(null)).throw('parameter "parent" is not set')
+    expect(() => storage.addChild(null)).throw('parameter "parent" is not set')
   })
   it('addChild with item=null throws Error', () => {
     const nodes = [{
@@ -2742,10 +2742,10 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
 
-    expect(() => manager.addChild(node, null)).throw('parameter "item" is not set')
+    expect(() => storage.addChild(node, null)).throw('parameter "item" is not set')
   })
   it('addChild adds child node to specified node', () => {
     const nodes = [{
@@ -2759,13 +2759,13 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
     const newChildItem = {
       id: 5,
       name: 'child3'
     }
-    const newChild = manager.addChild(node, newChildItem)
+    const newChild = storage.addChild(node, newChildItem)
     expect(newChild).to.be.not.null
     expect(newChild.parent).to.be.eq(node)
     expect(node.children).to.be.lengthOf(3)
@@ -2773,7 +2773,7 @@ describe('nodeManager functions', () => {
     expect(newChild.item).to.be.eq(newChildItem)
     expect(newChild.prev.id).to.be.eq(4)
     expect(newChild.next).to.be.null
-    expect(manager.getById(4).next.id).to.be.eq(5)
+    expect(storage.getById(4).next.id).to.be.eq(5)
   })
   it('addChild with treeOptions.autoSort=true adds child node to specified node and sorts all its child nodes', () => {
     const nodes = [{
@@ -2787,15 +2787,15 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes, {
+    const storage = getStorage(nodes, {
       autoSort: true
     })
-    const node = manager.getById(1)
+    const node = storage.getById(1)
     const newChildItem = {
       id: 5,
       name: 'child0'
     }
-    const newChild = manager.addChild(node, newChildItem)
+    const newChild = storage.addChild(node, newChildItem)
     expect(newChild).to.be.not.null
     expect(newChild.parent).to.be.eq(node)
     expect(node.children).to.be.lengthOf(3)
@@ -2803,7 +2803,7 @@ describe('nodeManager functions', () => {
     expect(newChild.item).to.be.eq(newChildItem)
     expect(newChild.prev).to.be.null
     expect(newChild.next.id).to.be.eq(3)
-    expect(manager.getById(3).prev.id).to.be.eq(5)
+    expect(storage.getById(3).prev.id).to.be.eq(5)
   })
   it('insertChild with parent=null throws Error', () => {
     const nodes = [{
@@ -2817,9 +2817,9 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
+    const storage = getStorage(nodes)
 
-    expect(() => manager.insertChild(null)).throw('parameter "parent" is not set')
+    expect(() => storage.insertChild(null)).throw('parameter "parent" is not set')
   })
   it('insertChild with item=null throws Error', () => {
     const nodes = [{
@@ -2833,10 +2833,10 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
 
-    expect(() => manager.insertChild(node, null)).throw('parameter "item" is not set')
+    expect(() => storage.insertChild(node, null)).throw('parameter "item" is not set')
   })
   it('insertChild inserts child node as first to specified node', () => {
     const nodes = [{
@@ -2850,13 +2850,13 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
     const newChildItem = {
       id: 5,
       name: 'child3'
     }
-    const newChild = manager.insertChild(node, newChildItem)
+    const newChild = storage.insertChild(node, newChildItem)
     expect(newChild).to.be.not.null
     expect(newChild.parent).to.be.eq(node)
     expect(node.children).to.be.lengthOf(3)
@@ -2864,7 +2864,7 @@ describe('nodeManager functions', () => {
     expect(newChild.item).to.be.eq(newChildItem)
     expect(newChild.prev).to.be.null
     expect(newChild.next.id).to.be.eq(3)
-    expect(manager.getById(3).prev.id).to.be.eq(5)
+    expect(storage.getById(3).prev.id).to.be.eq(5)
   })
   it('insertChild with beforeNode=child2 inserts child node as second to specified node', () => {
     const nodes = [{
@@ -2878,14 +2878,14 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const child = manager.getById(4)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const child = storage.getById(4)
     const newChildItem = {
       id: 5,
       name: 'child3'
     }
-    const newChild = manager.insertChild(node, newChildItem, child)
+    const newChild = storage.insertChild(node, newChildItem, child)
     expect(newChild).to.be.not.null
     expect(newChild.parent).to.be.eq(node)
     expect(node.children).to.be.lengthOf(3)
@@ -2893,8 +2893,8 @@ describe('nodeManager functions', () => {
     expect(newChild.item).to.be.eq(newChildItem)
     expect(newChild.prev.id).to.be.eq(3)
     expect(newChild.next.id).to.be.eq(4)
-    expect(manager.getById(3).next.id).to.be.eq(5)
-    expect(manager.getById(4).prev.id).to.be.eq(5)
+    expect(storage.getById(3).next.id).to.be.eq(5)
+    expect(storage.getById(4).prev.id).to.be.eq(5)
   })
   it('insertChild with treeOptions.autoSort=true and beforeNode=child2 inserts child node as second to specified node and sorts all its child nodes', () => {
     const nodes = [{
@@ -2908,16 +2908,16 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes, {
+    const storage = getStorage(nodes, {
       autoSort: true
     })
-    const node = manager.getById(1)
-    const child = manager.getById(4)
+    const node = storage.getById(1)
+    const child = storage.getById(4)
     const newChildItem = {
       id: 5,
       name: 'child0'
     }
-    const newChild = manager.insertChild(node, newChildItem, child)
+    const newChild = storage.insertChild(node, newChildItem, child)
     expect(newChild).to.be.not.null
     expect(newChild.parent).to.be.eq(node)
     expect(node.children).to.be.lengthOf(3)
@@ -2925,7 +2925,7 @@ describe('nodeManager functions', () => {
     expect(newChild.item).to.be.eq(newChildItem)
     expect(newChild.prev).to.be.null
     expect(newChild.next.id).to.be.eq(3)
-    expect(manager.getById(3).prev.id).to.be.eq(5)
+    expect(storage.getById(3).prev.id).to.be.eq(5)
   })
   it('remove with item=null throws Error', () => {
     const nodes = [{
@@ -2939,9 +2939,9 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
+    const storage = getStorage(nodes)
 
-    expect(() => manager.remove(null)).throw('parameter "node" is not set')
+    expect(() => storage.remove(null)).throw('parameter "node" is not set')
   })
   it('remove child node with treeOptions.childrenProp=function throws Error', () => {
     const nodes = [{
@@ -2955,12 +2955,12 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes, {
+    const storage = getStorage(nodes, {
       childrenProp: item => item.children
     })
 
-    const node = manager.getById(3)
-    expect(() => manager.remove(node)).throw('cannot remove the child item while "childrenProp" is a function')
+    const node = storage.getById(3)
+    expect(() => storage.remove(node)).throw('cannot remove the child item while "childrenProp" is a function')
   })
   it('remove with root node removes node and item from original collection', () => {
     const nodes = [{
@@ -2974,12 +2974,12 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
 
-    manager.remove(node)
+    storage.remove(node)
 
-    expect(manager.nodes).to.be.empty
+    expect(storage.nodes).to.be.empty
     expect(nodes).to.be.empty
   })
   it('remove with child node removes node and item from original collection', () => {
@@ -2994,16 +2994,16 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(3)
+    const storage = getStorage(nodes)
+    const node = storage.getById(3)
     const nextNode = node.next
 
-    manager.remove(node)
+    storage.remove(node)
 
-    expect(manager.getById(1).children).to.be.lengthOf(1)
-    expect(manager.getById(1).item.children).to.be.lengthOf(1)
-    expect(manager.getById(1).children[0].id).to.be.eq(4)
-    expect(manager.getById(1).item.children[0].id).to.be.eq(4)
+    expect(storage.getById(1).children).to.be.lengthOf(1)
+    expect(storage.getById(1).item.children).to.be.lengthOf(1)
+    expect(storage.getById(1).children[0].id).to.be.eq(4)
+    expect(storage.getById(1).item.children[0].id).to.be.eq(4)
     expect(nextNode.prev).to.be.null
   })
   it('remove with selected root node removes node and set selectedNode=null', () => {
@@ -3018,11 +3018,11 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.setSelected(node)
-    manager.remove(node)
-    expect(manager.selectedNode).to.be.null
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.setSelected(node)
+    storage.remove(node)
+    expect(storage.selectedNode).to.be.null
   })
   it('remove with selected child node removes node and set selectedNode=null', () => {
     const nodes = [{
@@ -3036,11 +3036,11 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(3)
-    manager.setSelected(node)
-    manager.remove(node)
-    expect(manager.selectedNode).to.be.null
+    const storage = getStorage(nodes)
+    const node = storage.getById(3)
+    storage.setSelected(node)
+    storage.remove(node)
+    expect(storage.selectedNode).to.be.null
   })
   it('disable with node=null throws Error', () => {
     const nodes = [{
@@ -3054,8 +3054,8 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    expect(() => manager.disable(null)).throw('parameter "node" is not set')
+    const storage = getStorage(nodes)
+    expect(() => storage.disable(null)).throw('parameter "node" is not set')
   })
   it('disable disables node', () => {
     const nodes = [{
@@ -3069,9 +3069,9 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.disable(node)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.disable(node)
     expect(node.states.disabled).to.be.true
   })
   it('disable with selected node disables node and sets selectedNode=null', () => {
@@ -3086,11 +3086,11 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.setSelected(node)
-    manager.disable(node)
-    expect(manager.selectedNode).to.be.null
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.setSelected(node)
+    storage.disable(node)
+    expect(storage.selectedNode).to.be.null
   })
   it('disable with withChildren=true disables node and its children', () => {
     const nodes = [{
@@ -3104,11 +3104,11 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.disable(node, true)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.disable(node, true)
     let enabledCount = 0
-    manager.visitAll([node], x => {
+    storage.visitAll([node], x => {
       if (!x.states.disabled) {
         enabledCount += 1
       }
@@ -3127,12 +3127,12 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const child = manager.getById(3)
-    manager.setSelected(child)
-    manager.disable(node, true)
-    expect(manager.selectedNode).to.be.null
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const child = storage.getById(3)
+    storage.setSelected(child)
+    storage.disable(node, true)
+    expect(storage.selectedNode).to.be.null
   })
   it('disableChildren with node=null throws Error', () => {
     const nodes = [{
@@ -3146,8 +3146,8 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    expect(() => manager.disableChildren(null)).throw('parameter "node" is not set')
+    const storage = getStorage(nodes)
+    expect(() => storage.disableChildren(null)).throw('parameter "node" is not set')
   })
   it('disableChildren disables all node children', () => {
     const nodes = [{
@@ -3161,11 +3161,11 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.disableChildren(node)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.disableChildren(node)
     let enabledCount = 0
-    manager.visitAll(node.children, x => {
+    storage.visitAll(node.children, x => {
       if (!x.states.disabled) {
         enabledCount += 1
       }
@@ -3185,12 +3185,12 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    const child = manager.getById(3)
-    manager.setSelected(child)
-    manager.disableChildren(node)
-    expect(manager.selectedNode).to.be.null
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const child = storage.getById(3)
+    storage.setSelected(child)
+    storage.disableChildren(node)
+    expect(storage.selectedNode).to.be.null
   })
   it('disableAll disables all nodes', () => {
     const nodes = [{
@@ -3204,10 +3204,10 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    manager.disableAll()
+    const storage = getStorage(nodes)
+    storage.disableAll()
     let enabledCount = 0
-    manager.visitAll(manager.nodes, x => {
+    storage.visitAll(storage.nodes, x => {
       if (!x.states.disabled) {
         enabledCount += 1
       }
@@ -3226,11 +3226,11 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.setSelected(node)
-    manager.disableAll()
-    expect(manager.selectedNode).to.be.null
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.setSelected(node)
+    storage.disableAll()
+    expect(storage.selectedNode).to.be.null
   })
   it('enable with node=null throws Error', () => {
     const nodes = [{
@@ -3244,8 +3244,8 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    expect(() => manager.enable(null)).throw('parameter "node" is not set')
+    const storage = getStorage(nodes)
+    expect(() => storage.enable(null)).throw('parameter "node" is not set')
   })
   it('enable enables node', () => {
     const nodes = [{
@@ -3260,9 +3260,9 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.enable(node)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.enable(node)
     expect(node.states.disabled).to.be.false
   })
   it('enable with withChildren=true enables node and its children', () => {
@@ -3280,11 +3280,11 @@ describe('nodeManager functions', () => {
         disabled: true
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.enable(node, true)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.enable(node, true)
     let disabledCount = 0
-    manager.visitAll([node], x => {
+    storage.visitAll([node], x => {
       if (x.states.disabled) {
         disabledCount += 1
       }
@@ -3303,8 +3303,8 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    expect(() => manager.enableChildren(null)).throw('parameter "node" is not set')
+    const storage = getStorage(nodes)
+    expect(() => storage.enableChildren(null)).throw('parameter "node" is not set')
   })
   it('enableChildren enables all node children', () => {
     const nodes = [{
@@ -3321,11 +3321,11 @@ describe('nodeManager functions', () => {
         disabled: true
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.enableChildren(node)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.enableChildren(node)
     let disabledCount = 0
-    manager.visitAll(node.children, x => {
+    storage.visitAll(node.children, x => {
       if (x.states.disabled) {
         disabledCount += 1
       }
@@ -3348,10 +3348,10 @@ describe('nodeManager functions', () => {
         disabled: true
       }]
     }]
-    const manager = getNodeManager(nodes)
-    manager.enableAll()
+    const storage = getStorage(nodes)
+    storage.enableAll()
     let disabledCount = 0
-    manager.visitAll(manager.nodes, x => {
+    storage.visitAll(storage.nodes, x => {
       if (x.states.disabled) {
         disabledCount += 1
       }
@@ -3370,8 +3370,8 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    expect(() => manager.setCheckboxStyle(null)).throw('parameter "node" is not set')
+    const storage = getStorage(nodes)
+    expect(() => storage.setCheckboxStyle(null)).throw('parameter "node" is not set')
   })
   it('setCheckboxStyle sets checkbox style for node', () => {
     const nodes = [{
@@ -3385,9 +3385,9 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.setCheckboxStyle(node, 'test-class')
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.setCheckboxStyle(node, 'test-class')
     expect(node.styleClasses.checkbox).to.be.eq('test-class')
   })
   it('setCheckboxStyle with withChildren=true sets checkbox style for node and its children', () => {
@@ -3402,11 +3402,11 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.setCheckboxStyle(node, 'test-class', true)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.setCheckboxStyle(node, 'test-class', true)
     let nodesWithoutStyle = 0
-    manager.visitAll([node], x => {
+    storage.visitAll([node], x => {
       if (x.styleClasses.checkbox == null || x.styleClasses.checkbox !== 'test-class') {
         nodesWithoutStyle += 1
       }
@@ -3425,8 +3425,8 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    expect(() => manager.setTextStyle(null)).throw('parameter "node" is not set')
+    const storage = getStorage(nodes)
+    expect(() => storage.setTextStyle(null)).throw('parameter "node" is not set')
   })
   it('setTextStyle sets text style for node', () => {
     const nodes = [{
@@ -3440,9 +3440,9 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.setTextStyle(node, 'test-class')
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.setTextStyle(node, 'test-class')
     expect(node.styleClasses.text).to.be.eq('test-class')
   })
   it('setTextStyle with withChildren=true sets text style for node and its children', () => {
@@ -3457,11 +3457,11 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.setTextStyle(node, 'test-class', true)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.setTextStyle(node, 'test-class', true)
     let nodesWithoutStyle = 0
-    manager.visitAll([node], x => {
+    storage.visitAll([node], x => {
       if (x.styleClasses.text == null || x.styleClasses.text !== 'test-class') {
         nodesWithoutStyle += 1
       }
@@ -3480,8 +3480,8 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    expect(() => manager.setIconStyle(null)).throw('parameter "node" is not set')
+    const storage = getStorage(nodes)
+    expect(() => storage.setIconStyle(null)).throw('parameter "node" is not set')
   })
   it('setIconStyle sets icon style for node', () => {
     const nodes = [{
@@ -3495,9 +3495,9 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.setIconStyle(node, 'test-class')
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.setIconStyle(node, 'test-class')
     expect(node.styleClasses.icon).to.be.eq('test-class')
   })
   it('setIconStyle with withChildren=true sets icon style for node and its children', () => {
@@ -3512,11 +3512,11 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.setIconStyle(node, 'test-class', true)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.setIconStyle(node, 'test-class', true)
     let nodesWithoutStyle = 0
-    manager.visitAll([node], x => {
+    storage.visitAll([node], x => {
       if (x.styleClasses.icon == null || x.styleClasses.icon !== 'test-class') {
         nodesWithoutStyle += 1
       }
@@ -3535,8 +3535,8 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    expect(() => manager.setExpanderStyle(null)).throw('parameter "node" is not set')
+    const storage = getStorage(nodes)
+    expect(() => storage.setExpanderStyle(null)).throw('parameter "node" is not set')
   })
   it('setExpanderStyle sets expander style for node', () => {
     const nodes = [{
@@ -3550,9 +3550,9 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.setExpanderStyle(node, 'test-class')
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.setExpanderStyle(node, 'test-class')
     expect(node.styleClasses.expander).to.be.eq('test-class')
   })
   it('setExpanderStyle with withChildren=true sets expander style for node and its children', () => {
@@ -3567,11 +3567,11 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    const node = manager.getById(1)
-    manager.setExpanderStyle(node, 'test-class', true)
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.setExpanderStyle(node, 'test-class', true)
     let nodesWithoutStyle = 0
-    manager.visitAll([node], x => {
+    storage.visitAll([node], x => {
       if (x.styleClasses.expander == null || x.styleClasses.expander !== 'test-class') {
         nodesWithoutStyle += 1
       }
@@ -3593,12 +3593,12 @@ describe('nodeManager functions', () => {
       id: 2,
       name: 'node1'
     }]
-    const manager = getNodeManager(nodes)
-    manager.sort()
-    expect(manager.nodes[0].id).to.be.eq(2)
-    expect(manager.nodes[1].id).to.be.eq(1)
-    expect(manager.nodes[1].children[0].id).to.be.eq(4)
-    expect(manager.nodes[1].children[1].id).to.be.eq(3)
+    const storage = getStorage(nodes)
+    storage.sort()
+    expect(storage.nodes[0].id).to.be.eq(2)
+    expect(storage.nodes[1].id).to.be.eq(1)
+    expect(storage.nodes[1].children[0].id).to.be.eq(4)
+    expect(storage.nodes[1].children[1].id).to.be.eq(3)
   })
   it('sort with comparator by id prop sorts all nodes by id', () => {
     const nodes = [{
@@ -3615,12 +3615,12 @@ describe('nodeManager functions', () => {
       id: 1,
       name: 'node1'
     }]
-    const manager = getNodeManager(nodes)
-    manager.sort((item1, item2) => item1.id - item2.id)
-    expect(manager.nodes[0].id).to.be.eq(1)
-    expect(manager.nodes[1].id).to.be.eq(2)
-    expect(manager.nodes[1].children[0].id).to.be.eq(3)
-    expect(manager.nodes[1].children[1].id).to.be.eq(4)
+    const storage = getStorage(nodes)
+    storage.sort((item1, item2) => item1.id - item2.id)
+    expect(storage.nodes[0].id).to.be.eq(1)
+    expect(storage.nodes[1].id).to.be.eq(2)
+    expect(storage.nodes[1].children[0].id).to.be.eq(3)
+    expect(storage.nodes[1].children[1].id).to.be.eq(4)
   })
   it('setNodes with items=null throws Error', () => {
     const nodes = [{
@@ -3634,8 +3634,8 @@ describe('nodeManager functions', () => {
         name: 'child2'
       }]
     }]
-    const manager = getNodeManager(nodes)
-    expect(() => manager.setNodes(null)).throw('parameter "items" is not set')
+    const storage = getStorage(nodes)
+    expect(() => storage.setNodes(null)).throw('parameter "items" is not set')
   })
   it('setNodes sets nodes to new items', () => {
     const items = [{
@@ -3663,10 +3663,10 @@ describe('nodeManager functions', () => {
       id: 15,
       name: 'node15'
     }]
-    const manager = getNodeManager(items)
-    manager.setNodes(anotherItems)
+    const storage = getStorage(items)
+    storage.setNodes(anotherItems)
     const anotherNodeIdList = []
-    manager.visitAll(manager.nodes, x => {
+    storage.visitAll(storage.nodes, x => {
       anotherNodeIdList.push(x.id)
     })
     expect(anotherNodeIdList).to.be.members([10, 11, 14, 15])
@@ -3697,13 +3697,13 @@ describe('nodeManager functions', () => {
       id: 15,
       name: 'node10'
     }]
-    const manager = getNodeManager(items, {
+    const storage = getStorage(items, {
       autoSort: true
     })
-    manager.setNodes(anotherItems)
-    expect(manager.nodes[0].id).to.be.eq(15)
-    expect(manager.nodes[1].id).to.be.eq(10)
-    expect(manager.nodes[1].children[0].id).to.be.eq(14)
-    expect(manager.nodes[1].children[1].id).to.be.eq(11)
+    storage.setNodes(anotherItems)
+    expect(storage.nodes[0].id).to.be.eq(15)
+    expect(storage.nodes[1].id).to.be.eq(10)
+    expect(storage.nodes[1].children[0].id).to.be.eq(14)
+    expect(storage.nodes[1].children[1].id).to.be.eq(11)
   })
 })

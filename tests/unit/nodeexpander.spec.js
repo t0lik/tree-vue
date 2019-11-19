@@ -31,7 +31,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const expanderWrapper = getNodeExpanderWrapper(wrapper, node, {})
     expect(expanderWrapper.vm.closedIcon).to.be.eq(wrapper.vm.treeOptions.icons.closedIcon)
   })
@@ -41,7 +41,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const expanderWrapper = getNodeExpanderWrapper(wrapper, node, {})
     expect(expanderWrapper.vm.openIcon).to.be.eq(wrapper.vm.treeOptions.icons.openIcon)
   })
@@ -52,7 +52,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const expanderWrapper = getNodeExpanderWrapper(wrapper, node, {})
     expect(expanderWrapper.vm.expanderClass).to.be.eq(expanderWrapper.vm.openIcon)
   })
@@ -62,7 +62,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const expanderWrapper = getNodeExpanderWrapper(wrapper, node, {})
     expect(expanderWrapper.vm.expanderClass).to.be.eq(expanderWrapper.vm.closedIcon)
   })
@@ -73,7 +73,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const expanderWrapper = getNodeExpanderWrapper(wrapper, node, {})
     expect(expanderWrapper.classes('treevue-default-arrow')).to.be.true
     expect(expanderWrapper.classes('expanded')).to.be.true
@@ -84,7 +84,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const expanderWrapper = getNodeExpanderWrapper(wrapper, node, {})
     expect(expanderWrapper.classes('treevue-default-arrow')).to.be.true
     expect(expanderWrapper.classes('expanded')).to.be.false
@@ -95,7 +95,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const expanderWrapper = getNodeExpanderWrapper(wrapper, node, {})
     expanderWrapper.vm.onClick()
     wrapper.vm.$nextTick(() => {
@@ -112,7 +112,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const expanderWrapper = getNodeExpanderWrapper(wrapper, node, {})
 
     expanderWrapper.vm.onClick()
@@ -131,7 +131,7 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const node = wrapper.vm.nodeManager.getById(1)
+    const node = wrapper.vm.storage.getById(1)
     const expanderWrapper = getNodeExpanderWrapper(wrapper, node, {})
 
     expanderWrapper.vm.onClick()
