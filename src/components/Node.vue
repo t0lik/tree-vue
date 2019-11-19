@@ -101,28 +101,28 @@ export default {
         'filter-matched': this.node.states.matched,
         disabled: this.node.states.disabled
       }
-      return this.combineClasses(this.combineClasses(classes, this.node.styleClasses.text), this.options.styleClasses.text)
+      return this.combineClasses(classes, [this.node.styleClasses.text || this.options.styleClasses.text])
     },
     iconClasses () {
       const classes = {
         disabled: this.node.states.disabled
       }
 
-      return this.combineClasses(this.combineClasses(classes, this.node.styleClasses.icon), this.options.styleClasses.icon)
+      return this.combineClasses(classes, [this.node.styleClasses.icon || this.options.styleClasses.icon])
     },
     checkClasses () {
       const classes = {
         disabled: this.node.states.disabled
       }
 
-      return this.combineClasses(this.combineClasses(classes, this.node.styleClasses.checkbox), this.options.styleClasses.checkbox)
+      return this.combineClasses(classes, [this.node.styleClasses.checkbox || this.options.styleClasses.checkbox])
     },
     expanderClasses () {
       const classes = {
         disabled: this.node.states.disabled
       }
 
-      return this.combineClasses(this.combineClasses(classes, this.node.styleClasses.expander), this.options.styleClasses.expander)
+      return this.combineClasses(classes, [this.node.styleClasses.expander || this.options.styleClasses.expander])
     },
     icons () {
       return this.options.icons
@@ -155,18 +155,23 @@ export default {
     delete this.state.nodes[this.node.id]
   },
   methods: {
-    combineClasses (defaultClass, customClass) {
-      if (customClass) {
-        const classes = {}
-        if (typeof (customClass) === 'string') {
-          const classList = customClass.split(' ')
+    combineClasses (defaultClass, customClasses) {
+      if (customClasses && customClasses.length) {
+        const allObjectClasses = []
+        for (const customClass of customClasses) {
+          const classes = {}
+          if (typeof (customClass) === 'string') {
+            const classList = customClass.split(' ')
 
-          for (const className of classList) {
-            classes[className] = true
+            for (const className of classList) {
+              classes[className] = true
+            }
+            allObjectClasses.push(classes)
+          } else {
+            allObjectClasses.push(customClass)
           }
-          return Object.assign({}, defaultClass, classes)
         }
-        return Object.assign({}, defaultClass, customClass)
+        return Object.assign({}, defaultClass, ...allObjectClasses)
       }
 
       return defaultClass

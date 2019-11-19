@@ -375,7 +375,7 @@ describe('Node.vue', () => {
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.textClasses).to.have.property('text-class', true)
   })
-  it('textClasses class contains combined custom text classes from node and treeOptions', () => {
+  it('textClasses class contains custom text classes from node if both node and treeOptions classes are set', () => {
     const nodes = [{
       id: 1,
       name: 'name',
@@ -393,7 +393,7 @@ describe('Node.vue', () => {
     wrapper.vm.storage.setTextStyle(node, 'text-class')
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.textClasses).to.have.property('text-class', true)
-    expect(nodeWrapper.vm.textClasses).to.have.property('all-text-class', true)
+    expect(nodeWrapper.vm.textClasses).to.not.have.property('all-text-class')
   })
   it('iconClasses = empty class on enabled node', () => {
     const nodes = [{
@@ -457,7 +457,7 @@ describe('Node.vue', () => {
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.iconClasses).to.have.property('icon-class', true)
   })
-  it('iconClasses class contains combined custom icon classes from node and treeOptions', () => {
+  it('iconClasses class contains custom icon classes from node if both node and treeOptions classes are set', () => {
     const nodes = [{
       id: 1,
       name: 'name',
@@ -475,7 +475,7 @@ describe('Node.vue', () => {
     wrapper.vm.storage.setIconStyle(node, 'icon-class')
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.iconClasses).to.have.property('icon-class', true)
-    expect(nodeWrapper.vm.iconClasses).to.have.property('all-icon-class', true)
+    expect(nodeWrapper.vm.iconClasses).to.not.have.property('all-icon-class')
   })
   it('checkClasses = empty class on enabled node', () => {
     const nodes = [{
@@ -539,7 +539,7 @@ describe('Node.vue', () => {
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.checkClasses).to.have.property('checkbox-class', true)
   })
-  it('checkClasses class contains combined custom checkbox classes from node and treeOptions', () => {
+  it('checkClasses class contains custom checkbox classes from node if both node and treeOptions classes are set', () => {
     const nodes = [{
       id: 1,
       name: 'name',
@@ -557,7 +557,7 @@ describe('Node.vue', () => {
     wrapper.vm.storage.setCheckboxStyle(node, 'checkbox-class')
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.checkClasses).to.have.property('checkbox-class', true)
-    expect(nodeWrapper.vm.checkClasses).to.have.property('all-checkbox-class', true)
+    expect(nodeWrapper.vm.checkClasses).to.not.have.property('all-checkbox-class')
   })
   it('expanderClasses = empty class on enabled node', () => {
     const nodes = [{
@@ -621,7 +621,7 @@ describe('Node.vue', () => {
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.expanderClasses).to.have.property('expander-class', true)
   })
-  it('expanderClasses class contains combined custom expander classes from node and treeOptions', () => {
+  it('expanderClasses class contains custom expander classes from node if both node and treeOptions classes are set', () => {
     const nodes = [{
       id: 1,
       name: 'name',
@@ -639,7 +639,7 @@ describe('Node.vue', () => {
     wrapper.vm.storage.setExpanderStyle(node, 'expander-class')
     const nodeWrapper = getNodeWrapper(wrapper, node)
     expect(nodeWrapper.vm.expanderClasses).to.have.property('expander-class', true)
-    expect(nodeWrapper.vm.expanderClasses).to.have.property('all-expander-class', true)
+    expect(nodeWrapper.vm.expanderClasses).to.not.have.property('all-expander-class')
   })
   it('icons prop = defaultIcons with default treeOptions', () => {
     const nodes = [{
@@ -847,7 +847,7 @@ describe('Node.vue', () => {
     wrapper.vm.storage.remove(node)
     expect(wrapper.vm.treeState.nodes).to.not.have.property(node.id)
   })
-  it('combineClasses function returns combined object with first and secord arguments as objects', () => {
+  it('combineClasses function returns combined object with first and array of rest arguments as objects', () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -858,11 +858,11 @@ describe('Node.vue', () => {
     const nodeWrapper = getNodeWrapper(wrapper, node)
     const defaultClass = { 'default-class': true }
     const otherClass = { 'test-class': true }
-    const combinesClass = nodeWrapper.vm.combineClasses(defaultClass, otherClass)
+    const combinesClass = nodeWrapper.vm.combineClasses(defaultClass, [otherClass])
     expect(combinesClass).to.have.property('default-class', true)
     expect(combinesClass).to.have.property('test-class', true)
   })
-  it('combineClasses function returns combined object with first argument as object and secord argument as string with class names', () => {
+  it('combineClasses function returns combined object with first argument as object and secord argument as array with string with class names', () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -873,7 +873,7 @@ describe('Node.vue', () => {
     const nodeWrapper = getNodeWrapper(wrapper, node)
     const defaultClass = { 'default-class': true }
     const otherClass = 'test-class test-class-2'
-    const combinesClass = nodeWrapper.vm.combineClasses(defaultClass, otherClass)
+    const combinesClass = nodeWrapper.vm.combineClasses(defaultClass, [otherClass])
 
     expect(combinesClass).to.have.property('default-class', true)
     expect(combinesClass).to.have.property('test-class', true)

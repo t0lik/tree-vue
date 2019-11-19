@@ -22,6 +22,7 @@ function Node (storage, item, parent = null, prevNode = null) {
     matched: false
   }
   this.styleClasses = {
+    default: null,
     icon: null,
     text: null,
     checkbox: null,
