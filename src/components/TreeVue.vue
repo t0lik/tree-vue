@@ -19,7 +19,7 @@
 <script>
 import Node from '@/components/Node'
 import defaultIcons from '../icons/defaultIcons'
-import DefaultStorage from '../storages/defaultManager'
+import DefaultStorage from '../storages/defaultStorage'
 import keyboardMixin from '../mixins/keyboard'
 
 export default {
