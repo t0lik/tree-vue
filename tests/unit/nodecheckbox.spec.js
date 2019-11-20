@@ -100,7 +100,7 @@ describe('Node.vue', () => {
         name: 'child2'
       }]
     }]
-    const wrapper = getTreeWrapper(nodes)
+    const wrapper = getTreeWrapper(nodes, { checkMode: 'linked' })
     const node = wrapper.vm.storage.getById(1)
     const checkboxWrapper = getNodeCheckboxWrapper(wrapper, node, {})
     expect(checkboxWrapper.vm.checkClass).to.be.eq(checkboxWrapper.vm.partiallyCheckedIcon)
@@ -141,7 +141,7 @@ describe('Node.vue', () => {
         name: 'child2'
       }]
     }]
-    const wrapper = getTreeWrapper(nodes)
+    const wrapper = getTreeWrapper(nodes, { checkMode: 'linked' })
     const node = wrapper.vm.storage.getById(1)
     const checkboxWrapper = getNodeCheckboxWrapper(wrapper, node, {})
     expect(checkboxWrapper.classes('treevue-default-checkbox')).to.be.true

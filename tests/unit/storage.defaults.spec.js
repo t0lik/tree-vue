@@ -356,7 +356,7 @@ describe('storage default item states', () => {
     expect(node.icon).to.be.eq('fa fa-plus')
   })
   // TODO: test for visible()
-  it('item is in the indeterminate state when some but not all its children are checked', () => {
+  it('item is not in the indeterminate state when some but not all its children are checked and default treeOptions.checkMode="independent"', () => {
     const nodes = [{
       id: 1,
       name: 'test',
@@ -371,6 +371,28 @@ describe('storage default item states', () => {
     }]
     const options = {
       checkOnSelect: false
+    }
+    const storage = getStorage(nodes, options)
+    const node = storage.getById(1)
+    expect(node).to.be.not.null
+    expect(node.indeterminate()).to.be.eq(false)
+  })
+  it('item is in the indeterminate state when some but not all its children are checked and treeOptions.checkMode="linked"', () => {
+    const nodes = [{
+      id: 1,
+      name: 'test',
+      children: [{
+        id: 2,
+        name: 'child1',
+        checked: true
+      }, {
+        id: 3,
+        name: 'child2'
+      }]
+    }]
+    const options = {
+      checkOnSelect: false,
+      checkMode: 'linked'
     }
     const storage = getStorage(nodes, options)
     const node = storage.getById(1)

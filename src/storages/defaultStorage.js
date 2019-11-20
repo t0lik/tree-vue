@@ -39,6 +39,9 @@ function Node (storage, item, parent = null, prevNode = null) {
 
   this.children = mappedChildren
   this.indeterminate = function () {
+    if (storage.treeOptions.checkMode === CheckModes.Independent) {
+      return false
+    }
     const isSomeChildrenChecked = this.children.some(x => x.states.checked || x.indeterminate())
     const isAllChildrenChecked = this.children.every(x => x.states.checked && !x.indeterminate())
     return isSomeChildrenChecked && !isAllChildrenChecked

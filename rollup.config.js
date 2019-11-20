@@ -2,10 +2,8 @@ import pkg from './package.json'
 // import commonjs from 'rollup-plugin-commonjs' // Convert CommonJS modules to ES6
 import vue from 'rollup-plugin-vue' // Handle .vue SFC files
 import buble from 'rollup-plugin-buble' // Transpile/polyfill with reasonable browser support
-// import alias from 'rollup-plugin-alias'
 import alias from '@rollup/plugin-alias'
 import resolve from 'rollup-plugin-node-resolve'
-
 // import css from 'rollup-plugin-css-only'
 
 const path = require('path')
@@ -37,12 +35,6 @@ export default [
         entries: {
           '@': path.resolve(__dirname, 'src')
         }
-        // entries: [
-        //   {
-        //     find: '@',
-        //     replacement: path.resolve(__dirname, 'src')
-        //   }
-        // ]
       }),
       resolve(),
       // commonjs(),
