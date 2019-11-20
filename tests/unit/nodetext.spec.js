@@ -7,9 +7,9 @@ import Tree from '@/components/TreeVue.vue'
 import NodeText from '@/components/NodeText.vue'
 
 describe('NodeText.vue', () => {
-  function getTreeWrapper (nodes, options = {}) {
+  function getTreeWrapper (items, options = {}) {
     const wrapper = mount(Tree, {
-      propsData: { nodes, options }
+      propsData: { items, options }
     })
 
     return wrapper

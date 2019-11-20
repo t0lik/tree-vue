@@ -5,9 +5,9 @@ import Tree from '@/components/TreeVue.vue'
 import sinon from 'sinon'
 
 describe('storage node functions', () => {
-  function getStorage (nodes, options = {}) {
+  function getStorage (items, options = {}) {
     const wrapper = mount(Tree, {
-      propsData: { nodes, options }
+      propsData: { items, options }
     })
 
     return wrapper.vm.storage

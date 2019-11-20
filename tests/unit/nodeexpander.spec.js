@@ -6,9 +6,9 @@ import Tree from '@/components/TreeVue.vue'
 import NodeExpander from '@/components/NodeExpander.vue'
 
 describe('Node.vue', () => {
-  function getTreeWrapper (nodes, options = {}) {
+  function getTreeWrapper (items, options = {}) {
     const wrapper = mount(Tree, {
-      propsData: { nodes, options }
+      propsData: { items, options }
     })
 
     return wrapper

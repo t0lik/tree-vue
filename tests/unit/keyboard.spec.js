@@ -50,7 +50,7 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
 
     wrapper.vm.$nextTick(() => {
       clickFirstFoundNodeText(wrapper)
@@ -75,7 +75,7 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
 
     wrapper.vm.$nextTick(() => {
       const clickableNodes = wrapper.findAll('.treevue-tree-node')
@@ -110,7 +110,7 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
 
     wrapper.vm.$nextTick(() => {
       clickFirstFoundNodeText(wrapper)
@@ -143,7 +143,7 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     clickFirstFoundNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: 'ArrowDown'
@@ -174,7 +174,7 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     clickFirstFoundNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: 'ArrowDown'
@@ -205,7 +205,7 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     clickFirstFoundChildNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: 'ArrowDown'
@@ -238,7 +238,7 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     clickFirstFoundNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: 'ArrowDown'
@@ -261,7 +261,7 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
 
     wrapper.vm.$nextTick(() => {
       const clickableNodes = wrapper.findAll('.treevue-tree-node')
@@ -290,7 +290,7 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
 
     wrapper.vm.$nextTick(() => {
       clickFirstFoundNodeText(wrapper)
@@ -320,7 +320,7 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
 
     const clickableNodes = wrapper.findAll('.treevue-tree-node')
     expect(clickableNodes.length).to.be.eq(3)
@@ -358,7 +358,7 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const clickableNodes = wrapper.findAll('.treevue-tree-root-node > .treevue-tree-node')
     expect(clickableNodes.length).to.be.eq(3)
     const thirdNode = clickableNodes.at(2)
@@ -397,7 +397,7 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const clickableNodes = wrapper.findAll('.treevue-tree-root-node > .treevue-tree-node')
     expect(clickableNodes.length).to.be.eq(3)
     const thirdNode = clickableNodes.at(2)
@@ -436,7 +436,7 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     clickFirstFoundChildNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: 'ArrowUp'
@@ -464,7 +464,7 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     clickFirstFoundNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: 'ArrowLeft'
@@ -493,7 +493,7 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     clickFirstFoundChildNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: 'ArrowLeft'
@@ -522,7 +522,7 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const clickableNodes = wrapper.findAll('.treevue-tree-node')
     expect(clickableNodes.length).to.be.eq(2)
     const secondNode = clickableNodes.at(1)
@@ -556,7 +556,7 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     clickFirstFoundNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: 'ArrowRight'
@@ -589,7 +589,7 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     clickFirstFoundNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: 'ArrowRight'
@@ -623,7 +623,7 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     clickFirstFoundNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: 'ArrowRight'
@@ -649,7 +649,7 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     clickFirstFoundNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: ' '
@@ -673,7 +673,7 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     clickFirstFoundNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: ' '
@@ -697,7 +697,7 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     clickFirstFoundNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: ' '
@@ -721,7 +721,7 @@ describe('keyboard mixin', () => {
       checkOnSelect: false,
       canDelete: true
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     clickFirstFoundNodeText(wrapper)
 
     wrapper.vm.$nextTick(() => {
@@ -746,7 +746,7 @@ describe('keyboard mixin', () => {
       checkOnSelect: false,
       canDelete: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     clickFirstFoundNodeText(wrapper)
 
     wrapper.vm.$nextTick(() => {
@@ -771,7 +771,7 @@ describe('keyboard mixin', () => {
       checkOnSelect: false,
       canEdit: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     clickFirstFoundNodeText(wrapper)
 
     wrapper.vm.$nextTick(() => {
@@ -796,7 +796,7 @@ describe('keyboard mixin', () => {
       checkOnSelect: false,
       canEdit: true
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     clickFirstFoundNodeText(wrapper)
 
     wrapper.vm.$nextTick(() => {

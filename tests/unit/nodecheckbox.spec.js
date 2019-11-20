@@ -6,9 +6,9 @@ import Tree from '@/components/TreeVue.vue'
 import NodeCheckbox from '@/components/NodeCheckbox.vue'
 
 describe('Node.vue', () => {
-  function getTreeWrapper (nodes, options = {}) {
+  function getTreeWrapper (items, options = {}) {
     const wrapper = mount(Tree, {
-      propsData: { nodes, options }
+      propsData: { items, options }
     })
 
     return wrapper

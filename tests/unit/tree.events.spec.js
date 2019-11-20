@@ -12,7 +12,7 @@ describe('Tree.vue events', () => {
     }]
     const options = {
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const clickableNode = wrapper.find('.treevue-tree-node')
     clickableNode.trigger('click')
     wrapper.vm.$nextTick(() => {
@@ -29,7 +29,7 @@ describe('Tree.vue events', () => {
     }]
     const options = {
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const clickableText = wrapper.find('.treevue-tree-node .treevue-node-text')
     clickableText.trigger('click')
     wrapper.vm.$nextTick(() => {
@@ -49,7 +49,7 @@ describe('Tree.vue events', () => {
     }]
     const options = {
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const secondNode = wrapper.vm.storage.getById(2)
     wrapper.vm.setFocusedNode(secondNode)
     expect(wrapper.emitted()['node:selected'][0]).to.be.not.null
@@ -81,7 +81,7 @@ describe('Tree.vue events', () => {
       name: 'node3'
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     storage.filter('child1')
     storage.clearFilter()
@@ -115,7 +115,7 @@ describe('Tree.vue events', () => {
       name: 'node3'
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     storage.filter('node')
     storage.clearFilter()
@@ -150,7 +150,7 @@ describe('Tree.vue events', () => {
       name: 'node3'
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     storage.checkAll()
     expect(wrapper.emitted()['tree:checked:all']).to.be.lengthOf(1)
@@ -182,7 +182,7 @@ describe('Tree.vue events', () => {
       name: 'node3'
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     storage.checkVisible()
     expect(wrapper.emitted()['tree:checked:visible']).to.be.lengthOf(1)
@@ -214,7 +214,7 @@ describe('Tree.vue events', () => {
       name: 'node3'
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     storage.uncheckAll()
     expect(wrapper.emitted()['tree:unchecked:all']).to.be.lengthOf(1)
@@ -246,7 +246,7 @@ describe('Tree.vue events', () => {
       name: 'node3'
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     storage.uncheckVisible()
     expect(wrapper.emitted()['tree:unchecked:visible']).to.be.lengthOf(1)
@@ -278,7 +278,7 @@ describe('Tree.vue events', () => {
       name: 'node3'
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     const node = storage.getById(1)
     storage.check(node)
@@ -313,7 +313,7 @@ describe('Tree.vue events', () => {
       name: 'node3'
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     const node = storage.getById(1)
     storage.uncheck(node)
@@ -347,7 +347,7 @@ describe('Tree.vue events', () => {
       name: 'node3'
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     const node = storage.getById(1)
     storage.expand(node)
@@ -382,7 +382,7 @@ describe('Tree.vue events', () => {
       name: 'node3'
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     const node = storage.getById(1)
     storage.collapse(node)
@@ -416,7 +416,7 @@ describe('Tree.vue events', () => {
       name: 'node3'
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     storage.expandAll()
     expect(wrapper.emitted()['tree:expanded:all']).to.be.lengthOf(1)
@@ -448,7 +448,7 @@ describe('Tree.vue events', () => {
       name: 'node3'
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     storage.collapseAll()
     expect(wrapper.emitted()['tree:collapsed:all']).to.be.lengthOf(1)
@@ -480,7 +480,7 @@ describe('Tree.vue events', () => {
       name: 'node3'
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     const node = storage.getById(1)
     storage.disable(node)
@@ -514,7 +514,7 @@ describe('Tree.vue events', () => {
       name: 'node3'
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     const node = storage.getById(1)
     storage.setSelected(node)
@@ -550,7 +550,7 @@ describe('Tree.vue events', () => {
       name: 'node3'
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     const node = storage.getById(1)
     storage.enable(node)
@@ -584,7 +584,7 @@ describe('Tree.vue events', () => {
       name: 'node3'
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     storage.disableAll()
     expect(wrapper.emitted()['tree:disabled:all']).to.be.lengthOf(1)
@@ -616,7 +616,7 @@ describe('Tree.vue events', () => {
       name: 'node3'
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     const node = storage.getById(1)
     storage.setSelected(node)
@@ -652,7 +652,7 @@ describe('Tree.vue events', () => {
       name: 'node3'
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     storage.enableAll()
     expect(wrapper.emitted()['tree:enabled:all']).to.be.lengthOf(1)
@@ -684,7 +684,7 @@ describe('Tree.vue events', () => {
       name: 'node3'
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     const node = storage.getById(1)
     storage.setSelected(node)
@@ -718,7 +718,7 @@ describe('Tree.vue events', () => {
       name: 'node3'
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     storage.setSelected(null)
     expect(wrapper.emitted()['node:selected']).to.be.lengthOf(1)
@@ -737,7 +737,7 @@ describe('Tree.vue events', () => {
       }]
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     const node = storage.getById(1)
     const newChildItem = {
@@ -763,7 +763,7 @@ describe('Tree.vue events', () => {
       }]
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     const node = storage.getById(1)
     const newChildItem = {
@@ -789,7 +789,7 @@ describe('Tree.vue events', () => {
       }]
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     const node = storage.getById(1)
     storage.remove(node)
@@ -810,7 +810,7 @@ describe('Tree.vue events', () => {
       }]
     }]
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const storage = wrapper.vm.storage
     const node = storage.getById(3)
     storage.remove(node)

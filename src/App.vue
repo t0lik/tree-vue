@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <tree :nodes="nodes" ref="tree" :options="treeOptions"
+    <tree :items="nodes" ref="tree" :options="treeOptions"
       @tree:checked:all="onCheckedAll"
       @tree:filtered="onFiltered"
       @node:disabled="onNodeDisabled"

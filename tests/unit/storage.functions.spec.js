@@ -4,9 +4,9 @@ import { mount } from '@vue/test-utils'
 import Tree from '@/components/TreeVue.vue'
 
 describe('storage functions', () => {
-  function getStorage (nodes, options = {}) {
+  function getStorage (items, options = {}) {
     const wrapper = mount(Tree, {
-      propsData: { nodes, options }
+      propsData: { items, options }
     })
 
     return wrapper.vm.storage

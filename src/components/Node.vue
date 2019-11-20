@@ -53,11 +53,11 @@
 </template>
 
 <script>
-import NodeExpander from './NodeExpander'
-import NodeText from './NodeText'
-import NodeCheckbox from './NodeCheckbox'
-import NodeIcon from './NodeIcon'
-import NodeEditor from './NodeEditor'
+import NodeExpander from '@/components/NodeExpander'
+import NodeText from '@/components/NodeText'
+import NodeCheckbox from '@/components/NodeCheckbox'
+import NodeIcon from '@/components/NodeIcon'
+import NodeEditor from '@/components/NodeEditor'
 
 export default {
   name: 'Node',

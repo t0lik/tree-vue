@@ -12,7 +12,7 @@ describe('Tree.vue', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
 
     expect(wrapper.find('.treevue-tree').exists()).to.be.true
   })
@@ -21,7 +21,7 @@ describe('Tree.vue', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
 
     expect(wrapper.vm.storage).to.be.not.null
   })
@@ -36,7 +36,7 @@ describe('Tree.vue', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
 
     wrapper.vm.storage.filter('node')
 
@@ -53,7 +53,7 @@ describe('Tree.vue', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
 
     wrapper.vm.storage.filter('test')
 
@@ -64,7 +64,7 @@ describe('Tree.vue', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
 
     expect(wrapper.find('.treevue-empty-search-text').exists()).to.be.false
   })
@@ -79,7 +79,7 @@ describe('Tree.vue', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
 
     expect(wrapper.findAll(Node).length).to.be.eq(nodes.length)
   })
@@ -94,14 +94,14 @@ describe('Tree.vue', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
 
     expect(wrapper.vm.visibleNodes.length).to.be.eq(nodes.length)
   })
   it('default treeState', () => {
     const nodes = []
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
 
     expect(wrapper.vm.treeState).to.be.not.null
     expect(wrapper.vm.treeState.nodes).to.be.empty
@@ -109,7 +109,7 @@ describe('Tree.vue', () => {
   it('default treeOptions', () => {
     const nodes = []
     const options = { }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
 
     expect(wrapper.vm.treeOptions).to.be.not.null
     expect(wrapper.vm.treeOptions.icons).to.be.not.null
@@ -159,7 +159,7 @@ describe('Tree.vue', () => {
         expander: 'expander-test'
       }
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
 
     expect(wrapper.vm.treeOptions.multiselect).to.be.true
     expect(wrapper.vm.treeOptions.showCheckbox).to.be.false
@@ -185,7 +185,7 @@ describe('Tree.vue', () => {
     const nodes = []
     const options = {
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     expect(wrapper.vm.getStorage()).to.be.eq(wrapper.vm.storage)
   })
   it('onNodeClicked emits node:clicked', () => {
@@ -195,7 +195,7 @@ describe('Tree.vue', () => {
     }]
     const options = {
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const node = wrapper.vm.storage.getById(1)
     wrapper.vm.onNodeClicked(node)
 
@@ -210,7 +210,7 @@ describe('Tree.vue', () => {
     }]
     const options = {
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const event = {
       key: 'Enter'
     }
@@ -228,7 +228,7 @@ describe('Tree.vue', () => {
     }]
     const options = {
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const mock = sinon.mock(wrapper.vm)
     mock.expects('navigate').once()
 
@@ -245,7 +245,7 @@ describe('Tree.vue', () => {
     }]
     const options = {
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const node = wrapper.vm.storage.getById(1)
 
     wrapper.vm.onNodeFocused(node)
@@ -263,7 +263,7 @@ describe('Tree.vue', () => {
     }]
     const options = {
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const secondNode = wrapper.vm.storage.getById(2)
     wrapper.vm.setFocusedNode(secondNode)
     expect(wrapper.vm.focusedNode).to.be.not.null
@@ -279,7 +279,7 @@ describe('Tree.vue', () => {
     }]
     const options = {
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const secondNode = wrapper.vm.storage.getById(2)
     wrapper.vm.setFocusedNode(secondNode)
     expect(wrapper.vm.storage.selectedNode).to.be.not.null
@@ -295,7 +295,7 @@ describe('Tree.vue', () => {
     }]
     const options = {
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const allNodeComponents = wrapper.findAll(Node)
     expect(allNodeComponents.length).to.be.eq(Object.keys(wrapper.vm.treeState.nodes).length)
   })

@@ -17,15 +17,15 @@
 </template>
 
 <script>
+import defaultIcons from '@/icons/defaultIcons'
+import DefaultStorage from '@/storages/defaultStorage'
+import keyboardMixin from '@/mixins/keyboard'
 import Node from '@/components/Node'
-import defaultIcons from '../icons/defaultIcons'
-import DefaultStorage from '../storages/defaultStorage'
-import keyboardMixin from '../mixins/keyboard'
 
 export default {
   name: 'TreeVue',
   props: {
-    nodes: {
+    items: {
       type: Array
     },
     options: {
@@ -93,7 +93,7 @@ export default {
   },
   mounted () {
     this.storage.initialize(this.treeOptions)
-    this.storage.setNodes(this.nodes)
+    this.storage.setNodes(this.items)
   },
   methods: {
     getStorage () {

@@ -18,9 +18,9 @@ describe('Node.vue', () => {
     clickableText.trigger('click')
     clickableText.trigger('focus')
   }
-  function getTreeWrapper (nodes, options = {}) {
+  function getTreeWrapper (items, options = {}) {
     const wrapper = mount(Tree, {
-      propsData: { nodes, options }
+      propsData: { items, options }
     })
 
     return wrapper
@@ -234,7 +234,7 @@ describe('Node.vue', () => {
       checkOnSelect: false,
       canEdit: true
     }
-    const wrapper = mount(Tree, { propsData: { nodes, options } })
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     clickFirstFoundNodeText(wrapper)
 
     wrapper.vm.$nextTick(() => {
