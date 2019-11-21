@@ -4,12 +4,11 @@
   "version": "0.1.0",
   "author": "Anatoliy Ivanov <t0lik@t0lik.com>",
   "library": "Treevue",
-  "private": true,
+  "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "rollup --config rollup.config.js",
     "build-simple": "vue-cli-service build --target lib --name tree-vue src/components/TreeVue.vue",
-    "build-app": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit --reporter min",
     "lint": "vue-cli-service lint"
   },
