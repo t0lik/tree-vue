@@ -1,9 +1,11 @@
 import pkg from './package.json'
 // import commonjs from 'rollup-plugin-commonjs' // Convert CommonJS modules to ES6
 import vue from 'rollup-plugin-vue' // Handle .vue SFC files
-import buble from 'rollup-plugin-buble' // Transpile/polyfill with reasonable browser support
+import buble from '@rollup/plugin-buble' // Transpile/polyfill with reasonable browser support
 import alias from '@rollup/plugin-alias'
 import resolve from 'rollup-plugin-node-resolve'
+import replace from '@rollup/plugin-replace'
+import { uglify } from 'rollup-plugin-uglify'
 // import css from 'rollup-plugin-css-only'
 
 const path = require('path')
@@ -18,55 +20,55 @@ const banner = `
 `
 console.log('__dirname', __dirname)
 
+const plugins = [
+  replace({
+    'process.env.NODE_ENV': JSON.stringify('production')
+  }),
+  alias({
+    resolve: ['.vue', '.js'],
+    entries: {
+      '@': path.resolve(__dirname, 'src')
+    }
+  }),
+  resolve(),
+  // commonjs(),
+  // css(),
+  vue({
+    css: true // Dynamically inject css as a <style> tag
+  }),
+  buble({ transforms: { dangerousForOf: true } }) // Transpile to ES5
+]
+
 export default [
-// ESM build to be used with webpack/rollup.
+  // ESM build to be used with webpack/rollup.
   {
     input: 'src/index.js', // Path relative to package.json
     output: {
       format: 'esm',
       file: pkg.module,
-      name: 'TreeVue',
       exports: 'named',
       banner
     },
-    plugins: [
-      alias({
-        resolve: ['.vue', '.js'],
-        entries: {
-          '@': path.resolve(__dirname, 'src')
-        }
-      }),
-      resolve(),
-      // commonjs(),
-      // css(),
-      vue({
-        css: true // Dynamically inject css as a <style> tag
-      }),
-      buble({ transforms: { forOf: false } }) // Transpile to ES5
-    ]
+    plugins: plugins
   }, {
     input: 'src/wrapper.js', // Path relative to package.json
     output: {
       format: 'iife',
-      file: 'dist/tree-vue.js',
+      name: 'TreeVue',
+      file: 'dist/tree-vue.min.js',
+      exports: 'named',
+      banner
+    },
+    plugins: [...plugins, uglify()]
+  }, {
+    input: 'src/wrapper.js', // Path relative to package.json
+    output: {
+      format: 'umd',
+      file: 'dist/tree-vue.umd.js',
       name: 'TreeVue',
       exports: 'named',
       banner
     },
-    plugins: [
-      alias({
-        resolve: ['.vue', '.js'],
-        entries: {
-          '@': path.resolve(__dirname, 'src')
-        }
-      }),
-      resolve(),
-      // commonjs(),
-      // css(),
-      vue({
-        css: true // Dynamically inject css as a <style> tag
-      }),
-      buble({ transforms: { forOf: false } }) // Transpile to ES5
-    ]
+    plugins: [...plugins, uglify()]
   }
 ]
