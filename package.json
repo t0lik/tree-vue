@@ -1,9 +1,9 @@
 {
-  "name": "tree-vue",
+  "name": "vu-tree",
   "description": "Treeview component for Vue.js",
   "version": "0.1.0",
   "author": "Anatoliy Ivanov <t0lik@t0lik.com>",
-  "library": "Treevue",
+  "library": "VuTree",
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",

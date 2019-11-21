@@ -16,13 +16,13 @@ A Vue treeview component that visualizes your data hierarchically.
 **Npm:**
 
 ```shell
-$ npm install tree-vue
+$ npm install vu-tree
 ```
 
 **Yarn:**
 
 ```shell
-$ yarn add tree-vue
+$ yarn add vu-tree
 ```
 
 ## Demo app
@@ -49,7 +49,7 @@ This simple app demonstrates almost all main tree features.
 
   <script>
     import Vue from 'Vue'
-    import { TreeVue } from 'tree-vue'
+    import { TreeVue } from 'vu-tree'
 
     Vue.use(TreeVue)
 
