@@ -55,7 +55,7 @@ export default [
     output: {
       format: 'iife',
       name: 'TreeVue',
-      file: 'dist/tree-vue.min.js',
+      file: pkg.unpkg,
       exports: 'named',
       banner
     },
@@ -64,7 +64,7 @@ export default [
     input: 'src/wrapper.js', // Path relative to package.json
     output: {
       format: 'umd',
-      file: 'dist/tree-vue.umd.js',
+      file: pkg.main,
       name: 'TreeVue',
       exports: 'named',
       banner

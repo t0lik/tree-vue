@@ -129,7 +129,7 @@ This simple app demonstrates almost all main tree features.
 
 ## Development
 
-To build this component and sources just run this command:
+To build this component from sources just run this command:
 - `npm run build`
 
 To run unit tests:
