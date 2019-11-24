@@ -25,6 +25,12 @@ $ npm install vu-tree
 $ yarn add vu-tree
 ```
 
+## Documentation
+
+[The component documentation](https://t0lik.github.io/tree-vue-docs).
+
+[The documentation sources](https://github.com/t0lik/tree-vue-docs).
+
 ## Demo app
 
 To run the demo:
@@ -110,11 +116,11 @@ This simple app demonstrates almost all main tree features.
     export default {
       computed: {
         storage () {
-          if (!this.$refs.tree) {
+          if (!this.$refs.treeVue) {
             return null
           }
 
-          return this.$refs.tree.getStorage()
+          return this.$refs.treeVue.getStorage()
         }
       },
       ...

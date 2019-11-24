@@ -149,8 +149,7 @@
 
 <script>
 import Tree from './components/TreeVue'
-import fontawesomeIcons from './icons/fontawesomeIcons'
-import defaultIcons from './icons/defaultIcons'
+import icons from './icons'
 
 export default {
   name: 'app',
@@ -166,7 +165,7 @@ export default {
         openOnSelect: false,
         autoSort: false,
         checkMode: 'linked',
-        icons: defaultIcons,
+        icons: icons.defaultIcons,
         childrenProp: 'kids',
         idProp: 'id_',
         nameProp: item => `${item.name} (${item.id})`,
@@ -186,68 +185,78 @@ export default {
       ascComparator: (item1, item2) => item1.item.name.localeCompare(item2.item.name),
       nodes: [{
         id: 0,
-        name: 'ноль'
+        name: 'zero'
       }, {
         id: 1,
-        name: 'один',
+        name: 'one',
         icon: 'fa fa-dice-one',
         kids: [{
           id: 3,
-          name: 'три',
+          name: 'threee',
           icon: 'fa fa-dice-three',
           kids: [{
             id: 8,
-            name: 'восемьдесят восемь тысяч семьсот пятьдесят два',
+            name: 'eighty eight thousand seven hundred fifty two',
             kids: []
           }, {
             id: 9,
-            name: 'девять'
+            name: 'nine'
           }]
         }, {
           id: 4,
-          name: 'четыре',
+          name: 'four',
           icon: 'fa fa-dice-four',
           kids: [{
             id: 5,
-            name: 'пять',
+            name: 'five',
             icon: 'fa fa-dice-five',
             kids: []
           }, {
             id: 6,
-            name: 'шесть',
+            name: 'six',
             icon: 'fa fa-dice-six',
             kids: []
           }]
         }]
       }, {
         id: 2,
-        name: 'два',
+        name: 'two',
         icon: 'fa fa-dice-two'
       }],
       anotherNodes: [{
         id: 0,
-        name: 'сто'
+        name: 'one hundred'
       }, {
         id: 1,
-        name: 'двести',
+        name: 'two hundred',
         kids: [{
           id: 3,
-          name: 'десять',
+          name: 'ten',
           kids: [{
             id: 8,
-            name: 'один',
+            name: 'one',
             kids: []
           }, {
             id: 9,
-            name: 'два'
+            name: 'two'
           }]
         }, {
           id: 4,
-          name: 'четыре'
+          name: 'four'
         }]
       }, {
         id: 2,
-        name: 'триста'
+        name: 'thre hundred'
+      }],
+      testItems: [{
+        name: 'item1'
+      }, {
+        name: 'item2',
+        children: [{
+          name: 'child1'
+        }, {
+          name: 'child2'
+        }]
       }],
       outputString: ''
     }
@@ -402,10 +411,10 @@ export default {
       this.searchString = ''
     },
     switchToAwesome () {
-      this.treeOptions.icons = fontawesomeIcons
+      this.treeOptions.icons = icons.fontawesome
     },
     switchToDefault () {
-      this.treeOptions.icons = defaultIcons
+      this.treeOptions.icons = icons.defaultIcons
     },
     showCheckboxes () {
       this.treeOptions.showCheckbox = true

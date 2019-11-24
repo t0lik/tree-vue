@@ -5,5 +5,5 @@ import defaultIcons from './defaultIcons'
 
 export default {
   fontawesome: fontawesomeIcons,
-  default: defaultIcons
+  defaultIcons: defaultIcons
 }
