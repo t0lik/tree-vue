@@ -48,7 +48,7 @@ function Node (storage, item, parent = null, prevNode = null) {
   }
 
   this.addChild = child => storage.addChild(this, child)
-  this.insertChild = (child, beforeChild) => storage.insertChild(this, child, beforeChild)
+  this.insertChild = (item, beforeNode) => storage.insertChild(this, item, beforeNode)
 
   this.expand = withChildren => storage.expand(this, withChildren)
   this.expandChildren = () => storage.expandChildren(this)
@@ -71,13 +71,13 @@ function Node (storage, item, parent = null, prevNode = null) {
   this.uncheckChildren = () => storage.uncheckChildren(this)
   this.visible = () => storage.getVisibility(this)
 
-  this.setCheckboxStyle = (checkBoxClasses, withChildren) => storage.setCheckboxStyle(this, checkBoxClasses, withChildren)
+  this.setCheckboxStyle = (classList, withChildren = false) => storage.setCheckboxStyle(this, classList, withChildren)
   this.resetCheckboxStyle = withChildren => storage.setCheckboxStyle(this, null, withChildren)
-  this.setTextStyle = (textClasses, withChildren) => storage.setTextStyle(this, textClasses, withChildren)
+  this.setTextStyle = (classList, withChildren = false) => storage.setTextStyle(this, classList, withChildren)
   this.resetTextStyle = withChildren => storage.setTextStyle(this, null, withChildren)
-  this.setIconStyle = (iconClasses, withChildren) => storage.setIconStyle(this, iconClasses, withChildren)
+  this.setIconStyle = (classList, withChildren = false) => storage.setIconStyle(this, classList, withChildren)
   this.resetIconStyle = withChildren => storage.setIconStyle(this, null, withChildren)
-  this.setExpanderStyle = (expanderClasses, withChildren) => storage.setExpanderStyle(this, expanderClasses, withChildren)
+  this.setExpanderStyle = (classList, withChildren = false) => storage.setExpanderStyle(this, classList, withChildren)
   this.resetExpanderStyle = withChildren => storage.setExpanderStyle(this, null, withChildren)
 
   this.findParent = selector => storage.findParent(this, selector)
