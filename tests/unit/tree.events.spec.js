@@ -13,9 +13,9 @@ describe('Tree.vue events', () => {
     const options = {
     }
     const wrapper = mount(Tree, { propsData: { items: nodes, options } })
-    const clickableNode = wrapper.find('.treevue-tree-node')
-    clickableNode.trigger('click')
     wrapper.vm.$nextTick(() => {
+      const clickableText = wrapper.find('.treevue-tree-node .treevue-node-text')
+      clickableText.trigger('click')
       expect(wrapper.emitted()['node:clicked'][0]).to.be.not.null
       expect(wrapper.emitted()['node:clicked'][0][0]).to.be.not.null
       expect(wrapper.emitted()['node:clicked'][0][0].item).to.be.eq(nodes[0])

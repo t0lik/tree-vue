@@ -11,6 +11,35 @@ describe('storage functions', () => {
 
     return wrapper.vm.storage
   }
+  it('initialize with treeOptions=null throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'test',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 6,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'test2'
+    }, {
+      id: 5,
+      name: 'test3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const storage = getStorage(nodes, options)
+
+    expect(() => storage.initialize(null)).throw('parameter "treeOptions" is not set')
+  })
   it('getChecked returns all checked nodes', () => {
     const nodes = [{
       id: 1,
@@ -240,6 +269,35 @@ describe('storage functions', () => {
     expect(node.states.open).to.be.true
     expect(node.children[0].states.open).to.be.false
   })
+  it('expand with node=null throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'test',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 6,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'test2'
+    }, {
+      id: 5,
+      name: 'test3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const storage = getStorage(nodes, options)
+
+    expect(() => storage.expand(null)).throw('parameter "node" is not set')
+  })
   it('expand with withChildren=true expands node and its children', () => {
     const nodes = [{
       id: 1,
@@ -302,6 +360,35 @@ describe('storage functions', () => {
     expect(node.states.open).to.be.false
     expect(node.children[0].states.open).to.be.true
   })
+  it('expandChildren with node=null throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'test',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 6,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'test2'
+    }, {
+      id: 5,
+      name: 'test3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const storage = getStorage(nodes, options)
+
+    expect(() => storage.expandChildren(null)).throw('parameter "node" is not set')
+  })
   it('collapse collapses node itself only', () => {
     const nodes = [{
       id: 1,
@@ -334,6 +421,37 @@ describe('storage functions', () => {
     storage.collapse(node)
     expect(node.states.open).to.be.false
     expect(node.children[0].states.open).to.be.true
+  })
+  it('collapse with node=null throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'test',
+      open: true,
+      children: [{
+        id: 3,
+        name: 'child1',
+        open: true,
+        children: [{
+          id: 6,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'test2'
+    }, {
+      id: 5,
+      name: 'test3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const storage = getStorage(nodes, options)
+
+    expect(() => storage.collapse(null)).throw('parameter "node" is not set')
   })
   it('collapse with withChildren=true collapses node and its children', () => {
     const nodes = [{
@@ -400,6 +518,37 @@ describe('storage functions', () => {
     storage.collapseChildren(node)
     expect(node.states.open).to.be.true
     expect(node.children[0].states.open).to.be.false
+  })
+  it('collapseChildren with node=null throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'test',
+      open: true,
+      children: [{
+        id: 3,
+        name: 'child1',
+        open: true,
+        children: [{
+          id: 6,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'test2'
+    }, {
+      id: 5,
+      name: 'test3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const storage = getStorage(nodes, options)
+
+    expect(() => storage.collapseChildren(null)).throw('parameter "node" is not set')
   })
   it('expandAll expands all nodes', () => {
     const nodes = [{
@@ -477,6 +626,47 @@ describe('storage functions', () => {
     expect(storage.getById(3).states.open).to.be.false
     expect(storage.getById(2).states.open).to.be.false
   })
+  it('collapseAll with selected child node collapses all nodes and sets selected node = null', () => {
+    const nodes = [{
+      id: 1,
+      name: 'test',
+      open: true,
+      children: [{
+        id: 3,
+        name: 'child1',
+        open: true,
+        children: [{
+          id: 6,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'test2',
+      open: true,
+      children: [{
+        id: 8,
+        name: 'grandchild2'
+      }]
+    }, {
+      id: 5,
+      name: 'test3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const storage = getStorage(nodes, options)
+    const childNode = storage.getById(3)
+    storage.setSelected(childNode)
+    storage.collapseAll()
+    expect(storage.getById(1).states.open).to.be.false
+    expect(storage.getById(3).states.open).to.be.false
+    expect(storage.getById(2).states.open).to.be.false
+    expect(storage.selectedNode).to.be.null
+  })
   it('getById gets node by its id', () => {
     const nodes = [{
       id: 1,
@@ -553,6 +743,76 @@ describe('storage functions', () => {
     const foundChild = storage.findOne(x => x.item.name.indexOf('grand') !== -1)
     expect(foundChild.id).to.be.eq(6)
   })
+  it('findOne with selector=null throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'test',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 6,
+          name: 'grandchild1'
+        }, {
+          id: 9,
+          name: 'grandchild3'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'test2',
+      children: [{
+        id: 8,
+        name: 'grandchild2'
+      }]
+    }, {
+      id: 5,
+      name: 'test3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const storage = getStorage(nodes, options)
+    expect(() => storage.findOne(null)).throw('parameter "selector" is not set')
+  })
+  it('findOne with selector !== function throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'test',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 6,
+          name: 'grandchild1'
+        }, {
+          id: 9,
+          name: 'grandchild3'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'test2',
+      children: [{
+        id: 8,
+        name: 'grandchild2'
+      }]
+    }, {
+      id: 5,
+      name: 'test3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const storage = getStorage(nodes, options)
+    expect(() => storage.findOne('test')).throw('parameter "selector" is not a function')
+  })
   it('findAll finds all nodes matching by criteria func', () => {
     const nodes = [{
       id: 1,
@@ -593,6 +853,40 @@ describe('storage functions', () => {
     expect(foundChildren).to.be.lengthOf(3)
     expect(foundChildren.map(x => x.id)).to.be.members([6, 9, 8])
   })
+  it('findAll with selector=null throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'test'
+    }, {
+      id: 2,
+      name: 'test2'
+    }, {
+      id: 5,
+      name: 'test3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const storage = getStorage(nodes, options)
+    expect(() => storage.findAll(null)).throw('parameter "selector" is not set')
+  })
+  it('findAll with selector !== function throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'test'
+    }, {
+      id: 2,
+      name: 'test2'
+    }, {
+      id: 5,
+      name: 'test3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const storage = getStorage(nodes, options)
+    expect(() => storage.findAll('test')).throw('parameter "selector" is not a function')
+  })
   it('findParent finds nearest parent node matching by criteria func', () => {
     const nodes = [{
       id: 1,
@@ -631,6 +925,90 @@ describe('storage functions', () => {
     expect(foundGrandParent.id).to.be.eq(1)
     const foundParent = storage.findParent(grandChild, x => x.item.name.indexOf('parent') !== -1)
     expect(foundParent.id).to.be.eq(3)
+  })
+  it('findParent with node=null throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'grandparent'
+    }, {
+      id: 2,
+      name: 'parent2'
+    }, {
+      id: 5,
+      name: 'test3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const storage = getStorage(nodes, options)
+
+    expect(() => storage.findParent(null, x => x.item.name.indexOf('grandparent') !== -1)).throw('parameter "node" is not set')
+  })
+  it('findParent with selector=null throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'grandparent',
+      children: [{
+        id: 3,
+        name: 'parent1',
+        children: [{
+          id: 6,
+          name: 'grandchild1'
+        }, {
+          id: 9,
+          name: 'grandchild3'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'parent2'
+    }, {
+      id: 5,
+      name: 'test3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const storage = getStorage(nodes, options)
+    const grandChild = storage.getById(6)
+
+    expect(() => storage.findParent(grandChild, null)).throw('parameter "selector" is not set')
+  })
+  it('findParent with selector !== function throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'grandparent',
+      children: [{
+        id: 3,
+        name: 'parent1',
+        children: [{
+          id: 6,
+          name: 'grandchild1'
+        }, {
+          id: 9,
+          name: 'grandchild3'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'parent2'
+    }, {
+      id: 5,
+      name: 'test3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const storage = getStorage(nodes, options)
+    const grandChild = storage.getById(6)
+
+    expect(() => storage.findParent(grandChild, 'test')).throw('parameter "selector" is not a function')
   })
   it('findParents finds all parent nodes matching by criteria func', () => {
     const nodes = [{
@@ -673,6 +1051,113 @@ describe('storage functions', () => {
     expect(foundParents).to.be.lengthOf(2)
     expect(foundParents[0].id).to.be.eq(3)
     expect(foundParents[1].id).to.be.eq(1)
+  })
+  it('findParents with node=null throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'grandparent',
+      children: [{
+        id: 3,
+        name: 'parent1',
+        children: [{
+          id: 6,
+          name: 'grandchild1'
+        }, {
+          id: 9,
+          name: 'grandchild3'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'parent2',
+      children: [{
+        id: 8,
+        name: 'grandchild2'
+      }]
+    }, {
+      id: 5,
+      name: 'test3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const storage = getStorage(nodes, options)
+    expect(() => storage.findParents(null, x => x.item.name.indexOf('grandparent') !== -1)).throw('parameter "node" is not set')
+  })
+  it('findParents with selector=null throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'grandparent',
+      children: [{
+        id: 3,
+        name: 'parent1',
+        children: [{
+          id: 6,
+          name: 'grandchild1'
+        }, {
+          id: 9,
+          name: 'grandchild3'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'parent2',
+      children: [{
+        id: 8,
+        name: 'grandchild2'
+      }]
+    }, {
+      id: 5,
+      name: 'test3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const storage = getStorage(nodes, options)
+    const grandChild = storage.getById(6)
+    expect(() => storage.findParents(grandChild, null)).throw('parameter "selector" is not set')
+  })
+  it('findParents with selector !== function throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'grandparent',
+      children: [{
+        id: 3,
+        name: 'parent1',
+        children: [{
+          id: 6,
+          name: 'grandchild1'
+        }, {
+          id: 9,
+          name: 'grandchild3'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'parent2',
+      children: [{
+        id: 8,
+        name: 'grandchild2'
+      }]
+    }, {
+      id: 5,
+      name: 'test3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const storage = getStorage(nodes, options)
+    const grandChild = storage.getById(6)
+    expect(() => storage.findParents(grandChild, 'test')).throw('parameter "selector" is not a function')
   })
   it('setSelected with node sets it as selected', () => {
     const nodes = [{
@@ -1086,6 +1571,41 @@ describe('storage functions', () => {
     expect(visibleNodes).to.be.lengthOf(3)
     expect(visibleNodes.map(x => x.id)).to.have.members([1, 2, 5])
   })
+  it('clearFilter does nothing if no filter was applied', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      open: true,
+      children: [{
+        id: 3,
+        name: 'child1',
+        open: true,
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      open: true,
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const storage = getStorage(nodes)
+    storage.clearFilter()
+    const visibleNodes = storage.getVisible()
+    expect(visibleNodes).to.be.lengthOf(7)
+    expect(visibleNodes.map(x => x.id)).to.have.members([1, 3, 9, 4, 2, 8, 5])
+  })
   it('visitAll with default options iterates through all passed nodes', () => {
     const nodes = [{
       id: 1,
@@ -1179,6 +1699,36 @@ describe('storage functions', () => {
     const storage = getStorage(nodes)
     const visitedNodes = []
     expect(() => storage.visitAll(null, x => { visitedNodes.push(x.id) })).throw('parameter "nodes" is not set')
+  })
+  it('visitAll with null in passed node array throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const storage = getStorage(nodes)
+    const visitedNodes = []
+    expect(() => storage.visitAll([null], x => { visitedNodes.push(x.id) })).throw('parameter "node" is not set')
   })
   it('visitAll with null as passed callback throws Error', () => {
     const nodes = [{
@@ -1507,6 +2057,83 @@ describe('storage functions', () => {
     storage.check(node)
     expect(node.states.checked).to.be.true
   })
+  it('check checks child node only with options.checkMode="linked" and collapsed parent node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const storage = getStorage(nodes, {
+      checkMode: 'linked'
+    })
+    const node = storage.getById(3)
+    const parentNode = storage.getById(1)
+    storage.check(node)
+    expect(node.states.checked).to.be.true
+    expect(parentNode.states.checked).to.be.false
+  })
+  it('check with options.checkMode="linked" checks child node and set open parent node check state to indeterminate', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      open: true,
+      children: [{
+        id: 3,
+        name: 'child1',
+        open: true,
+        children: [{
+          id: 9,
+          name: 'grandchild1',
+          checked: true,
+          open: true
+        }, {
+          id: 10,
+          name: 'grandchild2'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const storage = getStorage(nodes, {
+      checkMode: 'linked'
+    })
+    const node = storage.getById(4)
+    const parentNode = storage.getById(1)
+    storage.check(node)
+    expect(node.states.checked).to.be.true
+    expect(parentNode.indeterminate()).to.be.true
+  })
   it('check with node=null throws Error', () => {
     const nodes = [{
       id: 1,
@@ -1604,6 +2231,41 @@ describe('storage functions', () => {
     const checkedNodes = storage.getChecked()
     expect(checkedNodes).to.be.lengthOf(3)
     expect(checkedNodes.map(x => x.id)).to.be.members([3, 9, 4])
+  })
+  it('checkChildren with options.checkMode="linked" checks specified node children and node itself', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1',
+        children: [{
+          id: 9,
+          name: 'grandchild1'
+        }]
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const storage = getStorage(nodes, {
+      checkMode: 'linked'
+    })
+    const node = storage.getById(1)
+    storage.checkChildren(node)
+    const checkedNodes = storage.getChecked()
+    expect(checkedNodes).to.be.lengthOf(4)
+    expect(checkedNodes.map(x => x.id)).to.be.members([1, 3, 9, 4])
   })
   it('checkChildren with node=null throws Error', () => {
     const nodes = [{
@@ -1773,6 +2435,44 @@ describe('storage functions', () => {
     const checkedNodes = storage.getChecked()
     expect(checkedNodes.map(x => x.id)).to.be.members([1])
   })
+  it('uncheckChildren with options.checkMode="linked" unchecks specified node children and node itself', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      checked: true,
+      children: [{
+        id: 3,
+        name: 'child1',
+        checked: true,
+        children: [{
+          id: 9,
+          name: 'grandchild1',
+          checked: true
+        }]
+      }, {
+        id: 4,
+        name: 'child2',
+        checked: true
+      }]
+    }, {
+      id: 2,
+      name: 'node2',
+      children: [{
+        id: 8,
+        name: 'child3'
+      }]
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const storage = getStorage(nodes, {
+      checkMode: 'linked'
+    })
+    const node = storage.getById(1)
+    storage.uncheckChildren(node)
+    const checkedNodes = storage.getChecked()
+    expect(checkedNodes.map(x => x.id)).to.be.empty
+  })
   it('uncheckChildren with node=null throws Error', () => {
     const nodes = [{
       id: 1,
@@ -1830,6 +2530,20 @@ describe('storage functions', () => {
     const storage = getStorage(nodes)
     const node = storage.getById(3)
     expect(storage.getVisibility(node)).to.be.false
+  })
+  it('getVisibility with null throws Error', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1'
+    }, {
+      id: 2,
+      name: 'node2'
+    }, {
+      id: 5,
+      name: 'node3'
+    }]
+    const storage = getStorage(nodes)
+    expect(() => storage.getVisibility(null)).throw('parameter "node" is not set')
   })
   it('getVisibility with open node returns true', () => {
     const nodes = [{
@@ -3006,6 +3720,35 @@ describe('storage functions', () => {
     expect(storage.getById(1).item.children[0].id).to.be.eq(4)
     expect(nextNode.prev).to.be.null
   })
+  it('remove with child node removes node and relinks prev child node and next child node to each other', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1'
+      }, {
+        id: 4,
+        name: 'child2'
+      }, {
+        id: 5,
+        name: 'child3'
+      }]
+    }]
+    const storage = getStorage(nodes)
+    const node = storage.getById(4)
+    const prevNode = storage.getById(3)
+    const nextNode = storage.getById(5)
+
+    storage.remove(node)
+
+    expect(storage.getById(1).children).to.be.lengthOf(2)
+    expect(storage.getById(1).item.children).to.be.lengthOf(2)
+    expect(storage.getById(1).children[0].id).to.be.eq(3)
+    expect(storage.getById(1).item.children[0].id).to.be.eq(3)
+    expect(nextNode.prev).to.be.eq(prevNode)
+    expect(prevNode.next).to.be.eq(nextNode)
+  })
   it('remove with selected root node removes node and set selectedNode=null', () => {
     const nodes = [{
       id: 1,
@@ -3058,6 +3801,23 @@ describe('storage functions', () => {
     expect(() => storage.disable(null)).throw('parameter "node" is not set')
   })
   it('disable disables node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      children: [{
+        id: 3,
+        name: 'child1'
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }]
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.disable(node, false)
+    expect(node.states.disabled).to.be.true
+  })
+  it('disable with omitted withChildren disables node', () => {
     const nodes = [{
       id: 1,
       name: 'node1',
@@ -3248,6 +4008,24 @@ describe('storage functions', () => {
     expect(() => storage.enable(null)).throw('parameter "node" is not set')
   })
   it('enable enables node', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      disabled: true,
+      children: [{
+        id: 3,
+        name: 'child1'
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }]
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    storage.enable(node, false)
+    expect(node.states.disabled).to.be.false
+  })
+  it('enable with omitted withChldren enables node', () => {
     const nodes = [{
       id: 1,
       name: 'node1',

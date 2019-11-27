@@ -587,6 +587,31 @@ describe('storage node functions', () => {
 
     mock.verify()
   })
+  it('setCheckboxStyle with omitted withChildren calls storage.setCheckboxStyle with withChildren=false', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      checked: true,
+      children: [{
+        id: 3,
+        name: 'child1',
+        checked: true
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }]
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
+    const withChildren = false
+    const checkboxClasses = 'test-class'
+    mock.expects('setCheckboxStyle').once().withArgs(node, checkboxClasses, withChildren)
+
+    node.setCheckboxStyle(checkboxClasses)
+
+    mock.verify()
+  })
   it('setCheckboxStyle with withChildren=true calls storage.setCheckboxStyle with withChildren=true', () => {
     const nodes = [{
       id: 1,
@@ -682,6 +707,31 @@ describe('storage node functions', () => {
     mock.expects('setTextStyle').once().withArgs(node, textClasses, withChildren)
 
     node.setTextStyle(textClasses, withChildren)
+
+    mock.verify()
+  })
+  it('setTextStyle with omitted withChildren calls storage.setTextStyle with withChildren=false', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      checked: true,
+      children: [{
+        id: 3,
+        name: 'child1',
+        checked: true
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }]
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
+    const withChildren = false
+    const textClasses = 'test-class'
+    mock.expects('setTextStyle').once().withArgs(node, textClasses, withChildren)
+
+    node.setTextStyle(textClasses)
 
     mock.verify()
   })
@@ -783,6 +833,31 @@ describe('storage node functions', () => {
 
     mock.verify()
   })
+  it('setIconStyle with omitted withChildren calls storage.setIconStyle with withChildren=false', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      checked: true,
+      children: [{
+        id: 3,
+        name: 'child1',
+        checked: true
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }]
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
+    const withChildren = false
+    const iconClasses = 'test-class'
+    mock.expects('setIconStyle').once().withArgs(node, iconClasses, withChildren)
+
+    node.setIconStyle(iconClasses)
+
+    mock.verify()
+  })
   it('setIconStyle with withChildren=true calls storage.setIconStyle with withChildren=true', () => {
     const nodes = [{
       id: 1,
@@ -878,6 +953,31 @@ describe('storage node functions', () => {
     mock.expects('setExpanderStyle').once().withArgs(node, expanderClasses, withChildren)
 
     node.setExpanderStyle(expanderClasses, withChildren)
+
+    mock.verify()
+  })
+  it('setExpanderStyle with omitted withChildren calls storage.setExpanderStyle with withChildren=false', () => {
+    const nodes = [{
+      id: 1,
+      name: 'node1',
+      checked: true,
+      children: [{
+        id: 3,
+        name: 'child1',
+        checked: true
+      }, {
+        id: 4,
+        name: 'child2'
+      }]
+    }]
+    const storage = getStorage(nodes)
+    const node = storage.getById(1)
+    const mock = sinon.mock(storage)
+    const withChildren = false
+    const expanderClasses = 'test-class'
+    mock.expects('setExpanderStyle').once().withArgs(node, expanderClasses, withChildren)
+
+    node.setExpanderStyle(expanderClasses)
 
     mock.verify()
   })

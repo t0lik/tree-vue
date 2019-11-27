@@ -44,10 +44,10 @@ describe('Node.vue', () => {
       name: 'name'
     }]
     const wrapper = getTreeWrapper(nodes)
-    const clickableText = wrapper.find('.treevue-tree-node .treevue-node-text')
-    clickableText.trigger('click')
-    clickableText.trigger('focus')
     wrapper.vm.$nextTick(() => {
+      const clickableText = wrapper.find('.treevue-tree-node .treevue-node-text')
+      clickableText.trigger('click')
+      clickableText.trigger('focus')
       expect(wrapper.vm.focusedNode).to.be.not.null
       done()
     })
@@ -60,8 +60,8 @@ describe('Node.vue', () => {
     const wrapper = getTreeWrapper(nodes)
     const node = wrapper.vm.storage.getById(1)
     const nodeWrapper = getNodeWrapper(wrapper, node)
-    const clickableNode = nodeWrapper.find('.treevue-tree-node')
-    clickableNode.trigger('click')
+    const clickableText = nodeWrapper.find('.treevue-tree-node .treevue-node-text')
+    clickableText.trigger('click')
     wrapper.vm.$nextTick(() => {
       expect(nodeWrapper.emitted().clicked[0]).to.be.not.null
       expect(nodeWrapper.emitted().clicked[0][0]).to.be.not.null

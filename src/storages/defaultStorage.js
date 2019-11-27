@@ -32,7 +32,7 @@ function Node (storage, item, parent = null, prevNode = null) {
   const children = storage.getChildren(item) || []
   const mappedChildren = children.map(x => new Node(storage, x, this))
   if (storage.treeOptions.autoSort) {
-    sortNodes(storage, mappedChildren, storage.treeOptions.sortComparator)
+    sortNodes(mappedChildren, storage.treeOptions.sortComparator)
   } else {
     linkNodes(mappedChildren)
   }
@@ -118,9 +118,6 @@ function getVisibleNodes () {
 function visitNodeAndChildren (node, nodeCallback, onlyVisible) {
   if (!node) {
     throw new Error('parameter "node" is not set')
-  }
-  if (!nodeCallback) {
-    throw new Error('parameter "nodeCallback" is not set')
   }
 
   if (onlyVisible && !node.visible()) {
@@ -230,7 +227,7 @@ function setExpanderStyle (node, classList, withChildren = false) {
 function clearFilter () {
   this.options.inSearch = false
   this.visitAll(this.nodes, node => {
-    if (node._oldOpen !== null) {
+    if (node._oldOpen != null) {
       node.states.open = node._oldOpen
     }
     node.states.visible = true
@@ -289,17 +286,13 @@ function getCheckedNodes () {
 }
 
 function setAllNodesCheckState (nodes, state, onlyVisible = false) {
-  if (!nodes) {
-    throw new Error('parameter "nodes" is not set')
-  }
-
   visitAllNodes(nodes, node => {
     node.states.checked = state
   }, onlyVisible)
 }
 
 function checkAllNodes () {
-  setAllNodesCheckState(this.nodes, true, false)
+  setAllNodesCheckState(this.nodes, true)
   this.tree.$emit('tree:checked:all')
 }
 
@@ -309,7 +302,7 @@ function checkVisibleNodes () {
 }
 
 function uncheckAllNodes () {
-  setAllNodesCheckState(this.nodes, false, false)
+  setAllNodesCheckState(this.nodes, false)
   this.tree.$emit('tree:unchecked:all')
 }
 
@@ -319,14 +312,6 @@ function uncheckVisibleNodes () {
 }
 
 function setSingleNodeCheckState (storage, node, state) {
-  if (!storage) {
-    throw new Error('parameter "storage" is not set')
-  }
-
-  if (!node) {
-    throw new Error('parameter "node" is not set')
-  }
-
   node.states.checked = !!state
   storage.tree.$emit(state ? 'node:checked' : 'node:unchecked', node)
 }
@@ -368,14 +353,6 @@ function setCheckState (node, state, withChildren = false) {
 }
 
 function setNodeChildrenCheckState (storage, node, state) {
-  if (!storage) {
-    throw new Error('parameter "storage" is not set')
-  }
-
-  if (!node) {
-    throw new Error('parameter "node" is not set')
-  }
-
   visitAllNodes(node.children, child => {
     setSingleNodeCheckState(storage, child, state)
   })
@@ -434,24 +411,12 @@ function setOpenState (node, state, withChildren = false) {
 }
 
 function setNodeChildrenOpenState (storage, node, state) {
-  if (!storage) {
-    throw new Error('parameter "storage" is not set')
-  }
-
-  if (!node) {
-    throw new Error('parameter "node" is not set')
-  }
-
   visitAllNodes(node.children, child => {
     storage.setOpenState(child, state, true)
   })
 }
 
 function setAllNodesOpenState (nodes, state) {
-  if (!nodes) {
-    throw new Error('parameter "nodes" is not set')
-  }
-
   visitAllNodes(nodes, node => {
     node.states.open = state
   })
@@ -503,14 +468,6 @@ function collapseAll () {
 }
 
 function setSingleNodeDisableState (storage, node, state) {
-  if (!storage) {
-    throw new Error('parameter "storage" is not set')
-  }
-
-  if (!node) {
-    throw new Error('parameter "node" is not set')
-  }
-
   node.states.disabled = state
   if (storage.selectedNode === node && state) {
     storage.setSelected(null)
@@ -522,15 +479,7 @@ function setSingleNodeDisableState (storage, node, state) {
   }
 }
 
-function setNodeDisableState (storage, node, state, withChildren = false) {
-  if (!storage) {
-    throw new Error('parameter "storage" is not set')
-  }
-
-  if (!node) {
-    throw new Error('parameter "node" is not set')
-  }
-
+function setNodeDisableState (storage, node, state, withChildren) {
   setSingleNodeDisableState(storage, node, state)
   if (withChildren) {
     visitAllNodes(node.children, child => {
@@ -540,28 +489,12 @@ function setNodeDisableState (storage, node, state, withChildren = false) {
 }
 
 function setNodeChildrenDisableState (storage, node, state) {
-  if (!storage) {
-    throw new Error('parameter "storage" is not set')
-  }
-
-  if (!node) {
-    throw new Error('parameter "node" is not set')
-  }
-
   visitAllNodes(node.children, child => {
     setSingleNodeDisableState(storage, child, state)
   })
 }
 
 function setAllNodesDisableState (storage, nodes, state) {
-  if (!storage) {
-    throw new Error('parameter "storage" is not set')
-  }
-
-  if (!nodes) {
-    throw new Error('parameter "nodes" is not set')
-  }
-
   visitAllNodes(nodes, node => {
     node.states.disabled = state
   })
@@ -629,7 +562,7 @@ function findOne (selector) {
   }
 
   if (!isFunction(selector)) {
-    throw new Error('selector is not a function')
+    throw new Error('parameter "selector" is not a function')
   }
 
   let foundNode = null
@@ -653,7 +586,7 @@ function findParent (node, selector) {
   }
 
   if (!isFunction(selector)) {
-    throw new Error('selector is not a function')
+    throw new Error('parameter "selector" is not a function')
   }
 
   let foundParent = null
@@ -677,7 +610,7 @@ function findParents (node, selector) {
   }
 
   if (!isFunction(selector)) {
-    throw new Error('selector is not a function')
+    throw new Error('parameter "selector" is not a function')
   }
 
   const foundParents = []
@@ -696,7 +629,7 @@ function findAll (selector) {
   }
 
   if (!isFunction(selector)) {
-    throw new Error('selector is not a function')
+    throw new Error('parameter "selector" is not a function')
   }
 
   const foundNodes = []
@@ -808,7 +741,7 @@ function addChild (parent, item) {
   const child = new Node(this, item, parent)
   parent.children.push(child)
   if (this.treeOptions.autoSort) {
-    sortNodes(this, parent.children, this.treeOptions.sortComparator)
+    sortNodes(parent.children, this.treeOptions.sortComparator)
   } else {
     linkNodes(parent.children)
   }
@@ -834,7 +767,7 @@ function insertChild (parent, item, beforeNode) {
     parent.children.unshift(child)
   }
   if (this.treeOptions.autoSort) {
-    sortNodes(this, parent.children, this.treeOptions.sortComparator)
+    sortNodes(parent.children, this.treeOptions.sortComparator)
   } else {
     linkNodes(parent.children)
   }
@@ -895,15 +828,7 @@ function removeNode (node) {
   }
 }
 
-function sortNodes (storage, nodes, comparator) {
-  if (!storage) {
-    throw new Error('parameter "storage" is not set')
-  }
-
-  if (!nodes) {
-    throw new Error('parameter "nodes" is not set')
-  }
-
+function sortNodes (nodes, comparator) {
   if (comparator) {
     nodes.sort(comparator)
   } else {
@@ -913,16 +838,8 @@ function sortNodes (storage, nodes, comparator) {
 }
 
 function sortNodesRecursive (storage, nodes, comparator) {
-  if (!storage) {
-    throw new Error('parameter "storage" is not set')
-  }
-
-  if (!nodes) {
-    throw new Error('parameter "nodes" is not set')
-  }
-
   const compareFunc = comparator || storage.treeOptions.sortComparator
-  sortNodes(storage, nodes, compareFunc)
+  sortNodes(nodes, compareFunc)
 
   for (const node of nodes) {
     sortNodesRecursive(storage, node.children, comparator)
@@ -1020,7 +937,7 @@ function DefaultStorage (treeComponent) {
     this.originalItems = items
     const nodes = items.map(x => new Node(this, x))
     if (this.treeOptions.autoSort) {
-      sortNodes(this, nodes, this.treeOptions.sortComparator)
+      sortNodes(nodes, this.treeOptions.sortComparator)
     } else {
       linkNodes(nodes)
     }
