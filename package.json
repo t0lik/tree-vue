@@ -10,6 +10,7 @@
     "build": "rollup --config rollup.config.js",
     "build-simple": "vue-cli-service build --target lib --name tree-vue src/components/TreeVue.vue",
     "test:unit": "vue-cli-service test:unit --reporter min",
+    "test:unit:detail": "vue-cli-service test:unit",
     "test:jest": "jest",
     "lint": "vue-cli-service lint"
   },
