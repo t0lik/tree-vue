@@ -5,6 +5,8 @@ import { mount } from '@vue/test-utils'
 import Tree from '@/components/TreeVue.vue'
 import Node from '@/components/Node.vue'
 import sinon from 'sinon'
+import defaultIcons from '../../src/icons/defaultIcons'
+import fontawesomeIcons from '../../src/icons/fontawesomeIcons'
 
 describe('Tree.vue', () => {
   it('renders tree', () => {
@@ -203,6 +205,111 @@ describe('Tree.vue', () => {
     expect(wrapper.emitted()['node:clicked'][0][0]).to.be.not.null
     expect(wrapper.emitted()['node:clicked'][0][0].id).to.be.eq(node.id)
   })
+  it('changing options.icons changes treeOptions.icons accordingly', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const options = {
+      icons: defaultIcons
+    }
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+
+    wrapper.setProps({
+      options: {
+        icons: fontawesomeIcons
+      }
+    })
+
+    wrapper.vm.$nextTick(() => {
+      expect(wrapper.vm.treeOptions.icons.closedIcon).to.be.eq(fontawesomeIcons.closedIcon)
+      done()
+    })
+  })
+  it('changing options.showCheckbox changes treeOptions.showCheckbox accordingly', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const options = {
+      showCheckbox: false
+    }
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+
+    wrapper.setProps({
+      options: {
+        showCheckbox: true
+      }
+    })
+
+    wrapper.vm.$nextTick(() => {
+      expect(wrapper.vm.treeOptions.showCheckbox).to.be.eq(true)
+      done()
+    })
+  })
+  it('changing options.showIcon changes treeOptions.showIcon accordingly', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const options = {
+      showIcon: false
+    }
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+
+    wrapper.setProps({
+      options: {
+        showIcon: true
+      }
+    })
+
+    wrapper.vm.$nextTick(() => {
+      expect(wrapper.vm.treeOptions.showIcon).to.be.eq(true)
+      done()
+    })
+  })
+  it('changing options.canEdit changes treeOptions.canEdit accordingly', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const options = {
+      canEdit: false
+    }
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+
+    wrapper.setProps({
+      options: {
+        canEdit: true
+      }
+    })
+
+    wrapper.vm.$nextTick(() => {
+      expect(wrapper.vm.treeOptions.canEdit).to.be.eq(true)
+      done()
+    })
+  })
+  it('changing options.canDelete changes treeOptions.canDelete accordingly', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }]
+    const options = {
+      canDelete: false
+    }
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+
+    wrapper.setProps({
+      options: {
+        canDelete: true
+      }
+    })
+
+    wrapper.vm.$nextTick(() => {
+      expect(wrapper.vm.treeOptions.canDelete).to.be.eq(true)
+      done()
+    })
+  })
   it('onKeyDown calls navigate', () => {
     const nodes = [{
       id: 1,
@@ -266,6 +373,28 @@ describe('Tree.vue', () => {
     const wrapper = mount(Tree, { propsData: { items: nodes, options } })
     const secondNode = wrapper.vm.storage.getById(2)
     wrapper.vm.setFocusedNode(secondNode)
+    expect(wrapper.vm.focusedNode).to.be.not.null
+    expect(wrapper.vm.focusedNode.id).to.be.eq(secondNode.id)
+  })
+  it('setFocusedNode with hidden node does not change focusedNode', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      children: [{
+        id: 3,
+        name: 'name3'
+      }]
+    }, {
+      id: 2,
+      name: 'name2'
+    }]
+    const options = {
+    }
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const secondNode = wrapper.vm.storage.getById(2)
+    wrapper.vm.setFocusedNode(secondNode)
+    const hiddenNode = wrapper.vm.storage.getById(3)
+    wrapper.vm.setFocusedNode(hiddenNode)
     expect(wrapper.vm.focusedNode).to.be.not.null
     expect(wrapper.vm.focusedNode.id).to.be.eq(secondNode.id)
   })
