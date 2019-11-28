@@ -378,6 +378,49 @@ describe('keyboard mixin', () => {
       })
     })
   })
+  it('key Up on last node does not change selected node if all above nodes are disabled', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name',
+      disabled: true
+    }, {
+      id: 2,
+      name: 'name2',
+      disabled: true,
+      open: true,
+      children: [{
+        id: 4,
+        disabled: true,
+        name: 'child1'
+      }]
+    }, {
+      id: 3,
+      name: 'name3'
+    }]
+    const options = {
+      checkOnSelect: false
+    }
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const clickableNodes = wrapper.findAll('.treevue-tree-root-node > .treevue-tree-node')
+    expect(clickableNodes.length).to.be.eq(3)
+    const thirdNode = clickableNodes.at(2)
+    const clickableText = thirdNode.find('.treevue-tree-node .treevue-node-text')
+    clickableText.trigger('click')
+    clickableText.trigger('focus')
+
+    wrapper.vm.$nextTick(() => {
+      wrapper.trigger('keydown', {
+        key: 'ArrowUp'
+      })
+
+      wrapper.vm.$nextTick(() => {
+        expect(wrapper.emitted()['node:selected'].length).to.be.eq(1)
+        expectSelectedNodeId(wrapper, 3)
+        expectFirstSelectedEventWithNodeId(wrapper, 3)
+        done()
+      })
+    })
+  })
   it('key Up on last node selects next closed sibling with children', done => {
     const nodes = [{
       id: 1,
@@ -808,5 +851,50 @@ describe('keyboard mixin', () => {
 
       done()
     })
+  })
+  it('key F2 while editing node does nothing', done => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }, {
+      id: 2,
+      name: 'name2'
+    }]
+    const options = {
+      checkOnSelect: false,
+      canEdit: true
+    }
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    clickFirstFoundNodeText(wrapper)
+
+    wrapper.vm.$nextTick(() => {
+      wrapper.trigger('keydown', {
+        key: 'F2'
+      })
+      wrapper.trigger('keydown', {
+        key: 'ArrowDown'
+      })
+      wrapper.vm.$nextTick(() => {
+        const editorWrapper = wrapper.find('.treevue-node-editor')
+        expect(editorWrapper).to.be.not.null
+        done()
+      })
+    })
+  })
+  it('key Down with no focused node does nothing', () => {
+    const nodes = [{
+      id: 1,
+      name: 'name'
+    }, {
+      id: 2,
+      name: 'name2'
+    }]
+    const options = {
+    }
+    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    wrapper.trigger('keydown', {
+      key: 'ArrowDown'
+    })
+    expect(wrapper.vm.focusedNode).to.be.null
   })
 })

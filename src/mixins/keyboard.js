@@ -24,28 +24,20 @@ function getAvailableNodes (tree) {
 }
 
 function findAvailablePrevNode (tree, node) {
-  if (!node) {
-    return null
-  }
-
   const availableNodes = getAvailableNodes(tree)
   let prevNode = null
   for (const nodeItem of availableNodes) {
     if (nodeItem === node) {
-      return prevNode
+      break
     }
 
     prevNode = nodeItem
   }
 
-  return null
+  return prevNode
 }
 
 function findAvailableNextNode (tree, node) {
-  if (!node) {
-    return null
-  }
-
   const availableNodes = getAvailableNodes(tree)
   let currNodeFound = false
   for (const nodeItem of availableNodes) {
