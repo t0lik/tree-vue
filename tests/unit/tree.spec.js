@@ -8,7 +8,7 @@ import sinon from 'sinon'
 import defaultIcons from '../../src/icons/defaultIcons'
 import fontawesomeIcons from '../../src/icons/fontawesomeIcons'
 
-describe('Tree.vue', () => {
+describe('TreeVue.vue', () => {
   it('renders tree', () => {
     const nodes = []
     const options = {
