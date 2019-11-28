@@ -13,7 +13,7 @@
     "test:unit:detail": "vue-cli-service test:unit",
     "test": "jest",
     "test:coverage": "npm test -- --coverage",
-    "test:badges": "npm run test:coverage  && jest-coverage-badges",    
+    "test:badges": "npm run test:coverage  && jest-coverage-badges output \"./badges\"",    
     "lint": "vue-cli-service lint"
   },
   "main": "dist/tree-vue.umd.js",
