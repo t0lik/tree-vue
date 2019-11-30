@@ -6,6 +6,14 @@ import Tree from '@/components/TreeVue.vue'
 // import Node from '@/components/Node.vue'
 
 describe('keyboard mixin', () => {
+  async function getWrapper (items, options = {}) {
+    const wrapper = mount(Tree, {
+      propsData: { items, options }
+    })
+    await wrapper.vm.$nextTick()
+
+    return wrapper
+  }
   function clickFirstFoundNodeText (wrapper) {
     const clickableText = wrapper.find('.treevue-tree-node .treevue-node-text')
     clickableText.trigger('click')
@@ -39,7 +47,7 @@ describe('keyboard mixin', () => {
     expect(wrapper.emitted()['node:selected'][lastEventIndex][0].item.id).to.be.eq(nodeId)
   }
 
-  it('key Down on first node selects second node', done => {
+  it('key Down on first node selects second node', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -50,21 +58,19 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
 
-    wrapper.vm.$nextTick(() => {
-      clickFirstFoundNodeText(wrapper)
-      wrapper.trigger('keydown', {
-        key: 'ArrowDown'
-      })
-      wrapper.vm.$nextTick(() => {
-        expectSelectedNodeId(wrapper, 2)
-        expectSecondSelectedEventWithNodeId(wrapper, 2)
-        done()
-      })
+    clickFirstFoundNodeText(wrapper)
+    wrapper.trigger('keydown', {
+      key: 'ArrowDown'
     })
+
+    await wrapper.vm.$nextTick()
+
+    expectSelectedNodeId(wrapper, 2)
+    expectSecondSelectedEventWithNodeId(wrapper, 2)
   })
-  it('key Down on second node does not change selected node', done => {
+  it('key Down on second node does not change selected node', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -75,27 +81,24 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
 
-    wrapper.vm.$nextTick(() => {
-      const clickableNodes = wrapper.findAll('.treevue-tree-node')
-      expect(clickableNodes.length).to.be.eq(2)
-      const secondNode = clickableNodes.at(1)
-      const clickableText = secondNode.find('.treevue-tree-node .treevue-node-text')
-      clickableText.trigger('click')
-      clickableText.trigger('focus')
-      wrapper.trigger('keydown', {
-        key: 'ArrowDown'
-      })
-
-      wrapper.vm.$nextTick(() => {
-        expectSelectedNodeId(wrapper, 2)
-        expectFirstSelectedEventWithNodeId(wrapper, 2)
-        done()
-      })
+    const clickableNodes = wrapper.findAll('.treevue-tree-node')
+    expect(clickableNodes.length).to.be.eq(2)
+    const secondNode = clickableNodes.at(1)
+    const clickableText = secondNode.find('.treevue-tree-node .treevue-node-text')
+    clickableText.trigger('click')
+    clickableText.trigger('focus')
+    wrapper.trigger('keydown', {
+      key: 'ArrowDown'
     })
+
+    await wrapper.vm.$nextTick()
+
+    expectSelectedNodeId(wrapper, 2)
+    expectFirstSelectedEventWithNodeId(wrapper, 2)
   })
-  it('key Down on first node selects next enabled sibling', done => {
+  it('key Down on first node selects next enabled sibling', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -110,21 +113,19 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
 
-    wrapper.vm.$nextTick(() => {
-      clickFirstFoundNodeText(wrapper)
-      wrapper.trigger('keydown', {
-        key: 'ArrowDown'
-      })
-      wrapper.vm.$nextTick(() => {
-        expectSelectedNodeId(wrapper, 3)
-        expectSecondSelectedEventWithNodeId(wrapper, 3)
-        done()
-      })
+    clickFirstFoundNodeText(wrapper)
+    wrapper.trigger('keydown', {
+      key: 'ArrowDown'
     })
+
+    await wrapper.vm.$nextTick()
+
+    expectSelectedNodeId(wrapper, 3)
+    expectSecondSelectedEventWithNodeId(wrapper, 3)
   })
-  it('key Down on first open node selects first its child', done => {
+  it('key Down on first open node selects first its child', async () => {
     const nodes = [{
       id: 1,
       name: 'name',
@@ -143,19 +144,19 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
+
     clickFirstFoundNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: 'ArrowDown'
     })
 
-    wrapper.vm.$nextTick(() => {
-      expectSelectedNodeId(wrapper, 4)
-      expectSecondSelectedEventWithNodeId(wrapper, 4)
-      done()
-    })
+    await wrapper.vm.$nextTick()
+
+    expectSelectedNodeId(wrapper, 4)
+    expectSecondSelectedEventWithNodeId(wrapper, 4)
   })
-  it('key Down on closed node with children selects next sibling', done => {
+  it('key Down on closed node with children selects next sibling', async () => {
     const nodes = [{
       id: 1,
       name: 'name',
@@ -174,19 +175,19 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
+
     clickFirstFoundNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: 'ArrowDown'
     })
 
-    wrapper.vm.$nextTick(() => {
-      expectSelectedNodeId(wrapper, 2)
-      expectSecondSelectedEventWithNodeId(wrapper, 2)
-      done()
-    })
+    await wrapper.vm.$nextTick()
+
+    expectSelectedNodeId(wrapper, 2)
+    expectSecondSelectedEventWithNodeId(wrapper, 2)
   })
-  it('key Down on last child node selects next parent', done => {
+  it('key Down on last child node selects next parent', async () => {
     const nodes = [{
       id: 1,
       name: 'name',
@@ -205,19 +206,19 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
+
     clickFirstFoundChildNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: 'ArrowDown'
     })
 
-    wrapper.vm.$nextTick(() => {
-      expectSelectedNodeId(wrapper, 2)
-      expectSecondSelectedEventWithNodeId(wrapper, 2)
-      done()
-    })
+    await wrapper.vm.$nextTick()
+
+    expectSelectedNodeId(wrapper, 2)
+    expectSecondSelectedEventWithNodeId(wrapper, 2)
   })
-  it('key Down on first node selects next available node', done => {
+  it('key Down on first node selects next available node', async () => {
     const nodes = [{
       id: 1,
       name: 'name',
@@ -238,19 +239,19 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
+
     clickFirstFoundNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: 'ArrowDown'
     })
 
-    wrapper.vm.$nextTick(() => {
-      expectSelectedNodeId(wrapper, 3)
-      expectSecondSelectedEventWithNodeId(wrapper, 3)
-      done()
-    })
+    await wrapper.vm.$nextTick()
+
+    expectSelectedNodeId(wrapper, 3)
+    expectSecondSelectedEventWithNodeId(wrapper, 3)
   })
-  it('key Up on second node selects first node', done => {
+  it('key Up on second node selects first node', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -261,25 +262,23 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
 
-    wrapper.vm.$nextTick(() => {
-      const clickableNodes = wrapper.findAll('.treevue-tree-node')
-      expect(clickableNodes.length).to.be.eq(2)
-      const secondNode = clickableNodes.at(1)
-      clickFirstFoundNodeText(secondNode)
+    const clickableNodes = wrapper.findAll('.treevue-tree-node')
+    expect(clickableNodes.length).to.be.eq(2)
+    const secondNode = clickableNodes.at(1)
+    clickFirstFoundNodeText(secondNode)
 
-      wrapper.trigger('keydown', {
-        key: 'ArrowUp'
-      })
-      wrapper.vm.$nextTick(() => {
-        expectSelectedNodeId(wrapper, 1)
-        expectSecondSelectedEventWithNodeId(wrapper, 1)
-        done()
-      })
+    wrapper.trigger('keydown', {
+      key: 'ArrowUp'
     })
+
+    await wrapper.vm.$nextTick()
+
+    expectSelectedNodeId(wrapper, 1)
+    expectSecondSelectedEventWithNodeId(wrapper, 1)
   })
-  it('key Up on first node does not change selected node', done => {
+  it('key Up on first node does not change selected node', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -290,22 +289,19 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
 
-    wrapper.vm.$nextTick(() => {
-      clickFirstFoundNodeText(wrapper)
-      wrapper.trigger('keydown', {
-        key: 'ArrowUp'
-      })
-
-      wrapper.vm.$nextTick(() => {
-        expectSelectedNodeId(wrapper, 1)
-        expectFirstSelectedEventWithNodeId(wrapper, 1)
-        done()
-      })
+    clickFirstFoundNodeText(wrapper)
+    wrapper.trigger('keydown', {
+      key: 'ArrowUp'
     })
+
+    await wrapper.vm.$nextTick()
+
+    expectSelectedNodeId(wrapper, 1)
+    expectFirstSelectedEventWithNodeId(wrapper, 1)
   })
-  it('key Up on last node selects previous enabled sibling', done => {
+  it('key Up on last node selects previous enabled sibling', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -320,7 +316,7 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
 
     const clickableNodes = wrapper.findAll('.treevue-tree-node')
     expect(clickableNodes.length).to.be.eq(3)
@@ -328,18 +324,19 @@ describe('keyboard mixin', () => {
     const clickableText = secondNode.find('.treevue-tree-node .treevue-node-text')
     clickableText.trigger('click')
     clickableText.trigger('focus')
-    wrapper.vm.$nextTick(() => {
-      wrapper.trigger('keydown', {
-        key: 'ArrowUp'
-      })
-      wrapper.vm.$nextTick(() => {
-        expectSelectedNodeId(wrapper, 1)
-        expectSecondSelectedEventWithNodeId(wrapper, 1)
-        done()
-      })
+
+    await wrapper.vm.$nextTick()
+
+    wrapper.trigger('keydown', {
+      key: 'ArrowUp'
     })
+
+    await wrapper.vm.$nextTick()
+
+    expectSelectedNodeId(wrapper, 1)
+    expectSecondSelectedEventWithNodeId(wrapper, 1)
   })
-  it('key Up on last node selects first prev sibing child', done => {
+  it('key Up on last node selects first prev sibing child', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -358,7 +355,8 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
+
     const clickableNodes = wrapper.findAll('.treevue-tree-root-node > .treevue-tree-node')
     expect(clickableNodes.length).to.be.eq(3)
     const thirdNode = clickableNodes.at(2)
@@ -366,19 +364,18 @@ describe('keyboard mixin', () => {
     clickableText.trigger('click')
     clickableText.trigger('focus')
 
-    wrapper.vm.$nextTick(() => {
-      wrapper.trigger('keydown', {
-        key: 'ArrowUp'
-      })
+    await wrapper.vm.$nextTick()
 
-      wrapper.vm.$nextTick(() => {
-        expectSelectedNodeId(wrapper, 4)
-        expectSecondSelectedEventWithNodeId(wrapper, 4)
-        done()
-      })
+    wrapper.trigger('keydown', {
+      key: 'ArrowUp'
     })
+
+    await wrapper.vm.$nextTick()
+
+    expectSelectedNodeId(wrapper, 4)
+    expectSecondSelectedEventWithNodeId(wrapper, 4)
   })
-  it('key Up on last node does not change selected node if all above nodes are disabled', done => {
+  it('key Up on last node does not change selected node if all above nodes are disabled', async () => {
     const nodes = [{
       id: 1,
       name: 'name',
@@ -400,7 +397,8 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
+
     const clickableNodes = wrapper.findAll('.treevue-tree-root-node > .treevue-tree-node')
     expect(clickableNodes.length).to.be.eq(3)
     const thirdNode = clickableNodes.at(2)
@@ -408,20 +406,19 @@ describe('keyboard mixin', () => {
     clickableText.trigger('click')
     clickableText.trigger('focus')
 
-    wrapper.vm.$nextTick(() => {
-      wrapper.trigger('keydown', {
-        key: 'ArrowUp'
-      })
+    await wrapper.vm.$nextTick()
 
-      wrapper.vm.$nextTick(() => {
-        expect(wrapper.emitted()['node:selected'].length).to.be.eq(1)
-        expectSelectedNodeId(wrapper, 3)
-        expectFirstSelectedEventWithNodeId(wrapper, 3)
-        done()
-      })
+    wrapper.trigger('keydown', {
+      key: 'ArrowUp'
     })
+
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.emitted()['node:selected'].length).to.be.eq(1)
+    expectSelectedNodeId(wrapper, 3)
+    expectFirstSelectedEventWithNodeId(wrapper, 3)
   })
-  it('key Up on last node selects next closed sibling with children', done => {
+  it('key Up on last node selects next closed sibling with children', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -440,7 +437,8 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
+
     const clickableNodes = wrapper.findAll('.treevue-tree-root-node > .treevue-tree-node')
     expect(clickableNodes.length).to.be.eq(3)
     const thirdNode = clickableNodes.at(2)
@@ -448,19 +446,17 @@ describe('keyboard mixin', () => {
     clickableText.trigger('click')
     clickableText.trigger('focus')
 
-    wrapper.vm.$nextTick(() => {
-      wrapper.trigger('keydown', {
-        key: 'ArrowUp'
-      })
-
-      wrapper.vm.$nextTick(() => {
-        expectSelectedNodeId(wrapper, 2)
-        expectSecondSelectedEventWithNodeId(wrapper, 2)
-        done()
-      })
+    await wrapper.vm.$nextTick()
+    wrapper.trigger('keydown', {
+      key: 'ArrowUp'
     })
+
+    await wrapper.vm.$nextTick()
+
+    expectSelectedNodeId(wrapper, 2)
+    expectSecondSelectedEventWithNodeId(wrapper, 2)
   })
-  it('key Up on first child node selects its parent', done => {
+  it('key Up on first child node selects its parent', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -479,19 +475,19 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
+
     clickFirstFoundChildNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: 'ArrowUp'
     })
 
-    wrapper.vm.$nextTick(() => {
-      expectSelectedNodeId(wrapper, 2)
-      expectSecondSelectedEventWithNodeId(wrapper, 2)
-      done()
-    })
+    await wrapper.vm.$nextTick()
+
+    expectSelectedNodeId(wrapper, 2)
+    expectSecondSelectedEventWithNodeId(wrapper, 2)
   })
-  it('key Left on open node collapses it', done => {
+  it('key Left on open node collapses it', async () => {
     const nodes = [{
       id: 1,
       name: 'name',
@@ -507,20 +503,19 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
+
     clickFirstFoundNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: 'ArrowLeft'
     })
 
-    wrapper.vm.$nextTick(() => {
-      expectSelectedNodeId(wrapper, 1)
-      expect(wrapper.vm.storage.selectedNode.states.open).to.be.false
+    await wrapper.vm.$nextTick()
 
-      done()
-    })
+    expectSelectedNodeId(wrapper, 1)
+    expect(wrapper.vm.storage.selectedNode.states.open).to.be.false
   })
-  it('key Left on child node selectes its parent', done => {
+  it('key Left on child node selectes its parent', async () => {
     const nodes = [{
       id: 1,
       name: 'name',
@@ -536,20 +531,19 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
+
     clickFirstFoundChildNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: 'ArrowLeft'
     })
 
-    wrapper.vm.$nextTick(() => {
-      expectSelectedNodeId(wrapper, 1)
-      expectSecondSelectedEventWithNodeId(wrapper, 1)
+    await wrapper.vm.$nextTick()
 
-      done()
-    })
+    expectSelectedNodeId(wrapper, 1)
+    expectSecondSelectedEventWithNodeId(wrapper, 1)
   })
-  it('key Left on root node does nothing', done => {
+  it('key Left on root node does nothing', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -565,7 +559,8 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
+
     const clickableNodes = wrapper.findAll('.treevue-tree-node')
     expect(clickableNodes.length).to.be.eq(2)
     const secondNode = clickableNodes.at(1)
@@ -576,14 +571,12 @@ describe('keyboard mixin', () => {
       key: 'ArrowLeft'
     })
 
-    wrapper.vm.$nextTick(() => {
-      expectSelectedNodeId(wrapper, 2)
-      expectFirstSelectedEventWithNodeId(wrapper, 2)
+    await wrapper.vm.$nextTick()
 
-      done()
-    })
+    expectSelectedNodeId(wrapper, 2)
+    expectFirstSelectedEventWithNodeId(wrapper, 2)
   })
-  it('key Right on closed node expands it', done => {
+  it('key Right on closed node expands it', async () => {
     const nodes = [{
       id: 1,
       name: 'name',
@@ -599,20 +592,19 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
+
     clickFirstFoundNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: 'ArrowRight'
     })
 
-    wrapper.vm.$nextTick(() => {
-      expectSelectedNodeId(wrapper, 1)
-      expect(wrapper.vm.storage.selectedNode.states.open).to.be.true
+    await wrapper.vm.$nextTick()
 
-      done()
-    })
+    expectSelectedNodeId(wrapper, 1)
+    expect(wrapper.vm.storage.selectedNode.states.open).to.be.true
   })
-  it('key Right on open node selectes its first enabled child', done => {
+  it('key Right on open node selectes its first enabled child', async () => {
     const nodes = [{
       id: 1,
       name: 'name',
@@ -632,20 +624,19 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
+
     clickFirstFoundNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: 'ArrowRight'
     })
 
-    wrapper.vm.$nextTick(() => {
-      expectSelectedNodeId(wrapper, 5)
-      expectSecondSelectedEventWithNodeId(wrapper, 5)
+    await wrapper.vm.$nextTick()
 
-      done()
-    })
+    expectSelectedNodeId(wrapper, 5)
+    expectSecondSelectedEventWithNodeId(wrapper, 5)
   })
-  it('key Right on open node with disabled children does nothing', done => {
+  it('key Right on open node with disabled children does nothing', async () => {
     const nodes = [{
       id: 1,
       name: 'name',
@@ -666,20 +657,19 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
+
     clickFirstFoundNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: 'ArrowRight'
     })
 
-    wrapper.vm.$nextTick(() => {
-      expectSelectedNodeId(wrapper, 1)
-      expectFirstSelectedEventWithNodeId(wrapper, 1)
+    await wrapper.vm.$nextTick()
 
-      done()
-    })
+    expectSelectedNodeId(wrapper, 1)
+    expectFirstSelectedEventWithNodeId(wrapper, 1)
   })
-  it('key Space on disabled node does nothing', done => {
+  it('key Space on disabled node does nothing', async () => {
     const nodes = [{
       id: 1,
       name: 'name',
@@ -692,19 +682,18 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
+
     clickFirstFoundNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: ' '
     })
 
-    wrapper.vm.$nextTick(() => {
-      expect(wrapper.vm.storage.getById(1).states.checked).to.be.false
+    await wrapper.vm.$nextTick()
 
-      done()
-    })
+    expect(wrapper.vm.storage.getById(1).states.checked).to.be.false
   })
-  it('key Space on unchecked node checks it', done => {
+  it('key Space on unchecked node checks it', async () => {
     const nodes = [{
       id: 1,
       name: 'name',
@@ -716,19 +705,18 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
+
     clickFirstFoundNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: ' '
     })
 
-    wrapper.vm.$nextTick(() => {
-      expect(wrapper.vm.storage.getById(1).states.checked).to.be.true
+    await wrapper.vm.$nextTick()
 
-      done()
-    })
+    expect(wrapper.vm.storage.getById(1).states.checked).to.be.true
   })
-  it('key Space on checked node unchecks it', done => {
+  it('key Space on checked node unchecks it', async () => {
     const nodes = [{
       id: 1,
       name: 'name',
@@ -740,19 +728,18 @@ describe('keyboard mixin', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
+
     clickFirstFoundNodeText(wrapper)
     wrapper.trigger('keydown', {
       key: ' '
     })
 
-    wrapper.vm.$nextTick(() => {
-      expect(wrapper.vm.storage.getById(1).states.checked).to.be.false
+    await wrapper.vm.$nextTick()
 
-      done()
-    })
+    expect(wrapper.vm.storage.getById(1).states.checked).to.be.false
   })
-  it('key Del on node deletes it with canDelete option checked', done => {
+  it('key Del on node deletes it with canDelete option checked', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -764,20 +751,19 @@ describe('keyboard mixin', () => {
       checkOnSelect: false,
       canDelete: true
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
+
     clickFirstFoundNodeText(wrapper)
 
-    wrapper.vm.$nextTick(() => {
-      wrapper.trigger('keydown', {
-        key: 'Delete'
-      })
-      expect(wrapper.vm.storage.nodes.length).to.be.eq(1)
-      expect(wrapper.vm.storage.getById(1)).to.be.null
+    await wrapper.vm.$nextTick()
 
-      done()
+    wrapper.trigger('keydown', {
+      key: 'Delete'
     })
+    expect(wrapper.vm.storage.nodes.length).to.be.eq(1)
+    expect(wrapper.vm.storage.getById(1)).to.be.null
   })
-  it('key Del on node does nothing with canDelete option unchecked', done => {
+  it('key Del on node does nothing with canDelete option unchecked', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -789,20 +775,19 @@ describe('keyboard mixin', () => {
       checkOnSelect: false,
       canDelete: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
+
     clickFirstFoundNodeText(wrapper)
 
-    wrapper.vm.$nextTick(() => {
-      wrapper.trigger('keydown', {
-        key: 'Delete'
-      })
-      expect(wrapper.vm.storage.nodes.length).to.be.eq(2)
-      expect(wrapper.vm.storage.getById(1)).to.be.not.null
+    await wrapper.vm.$nextTick()
 
-      done()
+    wrapper.trigger('keydown', {
+      key: 'Delete'
     })
+    expect(wrapper.vm.storage.nodes.length).to.be.eq(2)
+    expect(wrapper.vm.storage.getById(1)).to.be.not.null
   })
-  it('key F2 on node does nothing with canEdit option unchecked', done => {
+  it('key F2 on node does nothing with canEdit option unchecked', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -814,20 +799,19 @@ describe('keyboard mixin', () => {
       checkOnSelect: false,
       canEdit: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
+
     clickFirstFoundNodeText(wrapper)
 
-    wrapper.vm.$nextTick(() => {
-      wrapper.trigger('keydown', {
-        key: 'F2'
-      })
-      expect(wrapper.vm.storage.nodes.length).to.be.eq(2)
-      expect(wrapper.vm.storage.getById(1)).to.be.not.null
+    await wrapper.vm.$nextTick()
 
-      done()
+    wrapper.trigger('keydown', {
+      key: 'F2'
     })
+    expect(wrapper.vm.storage.nodes.length).to.be.eq(2)
+    expect(wrapper.vm.storage.getById(1)).to.be.not.null
   })
-  it('key F2 on node switches it to edit mode with canEdit option checked', done => {
+  it('key F2 on node switches it to edit mode with canEdit option checked', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -839,20 +823,19 @@ describe('keyboard mixin', () => {
       checkOnSelect: false,
       canEdit: true
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
+
     clickFirstFoundNodeText(wrapper)
 
-    wrapper.vm.$nextTick(() => {
-      wrapper.trigger('keydown', {
-        key: 'F2'
-      })
-      const editorWrapper = wrapper.find('.treevue-node-editor')
-      expect(editorWrapper).to.be.not.null
+    await wrapper.vm.$nextTick()
 
-      done()
+    wrapper.trigger('keydown', {
+      key: 'F2'
     })
+    const editorWrapper = wrapper.find('.treevue-node-editor')
+    expect(editorWrapper).to.be.not.null
   })
-  it('key F2 while editing node does nothing', done => {
+  it('key F2 while editing node does nothing', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -864,24 +847,25 @@ describe('keyboard mixin', () => {
       checkOnSelect: false,
       canEdit: true
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
+
     clickFirstFoundNodeText(wrapper)
 
-    wrapper.vm.$nextTick(() => {
-      wrapper.trigger('keydown', {
-        key: 'F2'
-      })
-      wrapper.trigger('keydown', {
-        key: 'ArrowDown'
-      })
-      wrapper.vm.$nextTick(() => {
-        const editorWrapper = wrapper.find('.treevue-node-editor')
-        expect(editorWrapper).to.be.not.null
-        done()
-      })
+    await wrapper.vm.$nextTick()
+
+    wrapper.trigger('keydown', {
+      key: 'F2'
     })
+    wrapper.trigger('keydown', {
+      key: 'ArrowDown'
+    })
+
+    await wrapper.vm.$nextTick()
+
+    const editorWrapper = wrapper.find('.treevue-node-editor')
+    expect(editorWrapper).to.be.not.null
   })
-  it('key Down with no focused node does nothing', () => {
+  it('key Down with no focused node does nothing', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -891,7 +875,7 @@ describe('keyboard mixin', () => {
     }]
     const options = {
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
     wrapper.trigger('keydown', {
       key: 'ArrowDown'
     })

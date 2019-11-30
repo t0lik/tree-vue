@@ -9,25 +9,33 @@ import defaultIcons from '../../src/icons/defaultIcons'
 import fontawesomeIcons from '../../src/icons/fontawesomeIcons'
 
 describe('TreeVue.vue', () => {
-  it('renders tree', () => {
+  async function getWrapper (items, options = {}) {
+    const wrapper = mount(Tree, {
+      propsData: { items, options }
+    })
+    await wrapper.vm.$nextTick()
+
+    return wrapper
+  }
+  it('renders tree', async () => {
     const nodes = []
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
 
     expect(wrapper.find('.treevue-tree').exists()).to.be.true
   })
-  it('initializes storage', () => {
+  it('initializes storage', async () => {
     const nodes = []
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
 
     expect(wrapper.vm.storage).to.be.not.null
   })
-  it('filter with not found nodes shows not found text', () => {
+  it('filter with not found nodes shows not found text', async () => {
     const nodes = [{
       id: 1,
       name: 'test'
@@ -38,13 +46,15 @@ describe('TreeVue.vue', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
 
     wrapper.vm.storage.filter('node')
 
+    await wrapper.vm.$nextTick()
+
     expect(wrapper.find('.treevue-empty-search-text').exists()).to.be.true
   })
-  it('filter with found nodes does not show not found text', () => {
+  it('filter with found nodes does not show not found text', async () => {
     const nodes = [{
       id: 1,
       name: 'test'
@@ -55,22 +65,22 @@ describe('TreeVue.vue', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
 
     wrapper.vm.storage.filter('test')
 
     expect(wrapper.find('.treevue-empty-search-text').exists()).to.be.false
   })
-  it('empty tree does not show not found text', () => {
+  it('empty tree does not show not found text', async () => {
     const nodes = []
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
 
     expect(wrapper.find('.treevue-empty-search-text').exists()).to.be.false
   })
-  it('Node.vue count equals to source node count', () => {
+  it('Node.vue count equals to source node count', async () => {
     const nodes = [{
       id: 1,
       name: 'test'
@@ -81,11 +91,11 @@ describe('TreeVue.vue', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
 
     expect(wrapper.findAll(Node).length).to.be.eq(nodes.length)
   })
-  it('visibleNodes count equals to source node count', () => {
+  it('visibleNodes count equals to source node count', async () => {
     const nodes = [{
       id: 1,
       name: 'test'
@@ -96,22 +106,22 @@ describe('TreeVue.vue', () => {
     const options = {
       checkOnSelect: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
 
     expect(wrapper.vm.visibleNodes.length).to.be.eq(nodes.length)
   })
-  it('default treeState', () => {
+  it('default treeState', async () => {
     const nodes = []
     const options = { }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
 
     expect(wrapper.vm.treeState).to.be.not.null
     expect(wrapper.vm.treeState.nodes).to.be.empty
   })
-  it('default treeOptions', () => {
+  it('default treeOptions', async () => {
     const nodes = []
     const options = { }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
 
     expect(wrapper.vm.treeOptions).to.be.not.null
     expect(wrapper.vm.treeOptions.icons).to.be.not.null
@@ -136,7 +146,7 @@ describe('TreeVue.vue', () => {
     expect(wrapper.vm.treeOptions.styleClasses.checkbox).to.be.null
     expect(wrapper.vm.treeOptions.styleClasses.expander).to.be.null
   })
-  it('set treeOptions to non-default values', () => {
+  it('set treeOptions to non-default values', async () => {
     const nodes = []
     const options = {
       multiselect: true,
@@ -161,7 +171,7 @@ describe('TreeVue.vue', () => {
         expander: 'expander-test'
       }
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
 
     expect(wrapper.vm.treeOptions.multiselect).to.be.true
     expect(wrapper.vm.treeOptions.showCheckbox).to.be.false
@@ -183,21 +193,21 @@ describe('TreeVue.vue', () => {
     expect(wrapper.vm.treeOptions.styleClasses.checkbox).to.be.eq('checkbox-test')
     expect(wrapper.vm.treeOptions.styleClasses.expander).to.be.eq('expander-test')
   })
-  it('getStorage returns storage', () => {
+  it('getStorage returns storage', async () => {
     const nodes = []
     const options = {
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
     expect(wrapper.vm.getStorage()).to.be.eq(wrapper.vm.storage)
   })
-  it('onNodeClicked emits node:clicked', () => {
+  it('onNodeClicked emits node:clicked', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
     }]
     const options = {
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
     const node = wrapper.vm.storage.getById(1)
     wrapper.vm.onNodeClicked(node)
 
@@ -205,7 +215,7 @@ describe('TreeVue.vue', () => {
     expect(wrapper.emitted()['node:clicked'][0][0]).to.be.not.null
     expect(wrapper.emitted()['node:clicked'][0][0].id).to.be.eq(node.id)
   })
-  it('changing options.icons changes treeOptions.icons accordingly', done => {
+  it('changing options.icons changes treeOptions.icons accordingly', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -213,7 +223,7 @@ describe('TreeVue.vue', () => {
     const options = {
       icons: defaultIcons
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
 
     wrapper.setProps({
       options: {
@@ -221,12 +231,11 @@ describe('TreeVue.vue', () => {
       }
     })
 
-    wrapper.vm.$nextTick(() => {
-      expect(wrapper.vm.treeOptions.icons.closedIcon).to.be.eq(fontawesomeIcons.closedIcon)
-      done()
-    })
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.vm.treeOptions.icons.closedIcon).to.be.eq(fontawesomeIcons.closedIcon)
   })
-  it('changing options.showCheckbox changes treeOptions.showCheckbox accordingly', done => {
+  it('changing options.showCheckbox changes treeOptions.showCheckbox accordingly', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -234,7 +243,7 @@ describe('TreeVue.vue', () => {
     const options = {
       showCheckbox: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
 
     wrapper.setProps({
       options: {
@@ -242,12 +251,11 @@ describe('TreeVue.vue', () => {
       }
     })
 
-    wrapper.vm.$nextTick(() => {
-      expect(wrapper.vm.treeOptions.showCheckbox).to.be.eq(true)
-      done()
-    })
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.vm.treeOptions.showCheckbox).to.be.eq(true)
   })
-  it('changing options.showIcon changes treeOptions.showIcon accordingly', done => {
+  it('changing options.showIcon changes treeOptions.showIcon accordingly', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -255,7 +263,7 @@ describe('TreeVue.vue', () => {
     const options = {
       showIcon: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
 
     wrapper.setProps({
       options: {
@@ -263,12 +271,11 @@ describe('TreeVue.vue', () => {
       }
     })
 
-    wrapper.vm.$nextTick(() => {
-      expect(wrapper.vm.treeOptions.showIcon).to.be.eq(true)
-      done()
-    })
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.vm.treeOptions.showIcon).to.be.eq(true)
   })
-  it('changing options.canEdit changes treeOptions.canEdit accordingly', done => {
+  it('changing options.canEdit changes treeOptions.canEdit accordingly', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -276,7 +283,7 @@ describe('TreeVue.vue', () => {
     const options = {
       canEdit: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
 
     wrapper.setProps({
       options: {
@@ -284,12 +291,11 @@ describe('TreeVue.vue', () => {
       }
     })
 
-    wrapper.vm.$nextTick(() => {
-      expect(wrapper.vm.treeOptions.canEdit).to.be.eq(true)
-      done()
-    })
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.vm.treeOptions.canEdit).to.be.eq(true)
   })
-  it('changing options.canDelete changes treeOptions.canDelete accordingly', done => {
+  it('changing options.canDelete changes treeOptions.canDelete accordingly', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -297,7 +303,7 @@ describe('TreeVue.vue', () => {
     const options = {
       canDelete: false
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
 
     wrapper.setProps({
       options: {
@@ -305,19 +311,18 @@ describe('TreeVue.vue', () => {
       }
     })
 
-    wrapper.vm.$nextTick(() => {
-      expect(wrapper.vm.treeOptions.canDelete).to.be.eq(true)
-      done()
-    })
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.vm.treeOptions.canDelete).to.be.eq(true)
   })
-  it('onKeyDown calls navigate', () => {
+  it('onKeyDown calls navigate', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
     }]
     const options = {
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
     const event = {
       key: 'Enter'
     }
@@ -328,14 +333,14 @@ describe('TreeVue.vue', () => {
 
     mock.verify()
   })
-  it('keydown event calls onKeyDown', () => {
+  it('keydown event calls onKeyDown', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
     }]
     const options = {
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
     const mock = sinon.mock(wrapper.vm)
     mock.expects('navigate').once()
 
@@ -345,14 +350,14 @@ describe('TreeVue.vue', () => {
 
     mock.verify()
   })
-  it('onNodeFocused sets focusedNode', () => {
+  it('onNodeFocused sets focusedNode', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
     }]
     const options = {
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
     const node = wrapper.vm.storage.getById(1)
 
     wrapper.vm.onNodeFocused(node)
@@ -360,7 +365,7 @@ describe('TreeVue.vue', () => {
     expect(wrapper.vm.focusedNode).to.be.not.null
     expect(wrapper.vm.focusedNode.id).to.be.eq(node.id)
   })
-  it('setFocusedNode sets focusedNode', () => {
+  it('setFocusedNode sets focusedNode', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -370,13 +375,13 @@ describe('TreeVue.vue', () => {
     }]
     const options = {
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
     const secondNode = wrapper.vm.storage.getById(2)
     wrapper.vm.setFocusedNode(secondNode)
     expect(wrapper.vm.focusedNode).to.be.not.null
     expect(wrapper.vm.focusedNode.id).to.be.eq(secondNode.id)
   })
-  it('setFocusedNode with hidden node does not change focusedNode', () => {
+  it('setFocusedNode with hidden node does not change focusedNode', async () => {
     const nodes = [{
       id: 1,
       name: 'name',
@@ -390,7 +395,7 @@ describe('TreeVue.vue', () => {
     }]
     const options = {
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
     const secondNode = wrapper.vm.storage.getById(2)
     wrapper.vm.setFocusedNode(secondNode)
     const hiddenNode = wrapper.vm.storage.getById(3)
@@ -398,7 +403,7 @@ describe('TreeVue.vue', () => {
     expect(wrapper.vm.focusedNode).to.be.not.null
     expect(wrapper.vm.focusedNode.id).to.be.eq(secondNode.id)
   })
-  it('setFocusedNode sets selectedNode', () => {
+  it('setFocusedNode sets selectedNode', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -408,13 +413,13 @@ describe('TreeVue.vue', () => {
     }]
     const options = {
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
     const secondNode = wrapper.vm.storage.getById(2)
     wrapper.vm.setFocusedNode(secondNode)
     expect(wrapper.vm.storage.selectedNode).to.be.not.null
     expect(wrapper.vm.storage.selectedNode.id).to.be.eq(secondNode.id)
   })
-  it('treeState.nodes has all the nodes', () => {
+  it('treeState.nodes has all the nodes', async () => {
     const nodes = [{
       id: 1,
       name: 'name'
@@ -424,7 +429,7 @@ describe('TreeVue.vue', () => {
     }]
     const options = {
     }
-    const wrapper = mount(Tree, { propsData: { items: nodes, options } })
+    const wrapper = await getWrapper(nodes, options)
     const allNodeComponents = wrapper.findAll(Node)
     expect(allNodeComponents.length).to.be.eq(Object.keys(wrapper.vm.treeState.nodes).length)
   })
