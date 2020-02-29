@@ -37,7 +37,8 @@
   "dependencies": {},
   "files": [
     "src",
-    "dist/*.js"
+    "dist/*.js",
+    "badges/*.svg"
   ],
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.11.2",
