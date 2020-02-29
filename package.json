@@ -1,7 +1,7 @@
 {
   "name": "vu-tree",
   "description": "Treeview component for Vue.js",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "author": "Anatoliy Ivanov <t0lik@t0lik.com>",
   "library": "VuTree",
   "private": false,
