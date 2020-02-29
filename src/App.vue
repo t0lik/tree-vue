@@ -192,7 +192,7 @@ export default {
         icon: 'fa fa-dice-one',
         kids: [{
           id: 3,
-          name: 'threee',
+          name: 'three',
           icon: 'fa fa-dice-three',
           kids: [{
             id: 8,
