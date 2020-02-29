@@ -12,47 +12,47 @@
     <div class="button-container">
       <div class="button-group">
         <label>check</label>
-        <button @click="checkSelectedNode">selected</button>
-        <button @click="checkSelectedNodeWithChildren">selected with children</button>
-        <button @click="checkSelectedNodeChildren">selected node children</button>
+        <button @click="checkSelectedNode" :disabled="!isNodeSelected">selected</button>
+        <button @click="checkSelectedNodeWithChildren" :disabled="!isNodeSelected">selected with children</button>
+        <button @click="checkSelectedNodeChildren" :disabled="!isNodeSelected">selected node children</button>
         <button @click="checkAllNodes">all</button>
         <button @click="checkVisibleNodes">visible</button>
         <button @click="getCheckNodes">get checked</button>
       </div>
       <div class="button-group">
         <label>uncheck</label>
-        <button @click="uncheckSelectedNode">selected</button>
-        <button @click="uncheckSelectedNodeWithChildren">selected with children</button>
-        <button @click="uncheckSelectedNodeChildren">selected node children</button>
+        <button @click="uncheckSelectedNode" :disabled="!isNodeSelected">selected</button>
+        <button @click="uncheckSelectedNodeWithChildren" :disabled="!isNodeSelected">selected with children</button>
+        <button @click="uncheckSelectedNodeChildren" :disabled="!isNodeSelected">selected node children</button>
         <button @click="uncheckAllNodes">all</button>
         <button @click="uncheckVisibleNodes">visible</button>
       </div>
       <div class="button-group">
         <label>expand</label>
-        <button @click="expandSelectedNode">selected</button>
-        <button @click="expandSelectedNodeWithChildren">selected with children</button>
-        <button @click="expandSelectedNodeChildren">selected node children</button>
+        <button @click="expandSelectedNode" :disabled="!isNodeSelected">selected</button>
+        <button @click="expandSelectedNodeWithChildren" :disabled="!isNodeSelected">selected with children</button>
+        <button @click="expandSelectedNodeChildren" :disabled="!isNodeSelected">selected node children</button>
         <button @click="expandAll">all</button>
       </div>
       <div class="button-group">
         <label>collapse</label>
-        <button @click="collapseSelectedNode">selected</button>
-        <button @click="collapseSelectedNodeWithChildren">selected with children</button>
-        <button @click="collapseSelectedNodeChildren">selected node children</button>
+        <button @click="collapseSelectedNode" :disabled="!isNodeSelected">selected</button>
+        <button @click="collapseSelectedNodeWithChildren" :disabled="!isNodeSelected">selected with children</button>
+        <button @click="collapseSelectedNodeChildren" :disabled="!isNodeSelected">selected node children</button>
         <button @click="collapseAll">all</button>
       </div>
       <div class="button-group">
         <label>disable</label>
-        <button @click="disableSelectedNode">selected</button>
-        <button @click="disableSelectedNodeWithChildren">selected with chldren</button>
-        <button @click="disableSelectedNodeChildren">selected node chldren</button>
+        <button @click="disableSelectedNode" :disabled="!isNodeSelected">selected</button>
+        <button @click="disableSelectedNodeWithChildren" :disabled="!isNodeSelected">selected with children</button>
+        <button @click="disableSelectedNodeChildren" :disabled="!isNodeSelected">selected node children</button>
         <button @click="disableAll">all</button>
       </div>
       <div class="button-group">
         <label>enable</label>
-        <button @click="enableSelectedNode">selected</button>
-        <button @click="enableSelectedNodeWithChildren">selected with children</button>
-        <button @click="enableSelectedNodeChildren">selected node children</button>
+        <button @click="enableSelectedNode" :disabled="!isNodeSelected">selected</button>
+        <button @click="enableSelectedNodeWithChildren" :disabled="!isNodeSelected">selected with children</button>
+        <button @click="enableSelectedNodeChildren" :disabled="!isNodeSelected">selected node children</button>
         <button @click="enableAll">all</button>
       </div>
       <div class="button-group">
@@ -103,37 +103,37 @@
       </div>
       <div class="button-group">
         <label>text style</label>
-        <button @click="setSelectedNodeTextStyle">selected</button>
-        <button @click="setSelectedNodeTextStyleWithChildren">selected with children</button>
-        <button @click="resetSelectedNodeTextStyle">reset</button>
-        <button @click="resetSelectedNodeTextStyleWithChildren">reset with children</button>
+        <button @click="setSelectedNodeTextStyle" :disabled="!isNodeSelected">selected</button>
+        <button @click="setSelectedNodeTextStyleWithChildren" :disabled="!isNodeSelected">selected with children</button>
+        <button @click="resetSelectedNodeTextStyle" :disabled="!isNodeSelected">reset</button>
+        <button @click="resetSelectedNodeTextStyleWithChildren" :disabled="!isNodeSelected">reset with children</button>
         <button @click="setDefaultNodeTextStyle">default</button>
         <button @click="resetDefaultNodeTextStyle">reset default</button>
       </div>
       <div class="button-group">
         <label>icon style</label>
-        <button @click="setSelectedNodeIconStyle">selected</button>
-        <button @click="setSelectedNodeIconStyleWithChildren">selected with children</button>
-        <button @click="resetSelectedNodeIconStyle">reset</button>
-        <button @click="resetSelectedNodeIconStyleWithChildren">reset with children</button>
+        <button @click="setSelectedNodeIconStyle" :disabled="!isNodeSelected">selected</button>
+        <button @click="setSelectedNodeIconStyleWithChildren" :disabled="!isNodeSelected">selected with children</button>
+        <button @click="resetSelectedNodeIconStyle" :disabled="!isNodeSelected">reset</button>
+        <button @click="resetSelectedNodeIconStyleWithChildren" :disabled="!isNodeSelected">reset with children</button>
         <button @click="setDefaultIconStyle">default</button>
         <button @click="resetDefaultIconStyle">reset default</button>
       </div>
       <div class="button-group">
         <label>checkbox style</label>
-        <button @click="setSelectedNodeCheckboxStyle">selected</button>
-        <button @click="setSelectedNodeCheckboxStyleWithChildren">selected with children</button>
-        <button @click="resetSelectedNodeCheckboxStyle">reset</button>
-        <button @click="resetSelectedNodeCheckboxStyleWithChildren">reset with children</button>
+        <button @click="setSelectedNodeCheckboxStyle" :disabled="!isNodeSelected">selected</button>
+        <button @click="setSelectedNodeCheckboxStyleWithChildren" :disabled="!isNodeSelected">selected with children</button>
+        <button @click="resetSelectedNodeCheckboxStyle" :disabled="!isNodeSelected">reset</button>
+        <button @click="resetSelectedNodeCheckboxStyleWithChildren" :disabled="!isNodeSelected">reset with children</button>
         <button @click="setDefaultCheckboxStyle">default</button>
         <button @click="resetDefaultCheckboxStyle">reset default</button>
       </div>
       <div class="button-group">
         <label>expander style</label>
-        <button @click="setSelectedNodeExpanderStyle">selected</button>
-        <button @click="setSelectedNodeExpanderStyleWithChildren">selected with children</button>
-        <button @click="resetSelectedNodeExpanderStyle">reset</button>
-        <button @click="resetSelectedNodeExpanderStyleWithChildren">reset with children</button>
+        <button @click="setSelectedNodeExpanderStyle" :disabled="!isNodeSelected">selected</button>
+        <button @click="setSelectedNodeExpanderStyleWithChildren" :disabled="!isNodeSelected">selected with children</button>
+        <button @click="resetSelectedNodeExpanderStyle" :disabled="!isNodeSelected">reset</button>
+        <button @click="resetSelectedNodeExpanderStyleWithChildren" :disabled="!isNodeSelected">reset with children</button>
         <button @click="setDefaultExpanderStyle">default</button>
         <button @click="resetDefaultExpanderStyle">reset default</button>
       </div>
@@ -179,7 +179,7 @@ export default {
           expander: null
         }
       },
-      selectedNode: null,
+      storage: null,
       searchString: null,
       descComparator: (item1, item2) => 0 - item1.item.name.localeCompare(item2.item.name),
       ascComparator: (item1, item2) => item1.item.name.localeCompare(item2.item.name),
@@ -262,13 +262,12 @@ export default {
     }
   },
   computed: {
-    storage () {
-      if (!this.$refs.tree) {
-        return null
-      }
-
-      return this.$refs.tree.getStorage()
+    isNodeSelected () {
+      return this.storage && this.storage.selectedNode
     }
+  },
+  mounted () {
+    this.storage = this.$refs.tree.getStorage()
   },
   methods: {
     outputMessage (message) {
