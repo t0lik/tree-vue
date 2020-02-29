@@ -2,10 +2,10 @@
 ![Current Release](https://img.shields.io/github/release/t0lik/tree-vue.svg?style=flat-square)
 ![Monthly Downloads](https://img.shields.io/npm/dm/vu-tree.svg?style=flat-square)
 ![License](https://img.shields.io/npm/l/vu-tree.svg?style=flat-square)
-![Coverage lines](./badges/badge-lines.svg)
-![Coverage functions](./badges/badge-functions.svg)
-![Coverage branches](./badges/badge-branches.svg)
-![Coverage statements](./badges/badge-statements.svg)
+![Coverage lines](./badges/badge-lines.svg?sanitize=true)
+![Coverage functions](./badges/badge-functions.svg?sanitize=true)
+![Coverage branches](./badges/badge-branches.svg?sanitize=true)
+![Coverage statements](./badges/badge-statements.svg?sanitize=true)
 
 A Vue treeview component that visualizes your data hierarchically.
 
